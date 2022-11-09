@@ -27,4 +27,9 @@ class HomeController extends Controller
         
         return view('home',compact('menu'));
     }
+
+    public function AAA()
+    {
+        dd("llego");
+    }
 }

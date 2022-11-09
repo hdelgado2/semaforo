@@ -20,7 +20,7 @@
 <body class="hold-transition sidebar-mini">
   <div class="content-wrapper">
     <main class="py-4">
-      @yield('content')
+     @yield('content')
   </main>
 <script src="{{asset('js/jquery/jquery.min.js')}}"></script>
 <!-- Bootstrap -->

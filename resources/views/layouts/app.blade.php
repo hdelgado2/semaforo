@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <!-- Fonts -->
     <link rel="stylesheet" href="{{asset('/css/font-awesome/all.min.css')}}">
@@ -70,13 +71,45 @@
           </div>
           @endif    
                 </div>
-                <nav class="mt-2">
-                  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                     @yield('menu')
-                    
-                  </ul>
+                <main class="py-4">
+                  <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                     
+                     
+                  @foreach ($menu as $item)
                   
-                </nav>
+                  <li class="nav-item">
+                    <a href="{{route($item->ruta_archivo)}}" class="nav-link">
+                      <i class="nav-icon fas fa-copy"></i>
+                      <p style="font-size: 10px; color:aliceblue">
+                       {{$item->nombre_menu}}
+                       <i class="fas fa-angle-left right"></i>
+                      </p>
+                    </a>
+                    
+                  </li>
+                  
+                  @endforeach
+                  <li style="font-size: 10px;color:aliceblue">
+                                            
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                       onclick="event.preventDefault();
+                                     document.getElementById('logout-form').submit();">
+                                     <i class="nav-icon fas fa-copy"></i>
+                        {{ __('Logout') }}
+                    </a>
+                  
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                  
+                  </li>    
+                      
+                    </ul>
+                    
+                  </nav>
+                </main> 
+                
                 <!-- /.sidebar-menu -->
               </div>
               <!-- /.sidebar -->
@@ -86,7 +119,7 @@
             <div class="content-wrapper">
               <main class="py-4">
                 @yield('content')
-            </main>
+              </main>
               <!-- Content Header (Page header) -->
               {{-- <div class="content-header">
                 <div class="container-fluid">
@@ -126,7 +159,7 @@
 <script src="{{asset('js/adminlte/adminlte.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset('js/adminlte/pages/dashboard3.js')}}"></script>
-</body>
+
 </body>
 </html>
 <!--<ul class="nav nav-treeview">
