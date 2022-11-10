@@ -77,15 +77,15 @@
                      
                      
                   @foreach ($menu as $item)
-                  
+                     
                   <li class="nav-item">
-                    <a href="{{route($item->ruta_archivo)}}" class="nav-link">
+                    <router-link to="{{'/'.$item->ruta_archivo}}" class="nav-link">
                       <i class="nav-icon fas fa-copy"></i>
                       <p style="font-size: 10px; color:aliceblue">
                        {{$item->nombre_menu}}
                        <i class="fas fa-angle-left right"></i>
                       </p>
-                    </a>
+                    </router-link>
                     
                   </li>
                   
@@ -118,7 +118,7 @@
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
               <main class="py-4">
-                @yield('content')
+                <router-view></router-view>
               </main>
               <!-- Content Header (Page header) -->
               {{-- <div class="content-header">
@@ -159,6 +159,10 @@
 <script src="{{asset('js/adminlte/adminlte.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset('js/adminlte/pages/dashboard3.js')}}"></script>
+<script src="{{ asset('/js/app.js') }}">
+window.imagen = "llffo"
+</script>
+
 
 </body>
 </html>

@@ -23,13 +23,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $menu = Menu::all();
+        $menu = Menu::whereActivo(true)->get();
         
         return view('home',compact('menu'));
     }
 
-    public function AAA()
-    {
-        dd("llego");
-    }
+    
 }
