@@ -18,5 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('search','UsuarioController@index')->name('index');
 Route::get('searchUser/{search}','UsuarioController@searchUser')->name('searchUser');
+Route::post('createUser','UsuarioController@createUser')->name('createUser');
+Route::get('getRoles','UsuarioController@getRoles')->name('getRoles');
 
 

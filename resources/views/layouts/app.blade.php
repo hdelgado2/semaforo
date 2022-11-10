@@ -159,6 +159,8 @@
 <script src="{{asset('js/adminlte/adminlte.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset('js/adminlte/pages/dashboard3.js')}}"></script>
+<script src="{{ asset('sweetalert2/dist/sweetalert2.all.js') }}"></script>
+
 <script src="{{ asset('/js/app.js') }}">
 window.imagen = "llffo"
 </script>

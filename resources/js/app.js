@@ -8,8 +8,9 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 import VueRouter from 'vue-router'
-
+import Form from 'vform'
 Vue.use(VueRouter)
+window.Form = Form;
 Vue.config.silent = true
 Vue.prototype.Routes = window.routes;
 
@@ -26,10 +27,12 @@ Vue.prototype.Routes = window.routes;
 const Foo = {template:'<p>prueba</p>'}
 
 let routes = [
-    { path: '/guser', component: require('./view/Usuarios/ListUser.vue').default }
+    { path: '/guser', component: require('./view/Usuarios/ListUser.vue').default },
+    { path: '/createuser', component: require('./view/Usuarios/createUser.vue').default }
+
   ]
 
-Vue.component('example-component', require('./view/Usuarios/ListUser.vue').default);
+//Vue.component('example-component', require('./view/Usuarios/ListUser.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -9,9 +9,12 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Lista de Usuarios</h3>
-
+                <router-link to="/createuser" class="btn btn-primary">Registrar</router-link>
                 <div class="card-tools">
+                 
                   <div class="input-group input-group-sm" style="width: 150px;">
+
+                   
                     <input type="text" v-model="search"  name="table_search" class="form-control float-right" placeholder="Search">
 
                     <div class="input-group-append">
@@ -72,7 +75,6 @@ export default {
     },
     methods:{
          async searchUser(){
-
             
             await axios.get('api/searchUser/search='+this.search).then((result) => {
                 this.Lista = result['data']
