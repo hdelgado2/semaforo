@@ -15,7 +15,7 @@
                     <input type="text" v-model="search"  name="table_search" class="form-control float-right" placeholder="Search">
 
                     <div class="input-group-append">
-                      <button type="submit" @click="searchUser()" class="btn btn-default">
+                      <button type="submit" @click="searchUser" class="btn btn-default">
                         <i class="fas fa-search"></i>
                       </button>
                     </div>
@@ -71,10 +71,11 @@ export default {
         this.getListUser()
     },
     methods:{
-        async searchUser(){
-            this.lista = [];
+         async searchUser(){
+
+            
             await axios.get('api/searchUser/search='+this.search).then((result) => {
-                this.lista = result['data']
+                this.Lista = result['data']
             });
         },
         async getListUser(){

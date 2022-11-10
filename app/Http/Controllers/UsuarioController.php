@@ -18,7 +18,7 @@ class UsuarioController extends Controller
     {
         
         $user = User::select('id','login','nombre','apellido','baneado')
-               ->where('login','ILIKE','%'.explode('=',$searchUser)[0].'%')->paginate(10);
+               ->where('login','ILIKE','%'.explode('=',$searchUser)[1].'%')->paginate(10);
         return $user;
     }
 }
