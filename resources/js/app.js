@@ -26,10 +26,10 @@ Vue.prototype.Routes = window.routes;
 const Foo = {template:'<p>prueba</p>'}
 
 let routes = [
-    { path: '/guser', component: require('./components/Usuario/ListUser.vue').default }
+    { path: '/guser', component: require('./view/Usuarios/ListUser.vue').default }
   ]
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('example-component', require('./view/Usuarios/ListUser.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
