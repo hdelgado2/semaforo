@@ -86,7 +86,10 @@
                     title:'Success!',
                     text  : data.msg,
                     toast : true
-                  })
+                  });
+
+                  router.push('/guser')
+
                 });
       
             },

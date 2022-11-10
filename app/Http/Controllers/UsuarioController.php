@@ -62,4 +62,11 @@ class UsuarioController extends Controller
     {
         return roles::select('nombre_rol','id')->where('activo',true)->get();
     }
+
+    public function deleteUser($id)
+    {
+            $user = User::find($id)->delete();
+            $user1 = User::select('id','login','nombre','apellido','baneado')->paginate(10);
+            return $user1;
+    }
 }

@@ -1965,6 +1965,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee2);
       }))();
+    },
+    deleteUser: function deleteUser(id) {
+      var _this3 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return axios.get('api/deleteUser/' + id).then(function (result) {
+                  return _this3.Lista = result['data'];
+                });
+              case 2:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
     }
   }
 });
@@ -2019,6 +2038,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     text: data.msg,
                     toast: true
                   });
+                  router.push('/guser');
                 });
               case 2:
                 response = _context.sent;
@@ -2145,21 +2165,22 @@ var render = function render() {
   }, [_c("thead", [_vm._m(0), _vm._v(" "), _vm._l(_vm.Lista.data, function (list) {
     return _c("tr", {
       key: list.id
-    }, [_c("td", [_vm._v(_vm._s(list.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(list.login))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(list.nombre + " " + list.apellido))]), _vm._v(" "), list.baneado === false ? _c("td", [_vm._v("Activo")]) : _c("td", [_vm._v("Inactivo")]), _vm._v(" "), _vm._m(1, true)]);
+    }, [_c("td", [_vm._v(_vm._s(list.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(list.login))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(list.nombre + " " + list.apellido))]), _vm._v(" "), list.baneado === false ? _c("td", [_vm._v("Activo")]) : _c("td", [_vm._v("Inactivo")]), _vm._v(" "), _c("td", [_c("button", {
+      staticClass: "btn btn-warning"
+    }, [_vm._v("Edit")]), _vm._v("/\r\n                            "), _c("button", {
+      staticClass: "btn btn-danger",
+      on: {
+        click: function click($event) {
+          return _vm.deleteUser(list.id);
+        }
+      }
+    }, [_vm._v("Borrar")])])]);
   })], 2), _vm._v(" "), _c("tbody")])])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("tr", [_c("th", [_vm._v("ID")]), _vm._v(" "), _c("th", [_vm._v("User")]), _vm._v(" "), _c("th", [_vm._v("Nombre")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Action")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("td", [_c("button", {
-    staticClass: "btn btn-warning"
-  }, [_vm._v("Edit")]), _vm._v("/"), _c("button", {
-    staticClass: "btn btn-danger"
-  }, [_vm._v("Borrar")])]);
 }];
 render._withStripped = true;
 
@@ -53407,6 +53428,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   routes: routes // short for `routes: routes`
 });
 
+window.router = router;
 var app = new Vue({
   el: '#app',
   router: router
@@ -53637,8 +53659,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/semaforo/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/semaforo/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\laragon\www\semaforo\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\laragon\www\semaforo\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

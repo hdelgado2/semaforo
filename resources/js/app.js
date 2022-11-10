@@ -43,7 +43,7 @@ let routes = [
     mode:'history',
     routes // short for `routes: routes`
   })
-
+window.router = router;
 const app = new Vue({
     el: '#app',
     router

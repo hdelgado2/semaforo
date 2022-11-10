@@ -42,7 +42,9 @@
                         <td>{{list.nombre+' '+list.apellido}}</td>
                         <td v-if="list.baneado === false">Activo</td>
                         <td v-else>Inactivo</td>
-                        <td><button class="btn btn-warning">Edit</button>/<button class="btn btn-danger">Borrar</button></td>
+                        <td><button class="btn btn-warning">Edit</button>/
+                            <button @click="deleteUser(list.id)" class="btn btn-danger">Borrar</button>
+                        </td>
                     </tr>
                   </thead>
                   <tbody>
@@ -88,10 +90,11 @@ export default {
                     this.Lista = result['data'];
                
             })
-                
-             if(this.Lista.data.length > 0) this.carga = true;
-           
-        }
+             if(this.Lista.data.length > 0) this.carga = true;  
+        },
+        async deleteUser(id){
+            await axios.get('api/deleteUser/'+id).then((result) => this.Lista = result['data']);
+          }
     }
 }
 </script>
