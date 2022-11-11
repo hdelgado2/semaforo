@@ -21,5 +21,7 @@ Route::get('searchUser/{search}','UsuarioController@searchUser')->name('searchUs
 Route::post('createUser','UsuarioController@createUser')->name('createUser');
 Route::get('getRoles','UsuarioController@getRoles')->name('getRoles');
 Route::get('deleteUser/{id}','UsuarioController@deleteUser')->name('deleteUser');
+Route::get('editUser/editUser/{id}','UsuarioController@editUser')->name('editUser');
+
 
 

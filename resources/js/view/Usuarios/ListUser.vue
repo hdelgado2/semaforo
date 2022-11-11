@@ -42,7 +42,7 @@
                         <td>{{list.nombre+' '+list.apellido}}</td>
                         <td v-if="list.baneado === false">Activo</td>
                         <td v-else>Inactivo</td>
-                        <td><button class="btn btn-warning">Edit</button>/
+                        <td><router-link :to="{path:'/edituser/'+list.id}" class="btn btn-warning">Edit</router-link>/
                             <button @click="deleteUser(list.id)" class="btn btn-danger">Borrar</button>
                         </td>
                     </tr>

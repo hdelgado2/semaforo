@@ -69,4 +69,9 @@ class UsuarioController extends Controller
             $user1 = User::select('id','login','nombre','apellido','baneado')->paginate(10);
             return $user1;
     }
+
+    public function editUser($id)
+    {
+        dd($id);
+    }
 }
