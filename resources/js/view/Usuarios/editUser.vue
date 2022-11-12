@@ -16,7 +16,7 @@
                     <p style="color:red" :class="{'is-invalid':form.errors.has('cedula')}" >{{form.errors.get('cedula')}}</p>
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Login</label>
+                    <label for="exampleInputEmail2">Login</label>
                     <input type="text" :class="{'form-control':true ,'is-invalid':form.errors.has('login')}" v-model="form.login" id="exampleInputEmail1" placeholder="Enter Usuario">
                     <p style="color:red" :class="{'is-invalid':form.errors.has('login')}" >{{form.errors.get('login')}}</p>
                   </div>
@@ -27,14 +27,14 @@
 
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputFile">Nombre</label>
+                    <label for="exampleInputFile33">Nombre</label>
                     <div class="form-group">
                     <input type="text" class="form-control" v-model="form.nombre" :class="{'form-control':true ,'is-invalid':form.errors.has('nombre')}" id="exampleInputFile" placeholder="Enter Nombre">
                     <p style="color:red" :class="{'is-invalid':form.errors.has('nombre')}" >{{form.errors.get('nombre')}}</p>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputFile">Apellido</label>
+                    <label for="exampleInputFile122">Apellido</label>
                     <input type="text" class="form-control" v-model="form.apellido" id="exampleInputFile" :class="{'form-control':true ,'is-invalid':form.errors.has('apellido')}" placeholder="Enter Apellido">
                     <p style="color:red" :class="{'is-invalid':form.errors.has('apellido')}" >{{form.errors.get('apellido')}}</p>
                   </div>
@@ -76,16 +76,17 @@ export default {
                 }),
                 roleslist:[]
         }
-     },created(){
+     },mounted(){
         
         this.cargaUser();
         
      },
      methods:{
-        async cargaUser(){
+         cargaUser(){
             var id = this.$router.currentRoute.params.id
             
-            await axios.get('editUser/'+id)
+            let response  =  axios.get('api/edituser/seguridad/'+id);
+            console.log(response);
         }
      }
 }

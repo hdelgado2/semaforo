@@ -8,4 +8,5 @@ class Menu extends Model
 {
     protected $connection = 'pgsql';
     protected $table = 'menu';
+    protected $fillable = ['nombre_menu','nombre_archivo','ruta_archivo','activo'];
 }

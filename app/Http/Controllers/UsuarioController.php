@@ -72,6 +72,6 @@ class UsuarioController extends Controller
 
     public function editUser($id)
     {
-        dd($id);
+        return response()->json('2dkd');
     }
 }

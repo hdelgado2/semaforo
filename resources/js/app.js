@@ -9,7 +9,12 @@ require('./bootstrap');
 window.Vue = require('vue');
 import VueRouter from 'vue-router'
 import Form from 'vform'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
 Vue.use(VueRouter)
+Vue.use(VueAxios, axios)
+
 window.Form = Form;
 Vue.config.silent = true
 Vue.prototype.Routes = window.routes;
