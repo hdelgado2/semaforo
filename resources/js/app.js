@@ -18,7 +18,6 @@ Vue.use(VueAxios, axios)
 window.Form = Form;
 Vue.config.silent = true
 Vue.prototype.Routes = window.routes;
-
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -34,7 +33,8 @@ const Foo = {template:'<p>prueba</p>'}
 let routes = [
     { path: '/guser', component: require('./view/Usuarios/ListUser.vue').default },
     { path: '/createuser', component: require('./view/Usuarios/createUser.vue').default },
-    { path: '/edituser/:id', component: require('./view/Usuarios/editUser.vue').default }
+    { path: '/edituser/:id', component: require('./view/Usuarios/editUser.vue').default },
+    { path: '*', component: Foo }
 
 
   ]

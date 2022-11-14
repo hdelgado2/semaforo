@@ -19,7 +19,8 @@ Route::get('searchUser/{search}','UsuarioController@searchUser')->name('searchUs
 Route::post('createUser','UsuarioController@createUser')->name('createUser');
 Route::get('getRoles','UsuarioController@getRoles')->name('getRoles');
 Route::get('deleteUser/{id}','UsuarioController@deleteUser')->name('deleteUser');
-Route::get('edituser/seguridad/{id?}','UsuarioController@editUser')->name('editUser');
+Route::get('edituser/{id}','UsuarioController@editUser')->name('editUser');
+Route::post('editusers','UsuarioController@editUserRegistro')->name('editUserRegistro');
 
 
 
