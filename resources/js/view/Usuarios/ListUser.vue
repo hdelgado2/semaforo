@@ -93,7 +93,15 @@ export default {
              if(this.Lista.data.length > 0) this.carga = true;  
         },
         async deleteUser(id){
-            await axios.get('api/deleteUser/'+id).then((result) => this.Lista = result['data']);
+            await axios.get('api/deleteUser/'+id).then((result) => {
+              this.Lista = result['data']
+              Swal.fire({
+                    icon  :'success',
+                    title:'Success!',
+                    text  : "eliminado con exito",
+                    toast : true
+                  });
+            });
           }
     }
 }
