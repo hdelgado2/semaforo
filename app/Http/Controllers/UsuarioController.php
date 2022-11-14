@@ -13,7 +13,7 @@ class UsuarioController extends Controller
     public function index()
     {
         
-        $user = User::select('id','login','nombre','apellido','baneado')->paginate(10);
+        $user = User::select('id','login','nombre','apellido','baneado')->paginate();
         return $user;
     }
 

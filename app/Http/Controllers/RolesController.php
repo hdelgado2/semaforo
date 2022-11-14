@@ -37,4 +37,9 @@ class RolesController extends Controller
         return ['exito' => 200,'msg' => 'Se ha Registrado con exito'];
 
     }
+
+    public function search($role)
+    {
+        return roles::where('nombre_rol','ilike','%'.$role.'%')->where('activo',true)->paginate(10);
+    }
 }

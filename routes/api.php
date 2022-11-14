@@ -23,6 +23,7 @@ Route::get('edituser/{id}','UsuarioController@editUser')->name('editUser');
 Route::post('editusers','UsuarioController@editUserRegistro')->name('editUserRegistro');
 Route::get('listroles','RolesController@index')->name('index');
 Route::post('createroles','RolesController@createRoles')->name('createroles');
+Route::get('search','RolesController@search')->name('search');
 
 
 

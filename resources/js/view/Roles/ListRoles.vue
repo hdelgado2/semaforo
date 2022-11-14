@@ -68,11 +68,15 @@ export default {
         },
         data(){
             return{
-                listaRoles:{}
+                listaRoles:{},
+                search:""
             }
         },methods: {
             async getRoles(){
                 await axios.get('api/listroles').then(({data}) => this.listaRoles = data.data);
+            },
+            async searchRoles(){
+                await axios.get('api/search').then(({data})=>this.listaRoles = data.data)
             }
         }
 }   
