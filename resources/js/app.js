@@ -18,6 +18,15 @@ Vue.use(VueAxios, axios)
 window.Form = Form;
 Vue.config.silent = true
 Vue.prototype.Routes = window.routes;
+
+import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import 'leaflet/dist/leaflet.css';
+
+Vue.component('l-map', LMap);
+Vue.component('l-tile-layer', LTileLayer);
+Vue.component('l-marker', LMarker);
+
+//Vue.component('pagination', require('laravel-vue-pagination'));
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -34,6 +43,9 @@ let routes = [
     { path: '/guser', component: require('./view/Usuarios/ListUser.vue').default },
     { path: '/createuser', component: require('./view/Usuarios/createUser.vue').default },
     { path: '/edituser/:id', component: require('./view/Usuarios/editUser.vue').default },
+    { path: '/groles', component: require('./view/Roles/ListRoles.vue').default },
+    { path: '/create/groles', component: require('./view/Roles/createRoles.vue').default },
+    { path: '/ginterseccion', component: require('./view/Mapa/mapa.vue').default },
     { path: '*', component: Foo }
 
 
@@ -53,6 +65,7 @@ let routes = [
 window.router = router;
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    
 
 });
