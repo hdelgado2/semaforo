@@ -51,6 +51,7 @@
                    
                   </tbody>
                 </table>
+                <!-- <pagination :data="Lista" @pagination-change-page="getResults"></pagination> -->
               </div>
               <!-- /.card-body -->
             </div>
@@ -66,7 +67,7 @@
 export default {
     data(){
         return{
-            Lista:[],
+            Lista:{},
             carga:false,
             imageCarga:"/gif/Gear-0.2s-800px.gif",
             search:""
@@ -82,10 +83,10 @@ export default {
                 this.Lista = result['data']
             });
         },
-        async getListUser(){
+        async getListUser(page=1){
                 
                this.carga = false;
-                await axios.get('api/search').then((result) => {
+                await axios.get('api/search?page='+page).then((result) => {
                
                     this.Lista = result['data'];
                
@@ -93,7 +94,15 @@ export default {
              if(this.Lista.data.length > 0) this.carga = true;  
         },
         async deleteUser(id){
-            await axios.get('api/deleteUser/'+id).then((result) => this.Lista = result['data']);
+            await axios.get('api/deleteUser/'+id).then((result) => {
+              this.Lista = result['data']
+              Swal.fire({
+                    icon  :'success',
+                    title:'Success!',
+                    text  : "eliminado con exito",
+                    toast : true
+                  });
+            });
           }
     }
 }

@@ -13,7 +13,7 @@ class UsuarioController extends Controller
     public function index()
     {
         
-        $user = User::select('id','login','nombre','apellido','baneado')->paginate(10);
+        $user = User::select('id','login','nombre','apellido','baneado')->paginate();
         return $user;
     }
 
@@ -57,10 +57,15 @@ class UsuarioController extends Controller
 
         return ['exito' => 200,'msg' => 'Se ha Registrado con exito'];
     }
-
     public function getRoles()
     {
+        
         return roles::select('nombre_rol','id')->where('activo',true)->get();
+    }
+
+    public function getRolesEditar($id)
+    {
+        return roles::select('nombre_rol','id')->where('id',$id)->where('activo',true)->get();
     }
 
     public function deleteUser($id)
@@ -72,6 +77,49 @@ class UsuarioController extends Controller
 
     public function editUser($id)
     {
-        return response()->json('2dkd');
+        $user = User::find($id);
+        
+        return [
+            'cedula' => $user->cedula,
+            'login'  => $user->login,
+            'password' => $user->password,
+            'nombre' => $user->nombre,
+            'roles' => $this->getRolesEditar($user->roles_id),
+            'apellido' => $user->apellido,
+            'roless' => $this->getRoles()
+        ];
+    }
+
+    public function editUserRegistro(Request $request)
+    {
+        
+        $this->validate($request, [
+            'login' => 'required',
+            'password' => 'required',
+            'nombre' => 'required',
+            'apellido' => 'required',
+            'roles' => 'required',
+            'cedula' => 'required'
+        ]);
+
+        try {
+            \DB::beginTransaction();
+
+            User::find($request->idUserEdit)->update([
+                'login'    => $request->login, 
+                'password' => md5($request->password),
+                'nombre'   => $request->nombre,
+                'apellido' => $request->apellido,
+                'roles_id' => $request->roles,
+                'cedula'   => $request->cedula
+            ]);
+
+            \DB::commit();
+        } catch (\Exception $e) {
+            \DB::rollback();
+            dd($e->getMessage());
+        }
+
+        return ['exito' => 200,'msg' => 'Se ha Registrado con exito'];
     }
 }
