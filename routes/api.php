@@ -25,6 +25,8 @@ Route::get('listroles','RolesController@index')->name('index');
 Route::post('createroles','RolesController@createRoles')->name('createroles');
 Route::get('searchroles/{role}','RolesController@searchRoles')->name('searchRoles');
 Route::get('deleteroles/{role}','RolesController@deleteroles')->name('deleteroles');
+Route::get('editarroles/{role}','RolesController@editarRoles')->name('editarRoles');
+Route::post('editroles/{role}','RolesController@editrolesP')->name('editrolesP');
 
 
 

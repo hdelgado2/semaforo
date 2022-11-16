@@ -48,4 +48,33 @@ class RolesController extends Controller
             $deleteRole = roles::find($role)->delete();
             return roles::paginate(10);
     }
+
+    public function editarRoles($id)
+    {
+        return roles::find($id);
+    }
+    public function editrolesP(Request $request,$role)
+    {
+        
+        $this->validate($request, [
+            'role' => 'required',
+            'desc' => 'required',
+            'activo' => 'required',
+        ]);
+
+        try {
+            \DB::beginTransaction();
+            roles::find($role)->update([
+                'nombre_rol' => $request->role,
+                'descripcion' => $request->desc,
+                'activo' => $request->activo
+            ]);
+
+            \DB::commit();
+        } catch (\Exception $e) {
+            \DB::rollback();
+        }
+        return ['exito' => 200,'msg' => 'Se ha Editado con exito'];
+
+    }
 }

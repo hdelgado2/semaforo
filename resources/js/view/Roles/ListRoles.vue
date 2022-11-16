@@ -39,7 +39,7 @@
                         <td>{{roles.nombre_rol}}</td>
                         <td v-if="roles.activo === true">Activo</td>
                         <td v-else>Inactivo</td>
-                        <td><router-link to="/" class="btn btn-warning">Edit</router-link>/
+                        <td><router-link :to="{path:'/deleteRoles/'+roles.id}" class="btn btn-warning">Edit</router-link>/
                             <button class="btn btn-danger" @click="deleteRoles(roles)">Borrar</button>
                         </td>
                         
