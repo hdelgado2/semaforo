@@ -14,11 +14,10 @@
                  
                   <div class="input-group input-group-sm" style="width: 150px;">
 
-                   
                     <input type="text" v-model="search"  name="table_search" class="form-control float-right" placeholder="Search">
 
                     <div class="input-group-append">
-                      <button type="submit"  class="btn btn-default">
+                      <button type="submit" @click="searchRoles" class="btn btn-default">
                         <i class="fas fa-search"></i>
                       </button>
                     </div>
@@ -40,8 +39,8 @@
                         <td>{{roles.nombre_rol}}</td>
                         <td v-if="roles.activo === true">Activo</td>
                         <td v-else>Inactivo</td>
-                        <td><router-link to="/" class="btn btn-warning">Edit</router-link>/
-                            <button class="btn btn-danger">Borrar</button>
+                        <td><router-link :to="{path:'/deleteRoles/'+roles.id}" class="btn btn-warning">Edit</router-link>/
+                            <button class="btn btn-danger" @click="deleteRoles(roles)">Borrar</button>
                         </td>
                         
                     </tr>
@@ -72,11 +71,23 @@ export default {
                 search:""
             }
         },methods: {
+
             async getRoles(){
                 await axios.get('api/listroles').then(({data}) => this.listaRoles = data.data);
             },
             async searchRoles(){
-                await axios.get('api/search').then(({data})=>this.listaRoles = data.data)
+                await axios.get('api/searchroles/roles='+this.search).then(({data})=>this.listaRoles = data.data)
+            },
+            async deleteRoles({id}){
+                await axios.get('api/deleteroles/'+id).then((result) => {
+                  this.listaRoles = result['data']['data']
+                  Swal.fire({
+                    icon  :'success',
+                    title:'Success!',
+                    text  : "eliminado con exito",
+                    toast : true
+                  });
+                });
             }
         }
 }   

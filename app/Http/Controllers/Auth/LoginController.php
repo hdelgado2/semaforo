@@ -45,12 +45,14 @@ class LoginController extends Controller
         
         
         $user = User::where('login',$request->user)->where('password',md5($request->password))->first();
-        
+       
         if($user !== null){
             
             Auth::login($user);
 
             return redirect($this->redirectTo);
+        }else{
+            return redirect('/login');
         }
             
     }

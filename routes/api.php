@@ -23,7 +23,12 @@ Route::get('edituser/{id}','UsuarioController@editUser')->name('editUser');
 Route::post('editusers','UsuarioController@editUserRegistro')->name('editUserRegistro');
 Route::get('listroles','RolesController@index')->name('index');
 Route::post('createroles','RolesController@createRoles')->name('createroles');
-Route::get('search','RolesController@search')->name('search');
+Route::get('searchroles/{role}','RolesController@searchRoles')->name('searchRoles');
+Route::get('deleteroles/{role}','RolesController@deleteroles')->name('deleteroles');
+Route::get('editarroles/{role}','RolesController@editarRoles')->name('editarRoles');
+Route::post('editroles/{role}','RolesController@editrolesP')->name('editrolesP');
+Route::get('permisosLista','PermisosController@index')->name('permisosLista');
+Route::get('menu','PermisosController@menu')->name('menu');
 
 
 
