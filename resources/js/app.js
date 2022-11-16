@@ -47,6 +47,8 @@ let routes = [
     { path: '/create/groles', component: require('./view/Roles/createRoles.vue').default },
     { path: '/ginterseccion', component: require('./view/Mapa/mapa.vue').default },
     { path: '/deleteRoles/:id', component: require('./view/Roles/editRoles.vue').default },
+    { path: '/permisosuser', component: require('./view/Seguridad/Lista.vue').default },
+    { path: '/addpermisos', component: require('./view/Seguridad/agregarPermisos.vue').default },
     { path: '*', component: Foo }
 
 
