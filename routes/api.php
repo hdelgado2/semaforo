@@ -28,7 +28,7 @@ Route::get('deleteroles/{role}','RolesController@deleteroles')->name('deleterole
 Route::get('editarroles/{role}','RolesController@editarRoles')->name('editarRoles');
 Route::post('editroles/{role}','RolesController@editrolesP')->name('editrolesP');
 Route::get('permisosLista','PermisosController@index')->name('permisosLista');
-
+Route::get('menu','PermisosController@menu')->name('menu');
 
 
 

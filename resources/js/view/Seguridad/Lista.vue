@@ -40,7 +40,7 @@
                         <td>{{list.nombre+' '+list.apellido}}</td>
                         <td v-if="list.baneado === false">Activo</td>
                         <td v-else>Inactivo</td>
-                        <td><router-link to="/addpermisos" class="btn btn-primary">add</router-link>/
+                        <td><router-link :to="{path:'/addpermisos/'+list.id}" class="btn btn-primary">add</router-link>/
                             <button class="btn btn-danger">Borrar</button>
                         </td>
                     </tr>
