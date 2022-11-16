@@ -65,7 +65,13 @@ export default {
         },
 
         cambioPermisos($event){
-
+           //busca si hay modulo añadido
+            let findd = this.form.permisos.find(({id}) => (id === parseInt($event.target.value)))
+              //si lo encuentra no lo deja ingresar
+              if(findd){
+                return ;
+              }
+        
             this.menu.map(({id,nombre_menu}) => (id === parseInt($event.target.value)) ? this.form.permisos = [...this.form.permisos,{'id':id,'modulo':nombre_menu}] : '')
         }
     }
