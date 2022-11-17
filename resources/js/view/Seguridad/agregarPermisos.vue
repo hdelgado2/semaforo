@@ -26,18 +26,17 @@
                       <!-- Select multiple-->
                       <div class="form-group">
                         <label>Select Multiple</label>
-                        <select multiple="" @change="nivel" class="form-control">
-                          <option :value="menus.id" v-for="menus in form.permisos" :key="menus.id">{{menus.modulo}}</option>
+                        <select multiple="" @change="nivel" class="form-control " id="nivel">
+                          <option  :value="menus.id" v-for="(menus,index) in form.permisos" :id="index" :key="menus.id">{{menus.modulo}}</option>
                         </select>
                       </div>
                     </div>
                     <div class="row">
                     <div class="col-sm-6">
                       <!-- checkbox -->
-                      <div class="form-group" v-show="ocultar">
-                        <div v-for="(niveles2,index) in form.niveles" :key="index" class="custom-control custom-checkbox">
-                          <input class="custom-control-input" type="checkbox" :id="'customCheckbox'+index" >
-                          <label :for="'customCheckbox'+index" class="custom-control-label">{{niveles[index]}}</label>
+                      <div class="form-group"  v-show="ocultar">
+                        <div @change="checked" v-html="checkboxx"  class="custom-control custom-checkbox">
+                          
                         </div>
                       </div>
                     </div>
@@ -62,24 +61,39 @@ export default {
                 'nombre':"",
                 'login': "",
                 'permisos':[],
-                'niveles' :[{'Ver contenido':false},
-                            {'Crear Contenido':false},
-                            {'Editar Contenido':false},
-                            {'Borrar Contenido':false}
-                           ]                           
-                            
-                            
             }),
             menu:{},
             niveles:['Ver contenido','Crear Contenido','Editar Contenido','Borrar Contenido'],
-            ocultar:false
+            ocultar:false,
+            temp:null,
+            nivel1:0,
+            string:""
 
         }
     },mounted(){
         console.log(router.history.current.params.id)
         this.getUser()
     },
+    computed:{
+        checkboxx:function() {
+             this.string = '';
+            if(this.form.permisos[this.nivel1] === undefined) return this.string;
+
+             this.form.permisos[this.nivel1].niveles.map((_,index) => {
+                this.string += `<input class="custom-control-input" name="${index}"  type="checkbox" id="customCheckbox${index}" >
+                          <label for="customCheckbox${index}" class="custom-control-label">${this.niveles[index]}</label><br/>`
+                    
+             })
+          return this.string  
+         },
+    },
     methods:{
+      checked($event){
+        console.log(parseInt($event.target.name))
+          this.form.permisos[this.nivel1].niveles.map((_,index) => (parseInt($event.target.name) === index) ? this.form.permisos[this.nivel1].niveles[index] = true : '')
+          console.log($event)
+      },
+       
         async getUser(){
             await axios.get('/api/edituser/'+router.history.current.params.id).then(({data}) => {
                 this.form.nombre = data.nombre
@@ -95,17 +109,16 @@ export default {
               //si lo encuentra no lo deja ingresar
               if(findd) return ;
         
-            this.menu.map(({id,nombre_menu}) => (id === parseInt($event.target.value)) ? this.form.permisos = [...this.form.permisos,{'id':id,'modulo':nombre_menu}] : '')
+            this.menu.map(({id,nombre_menu}) => (id === parseInt($event.target.value)) ? this.form.permisos = [...this.form.permisos,{'id':id,'modulo':nombre_menu,'niveles':[false,false,false,false]}] : '')
             
         
           },nivel($event){
               this.ocultar = true
-              /*let findd = this.form.find(({id}) => (id === parseInt($event.target.value)))
-
-              if(findd){
-
-              };*/
-          } 
+              this.nivel1 = parseInt($event.explicitOriginalTarget.id)
+              if($event.target.id === "nivel")
+                 this.temp = this.form.permisos.find((_,index) => (index === parseInt($event.explicitOriginalTarget.id)));
+              
+           }
 
     }
 }
