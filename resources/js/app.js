@@ -19,12 +19,18 @@ window.Form = Form;
 Vue.config.silent = true
 Vue.prototype.Routes = window.routes;
 
-import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import  L  from "leaflet";
 import 'leaflet/dist/leaflet.css';
+Vue.use( L );
+import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from 'vue2-leaflet';
+
+
 
 Vue.component('l-map', LMap);
 Vue.component('l-tile-layer', LTileLayer);
 Vue.component('l-marker', LMarker);
+Vue.component('l-tooltip', LTooltip);
+Vue.component('l-popup', LPopup);
 
 //Vue.component('pagination', require('laravel-vue-pagination'));
 /**
