@@ -1,4 +1,5 @@
 <template>
+    <div>
     <div style="height: 800px; width: 100%">
         <div style="height: 200px; overflow: auto;">
             <p>First marker is placed at {{ withPopup.lat }}, {{ withPopup.lng }}</p>
@@ -28,23 +29,18 @@
         >
             <l-tile-layer :url="url" :attribution="attribution">
             </l-tile-layer>
-                <l-marker v-for="marker,index in markers" 
-                        :key="index" 
-                        :lat-lng="marker" 
-                        ref="marker"
-                        @click="removeMarker(index)">
-                    <l-popup>
-                        <div @click="innerClick">
-                            I am a popup
-                            <p v-show="showParagraph">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-                                sed pretium nisl, ut sagittis sapien. Sed vel sollicitudin nisi.
-                                Donec finibus semper metus id malesuada.
-                            </p>
-                        </div>
-                    </l-popup>
+                <l-marker v-for="semaforo,index in semaforos" 
+                        :key="index+1" 
+                        :lat-lng="trafficlightLocation(semaforo)" 
+                        ref="marker">
+                         <l-icon
+                            :icon-size="dynamicSize"
+                            :icon-anchor="dynamicAnchor"
+                            :icon-url="iconUrl"
+                        />
                 </l-marker>
         </l-map>
+    </div>
     </div>
 </template>
 
@@ -56,10 +52,10 @@ import { latLng, Icon } from "leaflet";
 export default {
 
         mounted() {
-            console.log(this.$refs.myMap)
-            console.log(this.$refs.myMap.mapObject)
-             this.$nextTick(() => {
+            //console.log(this.$refs.myMap.mapObject)
+            this.$nextTick(() => {
                 console.log('ss')
+                //this.$refs.map.mapObject._onResize();
                 //this.$refs.myMap.mapObject.ANY_LEAFLET_MAP_METHOD();
             });
 
@@ -88,37 +84,84 @@ export default {
                     zoomSnap: 0.5
                 },
                 showMap: true,
-
-                markers: [
-                    latLng(11.7102521, -70.4838664),
-                    latLng(11.7102521, -70.4838662),
-                    latLng(11.7102521, -70.4838661),
-                ]
+                iconSize: 50,
+                popupAnchor: [0, -40],
+                iconUrl: require('leaflet/dist/images/marker-icon.png'),
+                //markers: [],
+                semaforos: [
+                     latLng(11.7102521, -70.4838664),
+                     latLng(11.7102521, -70.1838662),
+                     latLng(11.7102521, -40.4838661),
+                 ]
             };
 
-            },methods: {
-                doSomethingOnReady() {
-                    this.map = this.$refs.myMap.mapObject
-                },
-                zoomUpdated (zoom) {
-                    this.zoom = zoom;
-                },
-                centerUpdated (center) {
-                    this.center = center;
-                },
-                boundsUpdated (bounds) {
-                    this.bounds = bounds;
-                },
-                removeMarker(index) {
-                    this.markers.splice(index, 1);
-                },
-                addMarker(event) {
-                    console.log(event)
-                    console.log('evento');
-                    this.markers.push(event.latlng);
-                    
+        },
 
+        computed: {
+            dynamicSize() {
+                return [this.iconSize, this.iconSize * 1];
+            },
+            dynamicAnchor() {
+                return [this.iconSize / 2, this.iconSize * 1];
+            },
+        },
+        methods: {
+
+            doSomethingOnReady() {
+                this.map = this.$refs.myMap.mapObject
+            },
+            zoomUpdated (zoom) {
+                this.zoom = zoom;
+            },
+            centerUpdated (center) {
+                this.center = center;
+            },
+            boundsUpdated (bounds) {
+                this.bounds = bounds;
+            },
+            removeMarker(index) {
+                this.markers.splice(index, 1);
+            },
+
+            addMarker(event) {
+
+
+                console.log(event)
+                console.log('evento');
+
+                if(event.latlng){
+
+                    let newSemaforo = {
+                        lat : event.latlng.lat,
+                        lng : event.latlng.lng
+                    }
+
+                    console.log('as')
+                    //this.semaforos.push({[...newSemaforo...]})
+                    //this.semaforos.push(newSemaforo);  
+                    
                 }
+                  
+
+            },
+
+            trafficlightLocation(location) {
+                return location;
+                //const trafficlightOnTheMap = [].concat(location).reverse();
+                //return latLng(trafficlightOnTheMap);
+            },
+
+            trafficlightIcon(status) {
+
+                if (status === 1) {
+                    return 'locationFree';
+                } else if (status === 2) {
+                    return 'locationBusy';
+                } else {
+                    return 'locationUse';
+                }
+            },
+
     
             }
 }   
