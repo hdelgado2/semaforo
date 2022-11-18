@@ -26,18 +26,22 @@
                       <!-- Select multiple-->
                       <div class="form-group">
                         <label>Select Multiple</label>
-                        <select multiple="" @change="nivel" class="form-control">
-                          <option :value="menus.id" v-for="menus in form.permisos" :key="menus.id">{{menus.modulo}}</option>
+                        <select multiple="" @change="activar" v-model="selected" class="form-control " >
+                          <option  :value="index" v-for="(menus,index) in form.permisos"  :key="menus.id">{{menus.modulo}}</option>
                         </select>
                       </div>
                     </div>
                     <div class="row">
                     <div class="col-sm-6">
                       <!-- checkbox -->
-                      <div class="form-group" v-show="ocultar">
-                        <div v-for="(niveles2,index) in form.niveles" :key="index" class="custom-control custom-checkbox">
-                          <input class="custom-control-input" type="checkbox" :id="'customCheckbox'+index" >
-                          <label :for="'customCheckbox'+index" class="custom-control-label">{{niveles[index]}}</label>
+                      <div class="form-group"  v-show="ocultar">
+                        
+                        <div v-if="form.permisos[selected[0]] === undefined" class="custom-control custom-checkbox">
+                          
+                        </div>
+                        <div v-else @change="checked(index)"  v-for="(value,index) in form.permisos[this.selected[0]].niveles" :key="index" class="custom-control custom-checkbox">
+                          <input class="custom-control-input" :name="index"  :checked="value"  type="checkbox" :id="'customCheckbox'+index" >
+                          <label :for="'customCheckbox'+index" class="custom-control-label">{{niveles[index]}}</label><br/>
                         </div>
                       </div>
                     </div>
@@ -62,24 +66,32 @@ export default {
                 'nombre':"",
                 'login': "",
                 'permisos':[],
-                'niveles' :[{'Ver contenido':false},
-                            {'Crear Contenido':false},
-                            {'Editar Contenido':false},
-                            {'Borrar Contenido':false}
-                           ]                           
-                            
-                            
             }),
             menu:{},
             niveles:['Ver contenido','Crear Contenido','Editar Contenido','Borrar Contenido'],
-            ocultar:false
+            ocultar:false,
+            temp:null,
+            nivel1:0,
+            selected:""
 
         }
     },mounted(){
+      
+
         console.log(router.history.current.params.id)
         this.getUser()
     },
+
     methods:{
+      checked(index){
+        console.log(this.nivel1)
+        this.form.permisos[this.selected[0]].niveles.map((_,index2) => { 
+            if(index === index2) 
+                this.form.permisos[this.selected[0]].niveles[index] = true 
+            
+            })
+      },
+       
         async getUser(){
             await axios.get('/api/edituser/'+router.history.current.params.id).then(({data}) => {
                 this.form.nombre = data.nombre
@@ -90,22 +102,20 @@ export default {
         },
 
         cambioPermisos($event){
+          
            //busca si hay modulo añadido
             let findd = this.form.permisos.find(({id}) => (id === parseInt($event.target.value)))
               //si lo encuentra no lo deja ingresar
               if(findd) return ;
         
-            this.menu.map(({id,nombre_menu}) => (id === parseInt($event.target.value)) ? this.form.permisos = [...this.form.permisos,{'id':id,'modulo':nombre_menu}] : '')
+            this.menu.map(({id,nombre_menu}) => (id === parseInt($event.target.value)) ? this.form.permisos = [...this.form.permisos,{'id':id,'modulo':nombre_menu,'niveles':[false,false,false,false]}] : '')
             
         
-          },nivel($event){
-              this.ocultar = true
-              /*let findd = this.form.find(({id}) => (id === parseInt($event.target.value)))
+          },activar(){
+            this.ocultar = true;
+            
+          }
 
-              if(findd){
-
-              };*/
-          } 
 
     }
 }
