@@ -159,9 +159,11 @@
 <script src="{{asset('js/adminlte/adminlte.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset('js/adminlte/pages/dashboard3.js')}}"></script>
-<script src="{{ asset('sweetalert2/dist/sweetalert2.all.js') }}"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.1/chart.min.js" integrity="sha512-2uu1jrAmW1A+SMwih5DAPqzFS2PI+OPw79OVLS4NJ6jGHQ/GmIVDDlWwz4KLO8DnoUmYdU8hTtFcp8je6zxbCg==" type="module" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.0.1/chart.min.js" integrity="sha512-tQYZBKe34uzoeOjY9jr3MX7R/mo7n25vnqbnrkskGr4D6YOoPYSpyafUAzQVjV6xAozAqUFIEFsCO4z8mnVBXA==" type="module" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+ -->
+ 
 
-<script src="{{ asset('/js/app.js') }}">
 window.imagen = "llffo"
 </script>
 

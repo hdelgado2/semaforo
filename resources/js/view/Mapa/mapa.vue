@@ -11,37 +11,153 @@
                 Toggle map
             </button>
         </div>
-        <div class="info" style="height: 15%">
+        <div class="info" style="height: 5%">
             <span>Center: {{ center }}</span>
             <span>Zoom: {{ zoom }}</span>
             <span>Bounds: {{ bounds }}</span>
         </div>
-        <l-map  @ready="doSomethingOnReady()"
-            v-if="showMap"
-            ref="map"
-            :zoom="zoom"
-            :center="center"
-            :options="mapOptions"
-            style="height: 80%;width: 100%"
-            @update:zoom="zoomUpdated"
-            @update:center="centerUpdated"
-            @update:bounds="boundsUpdated"
-            @click="addMarker"
-        >
-            <l-tile-layer :url="url" :attribution="attribution">
-            </l-tile-layer>
+        <div class="map-container" >
+            <l-map  @ready="doSomethingOnReady()"
+                v-if="showMap"
+                ref="map"
+                :zoom="zoom"
+                :center="center"
+                :options="mapOptions"
+                style="height: 80%;width: 100%"
+                @update:zoom="zoomUpdated"
+                @update:center="centerUpdated"
+                @update:bounds="boundsUpdated"
+                @click="openModal"
+            >
+                <l-tile-layer :url="url" :attribution="attribution">
+                </l-tile-layer>
                 <l-marker v-for="semaforo,index in semaforos"
-                        :key="index+1" 
-                        :item="semaforo"
-                        :lat-lng="calculateLatlng(semaforo.lat, semaforo.lng)" 
-                        ref="marker">
-                         <l-icon
+                    :key="index+1" 
+                    :item="semaforo"
+                    :lat-lng="calculateLatlng(semaforo.lat, semaforo.lng)" 
+                    ref="marker">
+                    <l-icon
                             :icon-size="dynamicSize"
                             :icon-anchor="dynamicAnchor"
                             :icon-url="iconUrl"
                         />
                 </l-marker>
-        </l-map>
+            </l-map>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            Launch demo modal
+        </button>
+        </div>
+        
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalSemaforoInfo" tabindex="-1" role="dialog" aria-labelledby="modalSemaforoInfoLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalSemaforoInfoLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="interseccion" class="col-form-label">Nombre intersección:</label>
+                        <input v-model="form.interseccion" type="text" class="form-control" id="interseccion">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="latitud" class="col-form-label">Latitud:</label>
+                        <input v-model="form.latitud" type="text" class="form-control" id="latitud">
+                    </div>
+                    <div class="form-group col">
+                        <label for="longitud" class="col-form-label">Longitud:</label>
+                        <input v-model="form.longitud" type="text" class="form-control" id="longitud">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="ip-equipo" class="col-form-label">IP equipo:</label>
+                        <input v-model="form.ip_equipo" type="text" class="form-control" id="ip-equipo">
+                    </div>
+                    <div class="form-group col">
+                        <label for="mac-equipo" class="col-form-label">MAC equipo:</label>
+                        <input v-model="form.mac_equipo" type="text" class="form-control" id="mac-equipo">
+                    </div>
+                    <div class="form-group col">
+                        <label for="zoom" class="col-form-label">Zoom:</label>
+                        <input v-model="form.zoom" type="number" class="form-control" id="zoom">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="observacion" class="col-form-label">Observación:</label>
+                        <input v-model="form.observacion" type="text" class="form-control" id="observacion">
+                    </div>
+                </div>
+
+                <hr/>
+
+                <h5>Cruces</h5>
+
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="rojo" class="col-form-label">Rojo:</label>
+                        <input v-model="form.rojo" type="number" class="form-control" id="rojo">
+                    </div>
+                    <div class="form-group col">
+                        <label for="rojo-cruce-izq" class="col-form-label">Rojo cruce izq:</label>
+                        <input v-model="form.rojo_cruce_izq" type="number" class="form-control" id="rojo-cruce-izq">
+                    </div>
+                    <div class="form-group col">
+                        <label for="rojo-cruce-der" class="col-form-label">Rojo cruce der:</label>
+                        <input v-model="form.rojo_cruce_der" type="number" class="form-control" id="rojo-cruce-der">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="amarillo" class="col-form-label">Amarillo:</label>
+                        <input v-model="form.amarillo" type="number" class="form-control" id="amarillo">
+                    </div>
+                    <div class="form-group col">
+                        <label for="amarillo-cruce-izq" class="col-form-label">Amarillo cruce izq:</label>
+                        <input v-model="form.amarillo_cruce_izq" type="number" class="form-control" id="amarillo-cruce-izq">
+                    </div>
+                    <div class="form-group col">
+                        <label for="amarillo-cruce-der" class="col-form-label">Amarillo cruce der:</label>
+                        <input v-model="form.amarillo_cruce_der" type="number" class="form-control" id="amarillo-cruce-der">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="verde" class="col-form-label">Verde:</label>
+                        <input v-model="form.verde" type="number" class="form-control" id="verde">
+                    </div>
+                    <div class="form-group col">
+                        <label for="verde-cruce-izq" class="col-form-label">Verde cruce izq:</label>
+                        <input v-model="form.verde_cruce_izq" type="number" class="form-control" id="verde-cruce-izq">
+                    </div>
+                    <div class="form-group col">
+                        <label for="verde-cruce-der" class="col-form-label">Rojo cruce der:</label>
+                        <input v-model="form.verde_cruce_der" type="number" class="form-control" id="verde-cruce-der">
+                    </div>
+                </div>
+                
+                
+                
+                
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
     </div>
 </template>
@@ -52,11 +168,6 @@
 import { latLng, Icon } from "leaflet";
 
 export default {
-
-        props:{
-            semaforicos: Array,
-        },
-
 
         data(){
             return {
@@ -84,16 +195,27 @@ export default {
                      latLng(11.7102521, -40.4838661),
                  ],
 
-                intersecciones: [],
+                form: new Form({
+                    interseccion:'',
+                    latitud:'',
+                    longitud:'',
+                    ip_equipo:'',
+                    mac_equipo:'',
+                    zoom:'',
+                    observacion:'',
+                }),
+
+                
+
+                interseccion:{},
+
             };
 
         },
 
          mounted() {
 
-            console.log(this.$refs.map)
-
-
+            
             this.$nextTick(() => {
                 console.log('ss')
                 //this.$refs.map.mapObject._onResize();
@@ -107,6 +229,9 @@ export default {
                 iconUrl: require('leaflet/dist/images/marker-icon.png'),
                 shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
             });
+
+            console.log(this.$refs.map)
+
 
             
         },
@@ -126,7 +251,7 @@ export default {
             },
 
             doSomethingOnReady() {
-                this.map = this.$refs.myMap.mapObject
+                this.map = this.$refs.map.mapObject
             },
             zoomUpdated (zoom) {
                 this.zoom = zoom;
@@ -143,10 +268,6 @@ export default {
 
             addMarker(event) {
 
-
-                console.log(event)
-                console.log('evento');
-
                 let newSemaforo = {
                     lat : event.latlng.lat,
                     lng : event.latlng.lng
@@ -154,17 +275,8 @@ export default {
 
                 this.intersecciones.push(newSemaforo)
 
-                //this.semaforos.length = 0;
 
                 this.$refs.map.mapObject.addMarker(newSemaforo)
-
-                //this.semaforos = this.intersecciones
-
-
-
-                //console.log('as')
-                //this.semaforos.push(event.latlng)
-                  
 
             },
 
@@ -185,7 +297,37 @@ export default {
                 }
             },
 
-    
+            openModal(){
+                console.log("abrir")
+                $('#modalSemaforoInfo').modal('show')
             }
+
+    
+        }
 }   
 </script>
+<style>
+    .map-container{
+        margin: auto;
+        padding: 2px;
+        height: 600px;
+        width: 980px;
+    }
+
+    @media (max-width: 400px) {
+        .map-container{
+            margin: auto;
+            padding: 2px;
+            height: 600px;
+            width: 700px;
+         }
+    }
+    @media (max-width: 700px) {
+        .map-container{
+            margin: auto;
+            padding: 2px;
+            height: 600px;
+            width: 980px;
+        }
+    }
+</style>

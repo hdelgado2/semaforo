@@ -13,7 +13,7 @@ class Interseccion extends Model
 
     protected $table = 'intersecciones';
     protected $fillable = [
-        'interseccion', 'io_equipo', 'mac_equipo','latitud','longitud',
+        'interseccion', 'ip_equipo', 'mac_equipo','latitud','longitud',
         'zoom','observacion'
     ];
 

@@ -11,9 +11,11 @@ import VueRouter from 'vue-router'
 import Form from 'vform'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+//import Chart from 'chart.js';
 
 Vue.use(VueRouter)
 Vue.use(VueAxios, axios)
+
 
 window.Form = Form;
 Vue.config.silent = true
