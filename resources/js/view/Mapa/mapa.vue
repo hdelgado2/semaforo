@@ -16,8 +16,9 @@
             <span>Zoom: {{ zoom }}</span>
             <span>Bounds: {{ bounds }}</span>
         </div>
-        <l-map ref="myMap" @ready="doSomethingOnReady()"
+        <l-map  @ready="doSomethingOnReady()"
             v-if="showMap"
+            ref="map"
             :zoom="zoom"
             :center="center"
             :options="mapOptions"
@@ -29,9 +30,10 @@
         >
             <l-tile-layer :url="url" :attribution="attribution">
             </l-tile-layer>
-                <l-marker v-for="semaforo,index in semaforos" 
+                <l-marker v-for="semaforo,index in semaforos"
                         :key="index+1" 
-                        :lat-lng="trafficlightLocation(semaforo)" 
+                        :item="semaforo"
+                        :lat-lng="calculateLatlng(semaforo.lat, semaforo.lng)" 
                         ref="marker">
                          <l-icon
                             :icon-size="dynamicSize"
@@ -51,23 +53,11 @@ import { latLng, Icon } from "leaflet";
 
 export default {
 
-        mounted() {
-            //console.log(this.$refs.myMap.mapObject)
-            this.$nextTick(() => {
-                console.log('ss')
-                //this.$refs.map.mapObject._onResize();
-                //this.$refs.myMap.mapObject.ANY_LEAFLET_MAP_METHOD();
-            });
-
-            delete Icon.Default.prototype._getIconUrl;
-            Icon.Default.mergeOptions({
-                iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-                iconUrl: require('leaflet/dist/images/marker-icon.png'),
-                shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-            });
-
-            console.log('montado');
+        props:{
+            semaforicos: Array,
         },
+
+
         data(){
             return {
                 url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -92,9 +82,33 @@ export default {
                      latLng(11.7102521, -70.4838664),
                      latLng(11.7102521, -70.1838662),
                      latLng(11.7102521, -40.4838661),
-                 ]
+                 ],
+
+                intersecciones: [],
             };
 
+        },
+
+         mounted() {
+
+            console.log(this.$refs.map)
+
+
+            this.$nextTick(() => {
+                console.log('ss')
+                //this.$refs.map.mapObject._onResize();
+                //this.$refs.map.mapObject.ANY_LEAFLET_MAP_METHOD();
+                
+            });
+
+            delete Icon.Default.prototype._getIconUrl;
+            Icon.Default.mergeOptions({
+                iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+                iconUrl: require('leaflet/dist/images/marker-icon.png'),
+                shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+            });
+
+            
         },
 
         computed: {
@@ -106,6 +120,10 @@ export default {
             },
         },
         methods: {
+
+            calculateLatlng(lat, lng){
+               return latLng(lat,lng);
+            },
 
             doSomethingOnReady() {
                 this.map = this.$refs.myMap.mapObject
@@ -129,18 +147,23 @@ export default {
                 console.log(event)
                 console.log('evento');
 
-                if(event.latlng){
-
-                    let newSemaforo = {
-                        lat : event.latlng.lat,
-                        lng : event.latlng.lng
-                    }
-
-                    console.log('as')
-                    //this.semaforos.push({[...newSemaforo...]})
-                    //this.semaforos.push(newSemaforo);  
-                    
+                let newSemaforo = {
+                    lat : event.latlng.lat,
+                    lng : event.latlng.lng
                 }
+
+                this.intersecciones.push(newSemaforo)
+
+                //this.semaforos.length = 0;
+
+                this.$refs.map.mapObject.addMarker(newSemaforo)
+
+                //this.semaforos = this.intersecciones
+
+
+
+                //console.log('as')
+                //this.semaforos.push(event.latlng)
                   
 
             },
