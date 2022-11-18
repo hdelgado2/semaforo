@@ -4,27 +4,27 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+require("./bootstrap");
 
-window.Vue = require('vue');
-import VueRouter from 'vue-router'
-import Form from 'vform'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+window.Vue = require("vue");
+import VueRouter from "vue-router";
+import Form from "vform";
+import axios from "axios";
+import VueAxios from "vue-axios";
 
-Vue.use(VueRouter)
-Vue.use(VueAxios, axios)
+Vue.use(VueRouter);
+Vue.use(VueAxios, axios);
 
 window.Form = Form;
-Vue.config.silent = true
+Vue.config.silent = true;
 Vue.prototype.Routes = window.routes;
 
-import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
-import 'leaflet/dist/leaflet.css';
+import { LMap, LTileLayer, LMarker } from "vue2-leaflet";
+import "leaflet/dist/leaflet.css";
 
-Vue.component('l-map', LMap);
-Vue.component('l-tile-layer', LTileLayer);
-Vue.component('l-marker', LMarker);
+Vue.component("l-map", LMap);
+Vue.component("l-tile-layer", LTileLayer);
+Vue.component("l-marker", LMarker);
 
 //Vue.component('pagination', require('laravel-vue-pagination'));
 /**
@@ -35,24 +35,74 @@ Vue.component('l-marker', LMarker);
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
+Vue.directive("uppercase", {
+    //Directiva para mayúsculas en los inputs
+    bind(el, binding, vnode) {
+        let handlerInput = (e) => {
+            const hasLowercaseRgx = /[a-z]/;
+            if (hasLowercaseRgx.test(e.target.value) === true) {
+                const start = e.target.selectionStart;
+                const end = e.target.selectionEnd;
+                e.target.value = e.target.value.toUpperCase();
+                e.target.setSelectionRange(start, end);
+                e.target.dispatchEvent(new CustomEvent("input"));
+            }
+        };
+        el.addEventListener("input", handlerInput);
+    },
+});
+
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-const Foo = {template:'<p>prueba</p>'}
+const Foo = { template: "<p>prueba</p>" };
 
 let routes = [
-    { path: '/guser', component: require('./view/Usuarios/ListUser.vue').default },
-    { path: '/createuser', component: require('./view/Usuarios/createUser.vue').default },
-    { path: '/edituser/:id', component: require('./view/Usuarios/editUser.vue').default },
-    { path: '/groles', component: require('./view/Roles/ListRoles.vue').default },
-    { path: '/create/groles', component: require('./view/Roles/createRoles.vue').default },
-    { path: '/ginterseccion', component: require('./view/Mapa/mapa.vue').default },
-    { path: '/deleteRoles/:id', component: require('./view/Roles/editRoles.vue').default },
-    { path: '/permisosuser', component: require('./view/Seguridad/Lista.vue').default },
-    { path: '/addpermisos/:id', component: require('./view/Seguridad/agregarPermisos.vue').default },
-    { path: '*', component: Foo }
-
-
-  ]
+    {
+        path: "/guser",
+        component: require("./view/Usuarios/ListUser.vue").default,
+    },
+    {
+        path: "/createuser",
+        component: require("./view/Usuarios/createUser.vue").default,
+    },
+    {
+        path: "/edituser/:id",
+        component: require("./view/Usuarios/editUser.vue").default,
+    },
+    {
+        path: "/groles",
+        component: require("./view/Roles/ListRoles.vue").default,
+    },
+    {
+        path: "/create/groles",
+        component: require("./view/Roles/createRoles.vue").default,
+    },
+    {
+        path: "/ginterseccion",
+        component: require("./view/Mapa/mapa.vue").default,
+    },
+    {
+        path: "/deleteRoles/:id",
+        component: require("./view/Roles/editRoles.vue").default,
+    },
+    {
+        path: "/permisosuser",
+        component: require("./view/Seguridad/Lista.vue").default,
+    },
+    {
+        path: "/addpermisos/:id",
+        component: require("./view/Seguridad/agregarPermisos.vue").default,
+    },
+    {
+        path: "/gtincidencia",
+        component: require("./view/Incidencia/ListIncidencia.vue").default,
+    },
+    {
+        path: "/editincidencia/:id",
+        component: require("./view/Incidencia/editIncidencia.vue").default,
+    },
+    { path: "*", component: Foo },
+];
 
 //Vue.component('example-component', require('./view/Usuarios/ListUser.vue').default);
 
@@ -61,14 +111,12 @@ let routes = [
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
- const router = new VueRouter({
-    mode:'history',
-    routes // short for `routes: routes`
-  })
+const router = new VueRouter({
+    mode: "history",
+    routes, // short for `routes: routes`
+});
 window.router = router;
 const app = new Vue({
-    el: '#app',
+    el: "#app",
     router,
-    
-
 });

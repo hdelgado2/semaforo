@@ -66,5 +66,12 @@ class MenuSeeder extends Seeder
             'ruta_archivo' => 'cClave',
             'activo' => true
         ]);
+
+        Menu::create([
+            'nombre_menu' => 'TIPOS DE INCIDENCIA',
+            'nombre_archivo' => 'TDI',
+            'ruta_archivo' => 'gtincidencia',
+            'activo' => true
+        ]);
     }
 }

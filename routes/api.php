@@ -30,6 +30,14 @@ Route::post('editroles/{role}','RolesController@editrolesP')->name('editrolesP')
 Route::get('permisosLista','PermisosController@index')->name('permisosLista');
 Route::get('menu','PermisosController@menu')->name('menu');
 
+/* API Tipos de incidencia */
+
+Route::get('tiposincidencia', 'TipoIncidenciasController@index')->name('tiposincidencia');
+Route::get('edittipo/{id}', 'TipoIncidenciasController@edit')->name('tipoedit');
+Route::get('deletetipo/{id}', 'TipoIncidenciasController@destroy')->name('tipodelete');
+Route::post('storetipo', 'TipoIncidenciasController@store')->name('storetipo');
+Route::post('updatetipo', 'TipoIncidenciasController@edittipo')->name('updatetipo');
+
 
 
 
