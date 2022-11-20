@@ -29,6 +29,7 @@ Route::get('editarroles/{role}','RolesController@editarRoles')->name('editarRole
 Route::post('editroles/{role}','RolesController@editrolesP')->name('editrolesP');
 Route::get('permisosLista','PermisosController@index')->name('permisosLista');
 Route::get('menu','PermisosController@menu')->name('menu');
+Route::post('addpermisos','PermisosController@addpermisos')->name('addpermisos');
 
 
 

@@ -4,7 +4,7 @@
               <div class="card-header">
                 <h3 class="card-title">Permisos a {{form.nombre}}</h3>
               </div>
-              <form>
+              <form @submit.prevent="Registrar">
                 <div class="card-body">
                   <div class="form-group">
                     <label for="exampleInputEmail1">Login</label>
@@ -26,7 +26,7 @@
                       <!-- Select multiple-->
                       <div class="form-group">
                         <label>Select Multiple</label>
-                        <select multiple="" @change="activar" v-model="selected" class="form-control " >
+                        <select multiple="" @change.prevent="activar" v-model="selected" class="form-control " >
                           <option  :value="index" v-for="(menus,index) in form.permisos"  :key="menus.id">{{menus.modulo}}</option>
                         </select>
                       </div>
@@ -66,6 +66,8 @@ export default {
                 'nombre':"",
                 'login': "",
                 'permisos':[],
+                 'niveles2':['Ver contenido','Crear Contenido','Editar Contenido','Borrar Contenido'],
+
             }),
             menu:{},
             niveles:['Ver contenido','Crear Contenido','Editar Contenido','Borrar Contenido'],
@@ -109,12 +111,16 @@ export default {
               if(findd) return ;
         
             this.menu.map(({id,nombre_menu}) => (id === parseInt($event.target.value)) ? this.form.permisos = [...this.form.permisos,{'id':id,'modulo':nombre_menu,'niveles':[false,false,false,false]}] : '')
-            
         
-          },activar(){
+        },activar(){
             this.ocultar = true;
             
-          }
+        },
+        async Registrar(){
+          await this.form.post('/api/addpermisos',{
+            'niveles':this.niveles
+          })
+        }
 
 
     }
