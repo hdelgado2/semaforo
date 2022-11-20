@@ -58,7 +58,9 @@
     
 </template>
 <script>
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 
+import 'sweetalert2/src/sweetalert2.scss'
 export default {
     data(){
         return{
@@ -117,8 +119,23 @@ export default {
             
         },
         async Registrar(){
-          await this.form.post('/api/addpermisos',{
-            'niveles':this.niveles
+          await this.form.post('/api/addpermisos').then(({data}) => {
+            const {exito,msg} = data
+            if(exito === 200){
+              Swal.fire({
+                    icon  :'success',
+                    title:'Success!',
+                    text  : msg,
+                  }); 
+            }else{
+                Swal.fire({
+                    icon  :'error',
+                    title:'Error!',
+                    text  : msg,
+                  });
+            }
+
+            router.push('/permisosuser');
           })
         }
 

@@ -43,6 +43,9 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+
+import 'sweetalert2/src/sweetalert2.scss'
 export default {
     mounted() {
         this.getRoleEditar()
@@ -74,8 +77,7 @@ export default {
                     Swal.fire({
                     icon  :'success',
                     title:'Success!',
-                    text  : data.msg,
-                    toast : true
+                    text  : data.msg
                   });
                 }
                 

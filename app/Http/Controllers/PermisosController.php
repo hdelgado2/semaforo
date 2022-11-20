@@ -49,7 +49,10 @@ class PermisosController extends Controller
             \DB::commit();
         }catch(\Exception $e){  
             \DB::commit();
-            dd($e);
+            return ['exito' => 500,'msg' => 'Error de permisos'];
         }
+
+        return ['exito' => 200,'msg' => 'Se ha Registrado con exito'];
+
     }
 }

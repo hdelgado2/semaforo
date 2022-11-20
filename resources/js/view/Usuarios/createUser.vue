@@ -62,6 +62,9 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+
+import 'sweetalert2/src/sweetalert2.scss'
    export default {
         mounted(){
             this.getListRoles();
@@ -85,7 +88,6 @@
                     icon  :'success',
                     title:'Success!',
                     text  : data.msg,
-                    toast : true
                   });
 
                   router.push('/guser')
