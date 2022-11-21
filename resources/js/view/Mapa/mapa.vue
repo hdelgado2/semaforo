@@ -1,24 +1,25 @@
 <template>
-    <div>
+
     <div style="height: 800px; width: 100%">
+
         <div style="height: 200px; overflow: auto;">
             <p>First marker is placed at {{ withPopup.lat }}, {{ withPopup.lng }}</p>
             <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
-            <button @click="showLongText">
-                Toggle long popup
-            </button>
+         
             <button @click="showMap = !showMap">
                 Toggle map
             </button>
         </div>
+
         <div class="info" style="height: 5%">
             <span>Center: {{ center }}</span>
             <span>Zoom: {{ zoom }}</span>
             <span>Bounds: {{ bounds }}</span>
         </div>
+
         <div class="map-container" >
             <l-map  @ready="doSomethingOnReady()"
-                v-if="showMap"
+                v-if="isReady"
                 ref="map"
                 :zoom="zoom"
                 :center="center"
@@ -34,18 +35,21 @@
                 <l-marker v-for="semaforo,index in semaforos"
                     :key="index+1" 
                     :item="semaforo"
-                    :lat-lng="calculateLatlng(semaforo.lat, semaforo.lng)" 
-                    ref="marker">
+                    :lat-lng="calculateLatlng(semaforo.latitud, semaforo.longitud)" 
+                    ref="marker"
+                    @click="innerClick(semaforo)">
                     <l-icon
                             :icon-size="dynamicSize"
                             :icon-anchor="dynamicAnchor"
                             :icon-url="iconUrl"
                         />
+                    <l-popup>
+                        <div>
+                            {{ semaforo.interseccion }}
+                        </div>
+                    </l-popup>
                 </l-marker>
             </l-map>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-            Launch demo modal
-        </button>
         </div>
         
 
@@ -158,7 +162,7 @@
             </div>
           </div>
         </div>
-    </div>
+
     </div>
 </template>
 
@@ -184,18 +188,20 @@ export default {
                 mapOptions: {
                     zoomSnap: 0.5
                 },
-                showMap: true,
+                showMap: false,
                 iconSize: 50,
                 popupAnchor: [0, -40],
                 iconUrl: require('leaflet/dist/images/marker-icon.png'),
                 //markers: [],
-                semaforos: [
-                     latLng(11.7102521, -70.4838664),
-                     latLng(11.7102521, -70.1838662),
-                     latLng(11.7102521, -40.4838661),
-                 ],
+                semaforos: [],
+                semaforos2: [
+                      latLng(11.7102521, -70.4838664),
+                      latLng(11.7102521, -70.1838662),
+                      latLng(11.7102521, -40.4838661),
+                ],
 
                 form: new Form({
+                    id:"",
                     interseccion:'',
                     latitud:'',
                     longitud:'',
@@ -215,6 +221,8 @@ export default {
 
          mounted() {
 
+            this.loadIntersecciones();
+
             
             this.$nextTick(() => {
                 console.log('ss')
@@ -231,8 +239,6 @@ export default {
             });
 
             console.log(this.$refs.map)
-
-
             
         },
 
@@ -243,6 +249,9 @@ export default {
             dynamicAnchor() {
                 return [this.iconSize / 2, this.iconSize * 1];
             },
+            isReady(){
+                return this.semaforos.length > 0;
+            }
         },
         methods: {
 
@@ -297,9 +306,43 @@ export default {
                 }
             },
 
-            openModal(){
+            openModal(event){
                 console.log("abrir")
+
+                this.form.reset();
+
+                this.form.latitud = event.latlng.lat;
+                this.form.longitud = event.latlng.lng;
+                
                 $('#modalSemaforoInfo').modal('show')
+            },
+
+
+            innerClick(semaforo) {
+                //this.form.reset();
+                this.form = semaforo;
+                $('#modalSemaforoInfo').modal('show')
+                
+            },
+
+            async loadIntersecciones(){
+                await axios.get('api/intersecciones').then(({data}) => this.semaforos = data );
+                console.log("listo");
+            },
+
+            async guardarInterseccion(){
+           
+                const response = await this.form.post('/api/createUser').then(({data}) => {
+                    Swal.fire({
+                    icon  :'success',
+                    title:'Success!',
+                    text  : data.msg,
+                  });
+
+                  router.push('/guser')
+
+                });
+      
             }
 
     

@@ -31,6 +31,9 @@ Route::get('permisosLista','PermisosController@index')->name('permisosLista');
 Route::get('menu','PermisosController@menu')->name('menu');
 Route::post('addpermisos','PermisosController@addpermisos')->name('addpermisos');
 
+Route::apiResources(['intersecciones' => 'InterseccionController']);
+
+
 
 
 

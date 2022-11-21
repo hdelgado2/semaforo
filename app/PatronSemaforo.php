@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PatronSemaforo extends Model
 {
     use HasFactory;
-    use SoftDeletes;
+    //use SoftDeletes;
 
     protected $table = 'patron_semaforo';
     protected $fillable = [
