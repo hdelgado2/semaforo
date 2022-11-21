@@ -33,21 +33,29 @@
                 <l-tile-layer :url="url" :attribution="attribution">
                 </l-tile-layer>
                 <l-marker v-for="semaforo,index in semaforos"
-                    :key="index+1" 
+                    :key="semaforo.id" 
                     :item="semaforo"
+                    :v-if="semaforo != null"
                     :lat-lng="calculateLatlng(semaforo.latitud, semaforo.longitud)" 
                     ref="marker"
-                    @click="innerClick(semaforo)">
-                    <l-icon
+                    @click="innerClick(semaforo)"
+                    >
+                    <l-icon :class="semaforo.id"
                             :icon-size="dynamicSize"
                             :icon-anchor="dynamicAnchor"
                             :icon-url="iconUrl"
+                            
                         />
-                    <l-popup>
-                        <div>
+                        <l-tooltip :options="{ permanent: true, interactive: true }">
+                            <div>
+                                {{ semaforo.interseccion }}
+                            </div>
+                        </l-tooltip>
+                    <!-- <l-popup :ref="'r'+semaforo.id">
+                        <p>
                             {{ semaforo.interseccion }}
-                        </div>
-                    </l-popup>
+                        </p>
+                    </l-popup> -->
                 </l-marker>
             </l-map>
         </div>
@@ -211,6 +219,7 @@ export default {
                     observacion:'',
                 }),
 
+                isReady : false,
                 
 
                 interseccion:{},
@@ -317,6 +326,17 @@ export default {
                 $('#modalSemaforoInfo').modal('show')
             },
 
+            // isHovering(id, accion){
+
+            //     let icono = this.$refs['r'+id];
+
+            //     if(accion != false){
+            //       //  icono[0].$el.click();
+            //         //icono[0].$el.style.display = 'block'
+            //     }
+
+            //     //else icono[0].$el.style.display = 'none'
+            // },
 
             innerClick(semaforo) {
                 //this.form.reset();
@@ -328,6 +348,7 @@ export default {
             async loadIntersecciones(){
                 await axios.get('api/intersecciones').then(({data}) => this.semaforos = data );
                 console.log("listo");
+                if( this.semaforos.length > 0) this.isReady = true;
             },
 
             async guardarInterseccion(){
@@ -350,6 +371,10 @@ export default {
 }   
 </script>
 <style>
+
+    .popup:hover{
+        display: block;
+    }
     .map-container{
         margin: auto;
         padding: 2px;
