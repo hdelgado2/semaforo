@@ -24,12 +24,18 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.2.1",
+        "@fortawesome/fontawesome-svg-core": "^6.2.1",
+        "@fortawesome/free-brands-svg-icons": "^6.2.1",
+        "@fortawesome/free-regular-svg-icons": "^6.2.1",
+        "@fortawesome/free-solid-svg-icons": "^6.2.1",
         "chart.js": "^2.9.4",
         "leaflet": "^1.9.2",
         "sweetalert2": "^11.6.10",
         "vform": "^2.1.2",
         "vue-axios": "^3.5.2",
         "vue-router": "^2.8.1",
+        "vue-select": "^3.20.0",
         "vue2-leaflet": "^2.7.1"
     }
 }

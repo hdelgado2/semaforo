@@ -63,7 +63,7 @@
 
         <!-- Modal -->
         <div class="modal fade" id="modalSemaforoInfo" tabindex="-1" role="dialog" aria-labelledby="modalSemaforoInfoLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="modalSemaforoInfoLabel">Modal title</h5>
@@ -73,23 +73,22 @@
               </div>
               <div class="modal-body">
                 <div class="row">
-                    <div class="form-group col">
+                    <div class="form-group col-8">
                         <label for="interseccion" class="col-form-label">Nombre intersección:</label>
                         <input v-model="form.interseccion" type="text" class="form-control" id="interseccion">
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col">
+                    <div class="form-group col-2">
                         <label for="latitud" class="col-form-label">Latitud:</label>
                         <input v-model="form.latitud" type="text" class="form-control" id="latitud">
                     </div>
-                    <div class="form-group col">
+                    <div class="form-group col-2">
                         <label for="longitud" class="col-form-label">Longitud:</label>
                         <input v-model="form.longitud" type="text" class="form-control" id="longitud">
                     </div>
                 </div>
+
                 <div class="row">
+                    
                     <div class="form-group col">
                         <label for="ip-equipo" class="col-form-label">IP equipo:</label>
                         <input v-model="form.ip_equipo" type="text" class="form-control" id="ip-equipo">
@@ -102,62 +101,133 @@
                         <label for="zoom" class="col-form-label">Zoom:</label>
                         <input v-model="form.zoom" type="number" class="form-control" id="zoom">
                     </div>
-                </div>
-                <div class="row">
                     <div class="form-group col">
                         <label for="observacion" class="col-form-label">Observación:</label>
                         <input v-model="form.observacion" type="text" class="form-control" id="observacion">
                     </div>
                 </div>
 
-                <hr/>
+                <div class="row">
+                    <div class="col form-group">
+                        
+                    </div>
+                     <div class="form-group col">
+                        
+                    </div>
+                </div>
 
                 <h5>Cruces</h5>
 
                 <div class="row">
+
+                    <div class="form-group col">
+                        <label>Sentido</label>
+                        <v-select 
+                            v-model="form_cruces.sentido" 
+                            :options="sentidos"
+                             >
+                            <has-error :form="form" field="sentido"></has-error>    
+                        </v-select>
+
+                        <label for="sentido-nombre" class="col-form-label">Dirección :</label>
+                        <input v-model="form_cruces.sentido_nombre" type="text" @input="toUpperCaseText()" class="form-control" id="sentido-nombre">
+
+                        <button :disabled="disabledAñadir" @click="añadir" type="button" class="btn btn-info" >Añadir</button>
+                    </div>
+
                     <div class="form-group col">
                         <label for="rojo" class="col-form-label">Rojo:</label>
-                        <input v-model="form.rojo" type="number" class="form-control" id="rojo">
-                    </div>
-                    <div class="form-group col">
-                        <label for="rojo-cruce-izq" class="col-form-label">Rojo cruce izq:</label>
-                        <input v-model="form.rojo_cruce_izq" type="number" class="form-control" id="rojo-cruce-izq">
-                    </div>
-                    <div class="form-group col">
-                        <label for="rojo-cruce-der" class="col-form-label">Rojo cruce der:</label>
-                        <input v-model="form.rojo_cruce_der" type="number" class="form-control" id="rojo-cruce-der">
-                    </div>
-                </div>
+                        <input v-model="form_cruces.rojo" type="number" class="form-control" id="rojo">
 
-                <div class="row">
+                        <label for="rojo-cruce-izq" class="col-form-label">Rojo cruce izq:</label>
+                        <input v-model="form_cruces.rojo_cruce_izq" type="number" class="form-control" id="rojo-cruce-izq">
+
+                        <label for="rojo-cruce-der" class="col-form-label">Rojo cruce der:</label>
+                        <input v-model="form_cruces.rojo_cruce_der" type="number" class="form-control" id="rojo-cruce-der">
+                    </div>
+
                     <div class="form-group col">
                         <label for="amarillo" class="col-form-label">Amarillo:</label>
-                        <input v-model="form.amarillo" type="number" class="form-control" id="amarillo">
-                    </div>
-                    <div class="form-group col">
-                        <label for="amarillo-cruce-izq" class="col-form-label">Amarillo cruce izq:</label>
-                        <input v-model="form.amarillo_cruce_izq" type="number" class="form-control" id="amarillo-cruce-izq">
-                    </div>
-                    <div class="form-group col">
-                        <label for="amarillo-cruce-der" class="col-form-label">Amarillo cruce der:</label>
-                        <input v-model="form.amarillo_cruce_der" type="number" class="form-control" id="amarillo-cruce-der">
-                    </div>
-                </div>
+                        <input v-model="form_cruces.amarillo" type="number" class="form-control" id="amarillo">
 
-                <div class="row">
+                        <label for="amarillo-cruce-izq" class="col-form-label">Amarillo cruce izq:</label>
+                        <input v-model="form_cruces.amarillo_cruce_izq" type="number" class="form-control" id="amarillo-cruce-izq">
+
+                        <label for="amarillo-cruce-der" class="col-form-label">Amarillo cruce der:</label>
+                        <input v-model="form_cruces.amarillo_cruce_der" type="number" class="form-control" id="amarillo-cruce-der">
+                    </div>
+
                     <div class="form-group col">
                         <label for="verde" class="col-form-label">Verde:</label>
-                        <input v-model="form.verde" type="number" class="form-control" id="verde">
-                    </div>
-                    <div class="form-group col">
+                        <input v-model="form_cruces.verde" type="number" class="form-control" id="verde">
+
                         <label for="verde-cruce-izq" class="col-form-label">Verde cruce izq:</label>
-                        <input v-model="form.verde_cruce_izq" type="number" class="form-control" id="verde-cruce-izq">
+                        <input v-model="form_cruces.verde_cruce_izq" type="number" class="form-control" id="verde-cruce-izq">
+
+                        <label for="verde-cruce-der" class="col-form-label">Verde cruce der:</label>
+                        <input v-model="form_cruces.verde_cruce_der" type="number" class="form-control" id="verde-cruce-der">
                     </div>
-                    <div class="form-group col">
-                        <label for="verde-cruce-der" class="col-form-label">Rojo cruce der:</label>
-                        <input v-model="form.verde_cruce_der" type="number" class="form-control" id="verde-cruce-der">
-                    </div>
+        
                 </div>
+
+
+                <table class="table table-striped">
+                            <thead>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Dirección</th>
+                                <th scope="col">Rojo</th>
+                                <th scope="col">Rojo cruce izq</th>
+                                <th scope="col">Rojo cruce der</th>
+                                <th scope="col">Amarillo</th>
+                                <th scope="col">Amarillo cruce izq</th>
+                                <th scope="col">Amarillo cruce der</th>
+                                <th scope="col">Verde</th>
+                                <th scope="col">Verde cruce izq</th>
+                                <th scope="col">Verde cruce der</th>
+                                <th scope="col">Acciones</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr  v-for="s, index in form.sentidos" :key="index+1">
+                                <td>{{ s.id }}</td>
+                                <td>{{ s.direccion }}</td>
+                                <td>{{ s.rojo }}</td>
+                                <td>{{ s.rojo_cruce_izq }}</td>
+                                <td>{{ s.rojo_cruce_der }}</td>
+                                <td>{{ s.amarillo }}</td>
+                                <td>{{ s.amarillo_cruce_izq }}</td>
+                                <td>{{ s.amarillo_cruce_der }}</td>
+                                <td>{{ s.verde }}</td>
+                                <td>{{ s.verde_cruce_izq }}</td>
+                                <td>{{ s.verde_cruce_der }}</td>
+                                <td class="text-center">
+                                  <a href="#" @click="deleteDireccion(s.id)">
+                                    <i class="fa-solid fa-trash"></i>
+                                  </a>
+                                </td>
+                              </tr>
+                              <tr  v-for="d, index in direcciones_arr" :key="index+1">
+                                <th scope="row">1</th>
+                                <td>{{ index+1 }}</td>
+                                <td>{{ d.direccion }}</td>
+                                <td>{{ d.rojo }}</td>
+                                <td>{{ d.rojo_cruce_izq }}</td>
+                                <td>{{ d.rojo_cruce_der }}</td>
+                                <td>{{ d.amarillo }}</td>
+                                <td>{{ d.amarillo_cruce_izq }}</td>
+                                <td>{{ d.amarillo_cruce_der }}</td>
+                                <td>{{ d.verde }}</td>
+                                <td>{{ d.verde_cruce_izq }}</td>
+                                <td>{{ d.verde_cruce_der }}</td>
+                                <td class="text-center">
+                                  <a href="#" @click="deleteDireccionIndex(index)">
+                                    <i class="fa-solid fa-trash red"></i>
+                                  </a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
                 
                 
                 
@@ -202,11 +272,11 @@ export default {
                 iconUrl: require('leaflet/dist/images/marker-icon.png'),
                 //markers: [],
                 semaforos: [],
-                semaforos2: [
-                      latLng(11.7102521, -70.4838664),
-                      latLng(11.7102521, -70.1838662),
-                      latLng(11.7102521, -40.4838661),
-                ],
+                // semaforos2: [
+                //       latLng(11.7102521, -70.4838664),
+                //       latLng(11.7102521, -70.1838662),
+                //       latLng(11.7102521, -40.4838661),
+                // ],
 
                 form: new Form({
                     id:"",
@@ -217,13 +287,32 @@ export default {
                     mac_equipo:'',
                     zoom:'',
                     observacion:'',
+                    sentidos:[]
+                }),
+
+                form_cruces: new Form({
+                    sentido:"",
+                    sentido_nombre:'',
+                    rojo:0,
+                    rojo_cruce_izq:0,
+                    rojo_cruce_der:0,
+                    amarillo:0,
+                    amarillo_cruce_izq:0,
+                    amarillo_cruce_der:0,
+                    verde:0,
+                    verde_cruce_izq:0,
+                    verde_cruce_der:0,
                 }),
 
                 isReady : false,
-                
 
                 interseccion:{},
 
+                sentidos:['NORTE','SUR','OESTE','ESTE'],
+                // sentido:'',
+                // sentido_nombre:'',
+
+                direcciones_arr:[]
             };
 
         },
@@ -252,15 +341,26 @@ export default {
         },
 
         computed: {
+
             dynamicSize() {
                 return [this.iconSize, this.iconSize * 1];
             },
+
             dynamicAnchor() {
                 return [this.iconSize / 2, this.iconSize * 1];
             },
+
             isReady(){
                 return this.semaforos.length > 0;
-            }
+            },
+
+            disabledAñadir(){
+                if( this.form_cruces.sentido_nombre && this.form_cruces.sentido ){
+                        return false;
+                }
+
+                return true;
+            },
         },
         methods: {
 
@@ -292,16 +392,11 @@ export default {
                 }
 
                 this.intersecciones.push(newSemaforo)
-
-
                 this.$refs.map.mapObject.addMarker(newSemaforo)
-
             },
 
             trafficlightLocation(location) {
                 return location;
-                //const trafficlightOnTheMap = [].concat(location).reverse();
-                //return latLng(trafficlightOnTheMap);
             },
 
             trafficlightIcon(status) {
@@ -316,15 +411,53 @@ export default {
             },
 
             openModal(event){
-                console.log("abrir")
 
-                this.form.reset();
-
+                //this.form.reset();
+                this.form.interseccion = ''
+                this.form.latitud = ''
+                this.form.longitud = ''
+                this.form.ip_equipo =''
+                this.form.mac_equipo = ''
+                this.form.zoom = ''
+                this.form.observacion = ''
+                this.form.sentidos = []
                 this.form.latitud = event.latlng.lat;
                 this.form.longitud = event.latlng.lng;
                 
                 $('#modalSemaforoInfo').modal('show')
             },
+
+            editModal(semaforo){
+
+             //this.form.fill(presupuesto);
+                this.form.interseccion = ''
+                this.form.latitud = ''
+                this.form.longitud = ''
+                this.form.ip_equipo =''
+                this.form.mac_equipo = ''
+                this.form.zoom = ''
+                this.form.observacion = ''
+                this.form.sentidos = []
+                this.form.latitud = event.latlng.lat;
+                this.form.longitud = event.latlng.lng;
+
+                this.form = semaforo;
+            
+                semaforo.patrones.forEach( (el) => {
+
+                if( el.id != null ){
+
+                  this.form.sentidos.push(el)
+
+                }else{
+
+                  this.direcciones_arr.push(el)
+
+                }
+             })
+
+             $('#modalSemaforoInfo').modal('show')
+          },
 
             // isHovering(id, accion){
 
@@ -341,8 +474,58 @@ export default {
             innerClick(semaforo) {
                 //this.form.reset();
                 this.form = semaforo;
+                this.form.sentidos = semaforo.patrones;
                 $('#modalSemaforoInfo').modal('show')
                 
+            },
+
+            toUpperCaseText(){
+                console.log('upper')
+                this.form_cruces.sentido_nombre = this.form_cruces.sentido_nombre.toUpperCase(); 
+            },
+
+            patronExiste(id) {
+                return this.form.sentidos.some(el => el.pieza.id === id);
+            },
+
+            patronArrExiste(interseccion) {
+                return this.direcciones_arr.some(el => el.interseccion === interseccion);
+            },
+
+            deleteDireccionBD(id){
+                this.form.sentidos = this.form.sentidos.filter(sentido => sentido.id != id);
+            },
+
+            deleteDireccionArr(index){
+                this.direcciones_arr = this.direcciones_arr.filter(direccion => direccion.interseccion != index );
+            },
+
+            añadirPatron(){
+
+                if( !this.patronExiste(this.form_cruces.interseccion) ){
+
+                    this.direcciones_arr.push(this.form_cruces);
+                    this.form_cruces.sentido = "";
+                    this.form_cruces.sentido_nombre = '';
+                    this.form_cruces.rojo = 0;
+                    this.form_cruces.rojo_cruce_izq = 0;
+                    this.form_cruces.rojo_cruce_der = 0;
+                    this.form_cruces.amarillo = 0;
+                    this.form_cruces.amarillo_cruce_izq = 0;
+                    this.form_cruces.amarillo_cruce_der = 0;
+                    this.form_cruces.verde = 0;
+                    this.form_cruces.verde_cruce_izq = 0;
+                    this.form_cruces.verde_cruce_der = 0;
+                    //this.form_cruces. = {}
+                    //this.form.cantidad = ''
+                    //this.form.precio_unitario = ''
+                    //this.form.descuento = ''
+                
+                }else{
+
+                    swal.fire("Error!", "La pieza ya se encuentra incluida en el contrato.", "warning")
+                }
+              
             },
 
             async loadIntersecciones(){

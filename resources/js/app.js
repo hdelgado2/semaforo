@@ -34,6 +34,11 @@ Vue.component('l-marker', LMarker);
 Vue.component('l-tooltip', LTooltip);
 Vue.component('l-popup', LPopup);
 
+import Vue from "vue";
+import vSelect from "vue-select";
+
+Vue.component("v-select", vSelect);
+import "vue-select/dist/vue-select.css";
 //Vue.component('pagination', require('laravel-vue-pagination'));
 /**
  * The following block of code may be used to automatically register your
