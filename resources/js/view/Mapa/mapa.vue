@@ -235,7 +235,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" @click="guardarInterseccion" class="btn btn-primary">Save changes</button>
               </div>
             </div>
           </div>
@@ -248,6 +248,9 @@
 <script>
 
 import { latLng, Icon } from "leaflet";
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+
+import 'sweetalert2/src/sweetalert2.scss'
 
 export default {
 
@@ -523,7 +526,7 @@ export default {
                 
                 }else{
 
-                    swal.fire("Error!", "La pieza ya se encuentra incluida en el contrato.", "warning")
+                    Swal.fire("Error!", "La pieza ya se encuentra incluida en el contrato.", "warning")
                 }
               
             },
@@ -536,17 +539,43 @@ export default {
 
             async guardarInterseccion(){
            
-                const response = await this.form.post('/api/createUser').then(({data}) => {
-                    Swal.fire({
-                    icon  :'success',
-                    title:'Success!',
-                    text  : data.msg,
-                  });
+                const response = await this.form.post('/api/intersecciones').then(({data}) => {
+                   
+                    if( data.exito ){
 
-                  router.push('/guser')
+                         Swal.fire({
+                            title: 'Hecho!',
+                            text: data.msg,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
+                        }).then((result) => {
+                            
+                            if( this.direcciones_arr.length > 0 )
+                                guardarPatrones();
+                        
+                        })
+                    }
 
                 });
       
+            },
+
+            async guardarPatrones(){
+
+
+                const response = await this.form_cruces.post('api/intersecciones/setPatrones').then(({data}) => {
+                     
+                     if( data.exito ){
+                        Swal.fire({
+                            icon  :'success',
+                            title:'Success!',
+                            text  : data.msg,
+                        });
+                     }
+                })
             }
 
     
