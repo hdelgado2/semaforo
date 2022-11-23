@@ -66,7 +66,7 @@
           <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="modalSemaforoInfoLabel">Modal title</h5>
+                <h5 class="modal-title" id="modalSemaforoInfoLabel">Semaforo {{ this.form.interseccion }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -121,7 +121,7 @@
                 <div class="row">
 
                     <div class="form-group col">
-                        <label>Sentido</label>
+                        <label class="mt-2">Sentido</label>
                         <v-select 
                             v-model="form_cruces.sentido" 
                             :options="sentidos"
@@ -132,7 +132,7 @@
                         <label for="sentido-nombre" class="col-form-label">Dirección :</label>
                         <input v-model="form_cruces.sentido_nombre" type="text" @input="toUpperCaseText()" class="form-control" id="sentido-nombre">
 
-                        <button :disabled="disabledAñadir" @click="añadir" type="button" class="btn btn-info" >Añadir</button>
+                        <button :disabled="disabledAñadir" @click="añadirPatron()" type="button" class="btn btn-outline-info mt-4 btn-lg btn-block" >Añadir patrón</button>
                     </div>
 
                     <div class="form-group col">
@@ -208,18 +208,17 @@
                                 </td>
                               </tr>
                               <tr  v-for="d, index in direcciones_arr" :key="index+1">
-                                <th scope="row">1</th>
                                 <td>{{ index+1 }}</td>
                                 <td>{{ d.direccion }}</td>
-                                <td>{{ d.rojo }}</td>
-                                <td>{{ d.rojo_cruce_izq }}</td>
-                                <td>{{ d.rojo_cruce_der }}</td>
-                                <td>{{ d.amarillo }}</td>
-                                <td>{{ d.amarillo_cruce_izq }}</td>
-                                <td>{{ d.amarillo_cruce_der }}</td>
-                                <td>{{ d.verde }}</td>
-                                <td>{{ d.verde_cruce_izq }}</td>
-                                <td>{{ d.verde_cruce_der }}</td>
+                                <td style="color: red;">{{ d.rojo }}</td>
+                                <td style="color: red;">{{ d.rojo_cruce_izq }}</td>
+                                <td style="color: red;">{{ d.rojo_cruce_der }}</td>
+                                <td style="color: orange;">{{ d.amarillo }}</td>
+                                <td style="color: orange;">{{ d.amarillo_cruce_izq }}</td>
+                                <td style="color: orange;">{{ d.amarillo_cruce_der }}</td>
+                                <td style="color: green;">{{ d.verde }}</td>
+                                <td style="color: green;">{{ d.verde_cruce_izq }}</td>
+                                <td style="color: green;">{{ d.verde_cruce_der }}</td>
                                 <td class="text-center">
                                   <a href="#" @click="deleteDireccionIndex(index)">
                                     <i class="fa-solid fa-trash red"></i>
@@ -235,7 +234,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" @click="guardarInterseccion" class="btn btn-primary">Save changes</button>
+                <button type="button" @click="guardarInterseccion" class="btn btn-primary">Guardar intersección</button>
               </div>
             </div>
           </div>
@@ -307,6 +306,11 @@ export default {
                     verde_cruce_der:0,
                 }),
 
+                form_patrones: new Form({
+                    intersecciones:[],
+                    intersecciones_id:''
+                }),
+
                 isReady : false,
 
                 interseccion:{},
@@ -366,6 +370,10 @@ export default {
             },
         },
         methods: {
+
+            reloadPage() {
+                 window.location.reload();
+            },
 
             calculateLatlng(lat, lng){
                return latLng(lat,lng);
@@ -487,8 +495,12 @@ export default {
                 this.form_cruces.sentido_nombre = this.form_cruces.sentido_nombre.toUpperCase(); 
             },
 
-            patronExiste(id) {
-                return this.form.sentidos.some(el => el.pieza.id === id);
+            patronExiste(interseccion) {
+                console.log(interseccion)
+                if( this.direcciones_arr.length > 0)
+                    return this.direcciones_arr.some(el => el.sentido_nombre  === interseccion);
+
+                return false;
             },
 
             patronArrExiste(interseccion) {
@@ -505,9 +517,13 @@ export default {
 
             añadirPatron(){
 
-                if( !this.patronExiste(this.form_cruces.interseccion) ){
+                console.log("añadir patron")
+                if( !this.patronExiste(this.form_cruces.sentido_nombre) ){
 
-                    this.direcciones_arr.push(this.form_cruces);
+                    //this.direcciones_arr.push(this.form_cruces);
+                    this.direcciones_arr.push({ direccion: this.form_cruces.sentido + ' ' + this.form_cruces.sentido_nombre, rojo: this.form_cruces.rojo,
+                    rojo_cruce_izq: this.form_cruces.rojo_cruce_izq, rojo_cruce_der: this.form_cruces.rojo_cruce_der, amarillo: this.form_cruces.amarillo, amarillo_cruce_izq: this.form_cruces.amarillo_cruce_izq,
+                    amarillo_cruce_der: this.form_cruces.amarillo_cruce_der, verde: this.form_cruces.verde, verde_cruce_izq: this.form_cruces.verde_cruce_izq, verde_cruce_der: this.form_cruces.verde_cruce_der });
                     this.form_cruces.sentido = "";
                     this.form_cruces.sentido_nombre = '';
                     this.form_cruces.rojo = 0;
@@ -538,10 +554,12 @@ export default {
             },
 
             async guardarInterseccion(){
-           
-                const response = await this.form.post('/api/intersecciones').then(({data}) => {
+                console.log(this.form)
+                const response = axios.post('/api/intersecciones', this.form).then(({data})=>{
+                //const response = await this.form.post('/api/intersecciones').then(({data}) => {
                    
                     if( data.exito ){
+                        console.log(data)
 
                          Swal.fire({
                             title: 'Hecho!',
@@ -552,9 +570,17 @@ export default {
                             confirmButtonText: 'Ok'
 
                         }).then((result) => {
+
+                            $('#modalSemaforoInfo').modal('hide')
                             
-                            if( this.direcciones_arr.length > 0 )
-                                guardarPatrones();
+                            if( this.direcciones_arr.length > 0 ){
+                                this.guardarPatrones();
+                            }
+
+                            else{
+                                this.reloadPage()
+                            }
+                                
                         
                         })
                     }
@@ -565,8 +591,12 @@ export default {
 
             async guardarPatrones(){
 
+                this.form_patrones.intersecciones = this.direcciones_arr;
+                this.form_patrones.intersecciones_id = this.form.id;
+                this.direcciones_arr = [];
 
-                const response = await this.form_cruces.post('api/intersecciones/setPatrones').then(({data}) => {
+                const response = axios.post('api/intersecciones/setPatrones', this.form_patrones).then(({data})=>{
+                //const response = await this.form_patrones.post('api/intersecciones/setPatrones').then(({data}) => {
                      
                      if( data.exito ){
                         Swal.fire({
@@ -574,6 +604,8 @@ export default {
                             title:'Success!',
                             text  : data.msg,
                         });
+
+                        //this.reloadPage()
                      }
                 })
             }
