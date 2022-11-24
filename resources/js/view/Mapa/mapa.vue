@@ -1,8 +1,8 @@
 <template>
 
-    <div style="height: 800px; width: 100%">
+    <div style="height: 100%; width: 100%">
 
-        <div style="height: 200px; overflow: auto;">
+     <!--    <div style="height: 200px; overflow: auto;">
             <p>First marker is placed at {{ withPopup.lat }}, {{ withPopup.lng }}</p>
             <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
          
@@ -15,9 +15,9 @@
             <span>Center: {{ center }}</span>
             <span>Zoom: {{ zoom }}</span>
             <span>Bounds: {{ bounds }}</span>
-        </div>
+        </div> -->
 
-        <div class="map-container" >
+        <div class="map-container">
             <l-map  @ready="doSomethingOnReady()"
                 v-if="isReady"
                 ref="map"
@@ -32,6 +32,7 @@
             >
                 <l-tile-layer :url="url" :attribution="attribution">
                 </l-tile-layer>
+
                 <l-marker v-for="semaforo,index in semaforos"
                     :key="semaforo.id" 
                     :item="semaforo"
@@ -51,11 +52,7 @@
                                 {{ semaforo.interseccion }}
                             </div>
                         </l-tooltip>
-                    <!-- <l-popup :ref="'r'+semaforo.id">
-                        <p>
-                            {{ semaforo.interseccion }}
-                        </p>
-                    </l-popup> -->
+
                 </l-marker>
             </l-map>
         </div>
@@ -107,15 +104,7 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col form-group">
-                        
-                    </div>
-                     <div class="form-group col">
-                        
-                    </div>
-                </div>
-
+                <hr>
                 <h5>Cruces</h5>
 
                 <div class="row">
@@ -189,7 +178,7 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr  v-for="s, index in form.sentidos" :key="index+1">
+                              <!-- <tr  v-for="s, index in form.sentidos" :key="index+1">
                                 <td>{{ s.id }}</td>
                                 <td>{{ s.direccion }}</td>
                                 <td>{{ s.rojo }}</td>
@@ -202,14 +191,15 @@
                                 <td>{{ s.verde_cruce_izq }}</td>
                                 <td>{{ s.verde_cruce_der }}</td>
                                 <td class="text-center">
-                                  <a href="#" @click="deleteDireccion(s.id)">
+                                  <a href="#" @click="deleteDireccionArr(index)">
                                     <i class="fa-solid fa-trash"></i>
                                   </a>
                                 </td>
-                              </tr>
+                              </tr> -->
                               <tr  v-for="d, index in direcciones_arr" :key="index+1">
                                 <td>{{ index+1 }}</td>
-                                <td>{{ d.direccion }}</td>
+                                <td>{{ d.direccion ?? d.sentido_nombre  }}</td>
+                                <td>{{ d.sentido }}</td>
                                 <td style="color: red;">{{ d.rojo }}</td>
                                 <td style="color: red;">{{ d.rojo_cruce_izq }}</td>
                                 <td style="color: red;">{{ d.rojo_cruce_der }}</td>
@@ -220,7 +210,7 @@
                                 <td style="color: green;">{{ d.verde_cruce_izq }}</td>
                                 <td style="color: green;">{{ d.verde_cruce_der }}</td>
                                 <td class="text-center">
-                                  <a href="#" @click="deleteDireccionIndex(index)">
+                                  <a href="#" @click="deleteDireccionArr(index)">
                                     <i class="fa-solid fa-trash red"></i>
                                   </a>
                                 </td>
@@ -233,7 +223,7 @@
                 
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 <button type="button" @click="guardarInterseccion" class="btn btn-primary">Guardar intersección</button>
               </div>
             </div>
@@ -272,13 +262,7 @@ export default {
                 iconSize: 50,
                 popupAnchor: [0, -40],
                 iconUrl: require('leaflet/dist/images/marker-icon.png'),
-                //markers: [],
                 semaforos: [],
-                // semaforos2: [
-                //       latLng(11.7102521, -70.4838664),
-                //       latLng(11.7102521, -70.1838662),
-                //       latLng(11.7102521, -40.4838661),
-                // ],
 
                 form: new Form({
                     id:"",
@@ -312,6 +296,7 @@ export default {
                 }),
 
                 isReady : false,
+                editMode : false,
 
                 interseccion:{},
 
@@ -422,7 +407,7 @@ export default {
             },
 
             openModal(event){
-
+                console.log('openModal')
                 //this.form.reset();
                 this.form.interseccion = ''
                 this.form.latitud = ''
@@ -440,7 +425,8 @@ export default {
 
             editModal(semaforo){
 
-             //this.form.fill(presupuesto);
+                console.log('editar');
+                this.editMode = true;
                 this.form.interseccion = ''
                 this.form.latitud = ''
                 this.form.longitud = ''
@@ -457,12 +443,13 @@ export default {
                 semaforo.patrones.forEach( (el) => {
 
                 if( el.id != null ){
-
-                  this.form.sentidos.push(el)
+                    console.log('id')
+                    this.direcciones_arr.push(el)
+                   // this.form.sentidos.push(el)
 
                 }else{
-
-                  this.direcciones_arr.push(el)
+                    console.log('!id')
+                    this.direcciones_arr.push(el)
 
                 }
              })
@@ -484,8 +471,25 @@ export default {
 
             innerClick(semaforo) {
                 //this.form.reset();
+                console.log('innerClick')
                 this.form = semaforo;
+                this.form.sentidos = []; 
+                this.direcciones_arr = [];
                 this.form.sentidos = semaforo.patrones;
+
+                semaforo.patrones.forEach( (el) => {
+
+                    if( el.id != null ){
+                        console.log('id')
+                        this.direcciones_arr.push(el)
+                        // this.form.sentidos.push(el)
+
+                    }else{
+                        console.log('!id')
+                        this.direcciones_arr.push(el)
+                    }
+                })
+
                 $('#modalSemaforoInfo').modal('show')
                 
             },
@@ -495,15 +499,14 @@ export default {
                 this.form_cruces.sentido_nombre = this.form_cruces.sentido_nombre.toUpperCase(); 
             },
 
-            patronExiste(interseccion) {
-                console.log(interseccion)
+            patronExiste(sentido) {
                 if( this.direcciones_arr.length > 0)
-                    return this.direcciones_arr.some(el => el.sentido_nombre  === interseccion);
+                    return this.direcciones_arr.some(el => el.sentido  === sentido);
 
                 return false;
             },
 
-            patronArrExiste(interseccion) {
+            patronArrExiste(sentido) {
                 return this.direcciones_arr.some(el => el.interseccion === interseccion);
             },
 
@@ -512,18 +515,41 @@ export default {
             },
 
             deleteDireccionArr(index){
-                this.direcciones_arr = this.direcciones_arr.filter(direccion => direccion.interseccion != index );
+                console.log(index)
+
+                Swal.fire({
+                    title: 'Eliminar?',
+                    text: "No podra revertir esta acción!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, eliminar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        this.direcciones_arr = this.direcciones_arr.filter( (direccion, i )=> i != index);
+
+                        Swal.fire(
+                            'Hecho!',
+                            'Patron eliminado.',
+                            'success'
+                        )
+                    }
+                })
+                
             },
 
             añadirPatron(){
 
-                console.log("añadir patron")
-                if( !this.patronExiste(this.form_cruces.sentido_nombre) ){
+                //console.log("añadir patron")
+                if( !this.patronExiste(this.form_cruces.sentido) ){
 
                     //this.direcciones_arr.push(this.form_cruces);
-                    this.direcciones_arr.push({ direccion: this.form_cruces.sentido + ' ' + this.form_cruces.sentido_nombre, rojo: this.form_cruces.rojo,
+                    this.direcciones_arr.push({ sentido: this.form_cruces.sentido, direccion: this.form_cruces.sentido_nombre, rojo: this.form_cruces.rojo,
                     rojo_cruce_izq: this.form_cruces.rojo_cruce_izq, rojo_cruce_der: this.form_cruces.rojo_cruce_der, amarillo: this.form_cruces.amarillo, amarillo_cruce_izq: this.form_cruces.amarillo_cruce_izq,
                     amarillo_cruce_der: this.form_cruces.amarillo_cruce_der, verde: this.form_cruces.verde, verde_cruce_izq: this.form_cruces.verde_cruce_izq, verde_cruce_der: this.form_cruces.verde_cruce_der });
+
                     this.form_cruces.sentido = "";
                     this.form_cruces.sentido_nombre = '';
                     this.form_cruces.rojo = 0;
@@ -542,7 +568,7 @@ export default {
                 
                 }else{
 
-                    Swal.fire("Error!", "La pieza ya se encuentra incluida en el contrato.", "warning")
+                    Swal.fire("Oh no!", "Ya se encuentra añadido un patron en ese sentido.", "warning")
                 }
               
             },
@@ -622,8 +648,8 @@ export default {
     .map-container{
         margin: auto;
         padding: 2px;
-        height: 600px;
-        width: 980px;
+        height: 828px;
+        width: 1333px;
     }
 
     @media (max-width: 400px) {

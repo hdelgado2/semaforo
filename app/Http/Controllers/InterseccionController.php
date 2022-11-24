@@ -11,7 +11,7 @@ class InterseccionController extends Controller
 {
     public function index()
     {
-        return Interseccion::with('patrones')->get();
+        return Interseccion::has('patrones')->with('patrones')->get();
     }
 
     public function store(Request $request)
@@ -109,6 +109,7 @@ class InterseccionController extends Controller
                     'verde' => $patron['verde'] ?? 0,
                     'verde_cruce_izq' => $patron['verde_cruce_izq'] ?? 0,
                     'verde_cruce_der' => $patron['verde_cruce_der'] ?? 0,
+                    'sentido' => $patron['sentido']
                 ]);
                 
             }
