@@ -224,7 +224,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" @click="guardarInterseccion" class="btn btn-primary">Guardar intersección</button>
+                <button type="button" @click="guardarInterseccion" class="btn btn-primary">{{ editMode ? 'Guardar cambios' : 'Guardar Interseccion' }} </button>
               </div>
             </div>
           </div>
@@ -472,6 +472,7 @@ export default {
             innerClick(semaforo) {
                 //this.form.reset();
                 console.log('innerClick')
+                this.editMode = true;
                 this.form = semaforo;
                 this.form.sentidos = []; 
                 this.direcciones_arr = [];
@@ -580,12 +581,14 @@ export default {
             },
 
             async guardarInterseccion(){
-                console.log(this.form)
+
                 const response = axios.post('/api/intersecciones', this.form).then(({data})=>{
                 //const response = await this.form.post('/api/intersecciones').then(({data}) => {
                    
                     if( data.exito ){
-                        console.log(data)
+
+                        if( data.id )
+                            this.form.id = data.id;
 
                          Swal.fire({
                             title: 'Hecho!',
@@ -622,16 +625,15 @@ export default {
                 this.direcciones_arr = [];
 
                 const response = axios.post('api/intersecciones/setPatrones', this.form_patrones).then(({data})=>{
-                //const response = await this.form_patrones.post('api/intersecciones/setPatrones').then(({data}) => {
                      
                      if( data.exito ){
                         Swal.fire({
                             icon  :'success',
-                            title:'Success!',
+                            title :'Hecho!',
                             text  : data.msg,
                         });
 
-                        //this.reloadPage()
+                        this.reloadPage()
                      }
                 })
             }

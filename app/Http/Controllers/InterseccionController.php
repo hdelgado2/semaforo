@@ -63,7 +63,7 @@ class InterseccionController extends Controller
             DB::commit();
 
             \Log::info('Se ha creado nueva interseccion '.$interseccion->interseccion);
-            return ['exito' => 200,'msg' => 'Se ha registrado con exito'];
+            return ['exito' => 200, 'id' => $interseccion->id,'msg' => 'Se ha registrado con exito'];
 
         } catch (\Exception $e) {
 
