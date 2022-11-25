@@ -1,6 +1,17 @@
 <template>
 
     <div style="height: 100%; width: 100%">
+        <div class="col-4 form-group ml-5 filtro">
+            <v-select 
+                v-model="filtro" 
+                :options="semaforos"
+                placeholder="SELECCIONE INTERSECCIÓN"
+                label="interseccion"
+                @input="selectLocationFilter()"
+            >
+                <has-error :form="form" field="filtro"></has-error>    
+            </v-select>
+        </div>
 
      <!--    <div style="height: 200px; overflow: auto;">
             <p>First marker is placed at {{ withPopup.lat }}, {{ withPopup.lng }}</p>
@@ -165,6 +176,7 @@
                               <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Dirección</th>
+                                <th scope="col">Sentido</th>
                                 <th scope="col">Rojo</th>
                                 <th scope="col">Rojo cruce izq</th>
                                 <th scope="col">Rojo cruce der</th>
@@ -263,6 +275,7 @@ export default {
                 popupAnchor: [0, -40],
                 iconUrl: require('leaflet/dist/images/marker-icon.png'),
                 semaforos: [],
+                filtro: '',
 
                 form: new Form({
                     id:"",
@@ -457,18 +470,6 @@ export default {
              $('#modalSemaforoInfo').modal('show')
           },
 
-            // isHovering(id, accion){
-
-            //     let icono = this.$refs['r'+id];
-
-            //     if(accion != false){
-            //       //  icono[0].$el.click();
-            //         //icono[0].$el.style.display = 'block'
-            //     }
-
-            //     //else icono[0].$el.style.display = 'none'
-            // },
-
             innerClick(semaforo) {
                 //this.form.reset();
                 console.log('innerClick')
@@ -574,6 +575,19 @@ export default {
               
             },
 
+            selectLocationFilter(){
+                console.log("filtrando");
+                console.log(this.filtro)
+                if( this.filtro.latitud ){
+                    this.currentZoom = 16;
+                    this.zoom = 16;
+                    this.currentCenter = latLng(this.filtro.latitud, this.filtro.longitud);
+                    this.center = latLng(this.filtro.latitud, this.filtro.longitud);
+                }
+
+                return;
+            },
+
             async loadIntersecciones(){
                 await axios.get('api/intersecciones').then(({data}) => this.semaforos = data );
                 console.log("listo");
@@ -647,11 +661,16 @@ export default {
     .popup:hover{
         display: block;
     }
+
     .map-container{
         margin: auto;
         padding: 2px;
         height: 828px;
         width: 1333px;
+    }
+
+    .filtro{
+        float: right;
     }
 
     @media (max-width: 400px) {
