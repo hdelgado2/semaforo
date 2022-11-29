@@ -130,4 +130,10 @@ class InterseccionController extends Controller
         }
 
     }
+
+    public function show(){
+
+        return Interseccion::with('patrones')->orderBy('id','desc')->paginate();
+
+    }
 }

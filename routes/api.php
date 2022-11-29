@@ -33,6 +33,7 @@ Route::post('addpermisos','PermisosController@addpermisos')->name('addpermisos')
 
 Route::apiResources(['intersecciones' => 'InterseccionController']);
 Route::post('intersecciones/setPatrones','InterseccionController@setPatrones')->name('intersecciones.patrones.guardar');
+Route::get('intersecciones/listado','InterseccionController@getIntersecciones')->name('intersecciones.listado.index');
 
 
 

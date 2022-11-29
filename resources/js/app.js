@@ -39,6 +39,8 @@ import vSelect from "vue-select";
 
 Vue.component("v-select", vSelect);
 import "vue-select/dist/vue-select.css";
+
+Vue.component('pagination', require('laravel-vue-pagination'));
 //Vue.component('pagination', require('laravel-vue-pagination'));
 /**
  * The following block of code may be used to automatically register your
@@ -62,6 +64,7 @@ let routes = [
     { path: '/deleteRoles/:id', component: require('./view/Roles/editRoles.vue').default },
     { path: '/permisosuser', component: require('./view/Seguridad/Lista.vue').default },
     { path: '/addpermisos/:id', component: require('./view/Seguridad/agregarPermisos.vue').default },
+    { path: '/lintersecciones', component: require('./view/Intersecciones/intersecciones.vue').default },
     { path: '*', component: Foo }
 
 

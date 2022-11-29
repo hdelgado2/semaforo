@@ -172,67 +172,45 @@
 
 
                 <table class="table table-striped">
-                            <thead>
-                              <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Dirección</th>
-                                <th scope="col">Sentido</th>
-                                <th scope="col">Rojo</th>
-                                <th scope="col">Rojo cruce izq</th>
-                                <th scope="col">Rojo cruce der</th>
-                                <th scope="col">Amarillo</th>
-                                <th scope="col">Amarillo cruce izq</th>
-                                <th scope="col">Amarillo cruce der</th>
-                                <th scope="col">Verde</th>
-                                <th scope="col">Verde cruce izq</th>
-                                <th scope="col">Verde cruce der</th>
-                                <th scope="col">Acciones</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <!-- <tr  v-for="s, index in form.sentidos" :key="index+1">
-                                <td>{{ s.id }}</td>
-                                <td>{{ s.direccion }}</td>
-                                <td>{{ s.rojo }}</td>
-                                <td>{{ s.rojo_cruce_izq }}</td>
-                                <td>{{ s.rojo_cruce_der }}</td>
-                                <td>{{ s.amarillo }}</td>
-                                <td>{{ s.amarillo_cruce_izq }}</td>
-                                <td>{{ s.amarillo_cruce_der }}</td>
-                                <td>{{ s.verde }}</td>
-                                <td>{{ s.verde_cruce_izq }}</td>
-                                <td>{{ s.verde_cruce_der }}</td>
-                                <td class="text-center">
-                                  <a href="#" @click="deleteDireccionArr(index)">
-                                    <i class="fa-solid fa-trash"></i>
-                                  </a>
-                                </td>
-                              </tr> -->
-                              <tr  v-for="d, index in direcciones_arr" :key="index+1">
-                                <td>{{ index+1 }}</td>
-                                <td>{{ d.direccion ?? d.sentido_nombre  }}</td>
-                                <td>{{ d.sentido }}</td>
-                                <td style="color: red;">{{ d.rojo }}</td>
-                                <td style="color: red;">{{ d.rojo_cruce_izq }}</td>
-                                <td style="color: red;">{{ d.rojo_cruce_der }}</td>
-                                <td style="color: orange;">{{ d.amarillo }}</td>
-                                <td style="color: orange;">{{ d.amarillo_cruce_izq }}</td>
-                                <td style="color: orange;">{{ d.amarillo_cruce_der }}</td>
-                                <td style="color: green;">{{ d.verde }}</td>
-                                <td style="color: green;">{{ d.verde_cruce_izq }}</td>
-                                <td style="color: green;">{{ d.verde_cruce_der }}</td>
-                                <td class="text-center">
-                                  <a href="#" @click="deleteDireccionArr(index)">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Dirección</th>
+                            <th scope="col">Sentido</th>
+                            <th scope="col">Rojo</th>
+                            <th scope="col">Rojo cruce izq</th>
+                            <th scope="col">Rojo cruce der</th>
+                            <th scope="col">Amarillo</th>
+                            <th scope="col">Amarillo cruce izq</th>
+                            <th scope="col">Amarillo cruce der</th>
+                            <th scope="col">Verde</th>
+                            <th scope="col">Verde cruce izq</th>
+                            <th scope="col">Verde cruce der</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr  v-for="d, index in direcciones_arr" :key="index+1">
+                            <td>{{ index+1 }}</td>
+                            <td>{{ d.direccion ?? d.sentido_nombre  }}</td>
+                            <td>{{ d.sentido }}</td>
+                            <td style="color: red;">{{ d.rojo }}</td>
+                            <td style="color: red;">{{ d.rojo_cruce_izq }}</td>
+                            <td style="color: red;">{{ d.rojo_cruce_der }}</td>
+                            <td style="color: orange;">{{ d.amarillo }}</td>
+                            <td style="color: orange;">{{ d.amarillo_cruce_izq }}</td>
+                            <td style="color: orange;">{{ d.amarillo_cruce_der }}</td>
+                            <td style="color: green;">{{ d.verde }}</td>
+                            <td style="color: green;">{{ d.verde_cruce_izq }}</td>
+                            <td style="color: green;">{{ d.verde_cruce_der }}</td>
+                            <td class="text-center">
+                                <a href="#" @click="deleteDireccionArr(index)">
                                     <i class="fa-solid fa-trash red"></i>
-                                  </a>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                
-                
-                
-                
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
