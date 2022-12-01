@@ -9,12 +9,12 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Lista de Intersecciones</h3>
-                <router-link to="/create/groles" class="btn btn-primary">Registrar</router-link>
+               <!--  <router-link to="/create/groles" class="btn btn-primary">Registrar</router-link> -->
                 <div class="card-tools">
                  
                   <div class="input-group input-group-sm" style="width: 150px;">
 
-                    <input type="text" v-model="search"  name="table_search" class="form-control float-right" placeholder="Search">
+                    <input type="text" v-model="search" @input="buscarInterseccion"  name="table_search" class="form-control float-right" placeholder="Search">
 
                     <div class="input-group-append">
                       <button type="submit" @click="searchRoles" class="btn btn-default">
@@ -37,7 +37,7 @@
                         <td>{{interseccion.id}}</td>
                         <td>{{interseccion.interseccion}}</td>
                         <td>
-                            <button @click="editInterseccion" class="btn btn-outline-primary"><i class="fa-solid fa-pencil"></i></button>
+                            <button @click="editInterseccion(interseccion)" class="btn btn-outline-primary"><i class="fa-solid fa-pencil"></i></button>
                             <button @click="showInterseccion(interseccion)" class="btn btn-outline-info"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </td>
                         
@@ -63,15 +63,15 @@
                                 <div class="row">
                                     <div class="form-group col-8">
                                         <label for="interseccion" class="col-form-label">Nombre intersección:</label>
-                                        <input v-model="form.interseccion" type="text" class="form-control" id="interseccion">
+                                        <input :readonly="!editMode"  v-model="form.interseccion" type="text" class="form-control" id="interseccion">
                                     </div>
                                     <div class="form-group col-2">
                                         <label for="latitud" class="col-form-label">Latitud:</label>
-                                        <input v-model="form.latitud" type="text" class="form-control" id="latitud">
+                                        <input :readonly="!editMode" v-model="form.latitud" type="text" class="form-control" id="latitud">
                                     </div>
                                     <div class="form-group col-2">
                                         <label for="longitud" class="col-form-label">Longitud:</label>
-                                        <input v-model="form.longitud" type="text" class="form-control" id="longitud">
+                                        <input :readonly="!editMode" v-model="form.longitud" type="text" class="form-control" id="longitud">
                                     </div>
                                 </div>
 
@@ -79,26 +79,26 @@
                     
                                     <div class="form-group col">
                                         <label for="ip-equipo" class="col-form-label">IP equipo:</label>
-                                        <input v-model="form.ip_equipo" type="text" class="form-control" id="ip-equipo">
+                                        <input :readonly="!editMode" v-model="form.ip_equipo" type="text" class="form-control" id="ip-equipo">
                                     </div>
                                     <div class="form-group col">
                                         <label for="mac-equipo" class="col-form-label">MAC equipo:</label>
-                                        <input v-model="form.mac_equipo" type="text" class="form-control" id="mac-equipo">
+                                        <input :readonly="!editMode" v-model="form.mac_equipo" type="text" class="form-control" id="mac-equipo">
                                     </div>
                                     <div class="form-group col">
                                         <label for="zoom" class="col-form-label">Zoom:</label>
-                                        <input v-model="form.zoom" type="number" class="form-control" id="zoom">
+                                        <input :readonly="!editMode" v-model="form.zoom" type="number" class="form-control" id="zoom">
                                     </div>
                                     <div class="form-group col">
                                         <label for="observacion" class="col-form-label">Observación:</label>
-                                        <input v-model="form.observacion" type="text" class="form-control" id="observacion">
+                                        <input :readonly="!editMode" v-model="form.observacion" type="text" class="form-control" id="observacion">
                                     </div>
                                 </div>
 
                                 <hr>
                                 <h5>Cruces</h5>
 
-                                <div class="row">
+                                <div v-if="editMode == true" class="row">
 
                                     <div class="form-group col">
 
@@ -167,7 +167,7 @@
                                         <th scope="col">Verde</th>
                                         <th scope="col">Verde cruce izq</th>
                                         <th scope="col">Verde cruce der</th>
-                                        <th scope="col">Acciones</th>
+                                        <th v-if="editMode == true" scope="col">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -185,7 +185,7 @@
                                         <td style="color: green;">{{ d.verde_cruce_izq }}</td>
                                         <td style="color: green;">{{ d.verde_cruce_der }}</td>
                                         <td class="text-center">
-                                            <a href="#" @click="deleteDireccionArr(index)">
+                                            <a v-if="editMode == true" href="#" @click="deleteDireccionArr(index)">
                                                 <i class="fa-solid fa-trash red"></i>
                                             </a>
                                         </td>
@@ -255,7 +255,8 @@ export default {
 
                 direcciones_arr:[],
                 sentidos:['NORTE','SUR','OESTE','ESTE'],
-
+                editMode : false,
+                search: ''
             }
         },methods: {
 
@@ -304,18 +305,54 @@ export default {
               
             },
 
-            editInterseccion(){
+            editInterseccion(interseccion){
+                this.editMode = true;
+                this.form = interseccion;
+                this.form.sentidos = []; 
+                this.direcciones_arr = [];
+                this.form.sentidos = interseccion.patrones;
 
+                interseccion.patrones.forEach( (el) => {
+
+                    if( el.id != null ){
+                        console.log('id')
+                        this.direcciones_arr.push(el)
+                        // this.form.sentidos.push(el)
+
+                    }else{
+                        console.log('!id')
+                        this.direcciones_arr.push(el)
+                    }
+                })
+
+                $('#showInterseccion').modal('show')
             },
 
-            showInterseccion(){
-                $('#showModal').modal('show')
+            patronExiste(sentido) {
+                if( this.direcciones_arr.length > 0)
+                    return this.direcciones_arr.some(el => el.sentido  === sentido);
+
+                return false;
+            },
+
+            patronArrExiste(sentido) {
+                return this.direcciones_arr.some(el => el.interseccion === interseccion);
+            },
+
+            async buscarInterseccion(){
+
+                if(this.search != ''){
+                    await axios.get('api/intersecciones/listado/search/'+this.search).then(({ data }) => {
+                        this.intersecciones = data
+                    })
+                }
+                
             },
 
             showInterseccion(interseccion){
 
                 console.log('open modal')
-                this.editMode = true;
+                this.editMode = false;
                 this.form = interseccion;
                 this.form.sentidos = []; 
                 this.direcciones_arr = [];

@@ -136,4 +136,14 @@ class InterseccionController extends Controller
         return Interseccion::with('patrones')->orderBy('id','desc')->paginate();
 
     }
+
+    public function searchInterseccion($search){
+
+        $intersecciones = Interseccion::where('interseccion','ilike','%'.$search.'%')->has('patrones')->with('patrones')->orderBy('id','desc')->paginate();
+
+        if( !$intersecciones->isEmpty() )
+            return $intersecciones;
+
+        return $this->show();
+    }
 }
