@@ -137,13 +137,24 @@ class InterseccionController extends Controller
 
     }
 
-    public function searchInterseccion($search){
+    public function searchInterseccion($search = ''){
 
-        $intersecciones = Interseccion::where('interseccion','ilike','%'.$search.'%')->has('patrones')->with('patrones')->orderBy('id','desc')->paginate();
+        $intersecciones = null;
 
-        if( !$intersecciones->isEmpty() )
-            return $intersecciones;
+        if($search != ''){
+             $intersecciones = Interseccion::where('interseccion','ilike','%'.$search.'%')->has('patrones')->with('patrones')->orderBy('id','desc')->paginate();
 
-        return $this->show();
+            if( !$intersecciones->isEmpty() ){
+                return $intersecciones;
+            }else{
+                return $this->show();
+            }
+        }
+
+        if($intersecciones == null)
+            return $this->show();
+        
+
+        
     }
 }

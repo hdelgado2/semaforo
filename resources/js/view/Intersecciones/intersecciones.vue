@@ -340,12 +340,14 @@ export default {
             },
 
             async buscarInterseccion(){
-
-                if(this.search != ''){
-                    await axios.get('api/intersecciones/listado/search/'+this.search).then(({ data }) => {
+                await axios.get('api/intersecciones/listado/search/'+this.search).then(({ data }) => {
                         this.intersecciones = data
                     })
-                }
+                // if(this.search != ''){
+                //     await axios.get('api/intersecciones/listado/search/'+this.search).then(({ data }) => {
+                //         this.intersecciones = data
+                //     })
+                // }
                 
             },
 
