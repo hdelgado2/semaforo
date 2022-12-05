@@ -50,7 +50,7 @@
                     :v-if="semaforo != null"
                     :lat-lng="calculateLatlng(semaforo.latitud, semaforo.longitud)" 
                     ref="marker"
-                    @click="innerClick(semaforo)"
+                    @click="showOptions(semaforo)"
                     >
                     <l-icon :class="semaforo.id"
                             :icon-size="dynamicSize"
@@ -220,6 +220,58 @@
           </div>
         </div>
 
+        <!-- -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalInstruccion" tabindex="-1" role="dialog" aria-labelledby="modalInstruccionLabel" aria-hidden="true">
+          <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalSemaforoInfoLabel">INSTRUCCIONES PARA SEMAFORO {{ this.form.interseccion }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+
+                <div class="row">
+
+                    <div class="form-group col">
+                        <label class="mt-2">Sentido</label>
+                        <v-select 
+                            v-model="form_instrucciones.sentido" 
+                            :options="sentidosEmergencia"
+                             >
+                            <has-error :form="form" field="sentido"></has-error>    
+                        </v-select>
+                    </div>
+
+                    <div class="form-group col">
+                        <label class="mt-2">Color</label>
+                        <v-select 
+                            v-model="form_instrucciones.color" 
+                            :options="colores"
+                             >
+                            <has-error :form="form" field="color"></has-error>    
+                        </v-select>
+                    </div>
+
+                    <div class="form-group col">
+                        <label for="tiempo" class="col-form-label">Tiempo</label>
+                        <input v-model="form_instrucciones.tiempo" type="number" class="form-control" id="tiempo">
+                    </div>
+        
+                </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" @click="publishMessage" class="btn btn-primary">{{ editMode ? 'Guardar cambios' : 'Guardar Interseccion' }} </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
     </div>
 </template>
 
@@ -286,12 +338,20 @@ export default {
                     intersecciones_id:''
                 }),
 
+                form_instrucciones: new Form({
+                    sentido:'',
+                    color:'',
+                    tiempo:0,
+                }),
+
                 isReady : false,
                 editMode : false,
 
                 interseccion:{},
 
                 sentidos:['NORTE','SUR','OESTE','ESTE'],
+                sentidosEmergencia:['NORTE','SUR','OESTE','ESTE','DETENTE'],
+                colores:['ROJO','VERDE','AMARILLO','ROJO CRUCE IZQ','ROJO CRUCE DER','AMARILLO CRUCE IZQ','AMARILLO CRUCE DER','VERDE CRUCE IZQ','VERDE CRUCE DER'],
                 // sentido:'',
                 // sentido_nombre:'',
 
@@ -474,6 +534,54 @@ export default {
                 
             },
 
+            showOptions(semaforo){
+                let sem = semaforo
+
+                Swal.fire({
+                    title: 'Seleccione una acción?',
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: 'Editar',
+                    denyButtonText: `Enviar instrucción`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        this.innerClick(sem)
+                        //Swal.fire('Saved!', '', 'success')
+                    } 
+                    else if (result.isDenied) {
+                        this.openInstructionModal(sem)
+                    }
+                })
+            },
+
+            openInstructionModal(semaforo) {
+                //this.form.reset();
+                console.log('intructionModal')
+                this.editMode = true;
+                this.form = semaforo;
+                this.form.sentidos = []; 
+                this.direcciones_arr = [];
+                this.form.sentidos = semaforo.patrones;
+
+                semaforo.patrones.forEach( (el) => {
+
+                    if( el.id != null ){
+                        console.log('id')
+                        this.direcciones_arr.push(el)
+                        // this.form.sentidos.push(el)
+
+                    }else{
+                        console.log('!id')
+                        this.direcciones_arr.push(el)
+                    }
+                })
+
+                $('#modalInstruccion').modal('show')
+                
+            },
+
+
             toUpperCaseText(){
                 console.log('upper')
                 this.form_cruces.sentido_nombre = this.form_cruces.sentido_nombre.toUpperCase(); 
@@ -564,6 +672,46 @@ export default {
                 }
 
                 return;
+            },
+
+            async publishMessage(){
+                await axios.post("/api/mqtt/publish", this.form_instrucciones).then(({data})=>{
+
+                    console.log(data)
+
+                    if( data.exito  ){
+
+                         Swal.fire({
+                            title: 'Hecho!',
+                            text: data.msg,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
+                        }).then((result)=>{
+
+                            this.form_instrucciones.sentido = '';
+                            this.form_instrucciones.color = '';
+                            this.form_instrucciones.tiempo = 0;
+
+                            $('#modalInstruccion').modal('hide');
+                
+                        })
+                    }
+                    else{
+
+                         Swal.fire({
+                            title: 'Oops!',
+                            text: data.msg,
+                            icon: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
+                        })
+                    }
+                })
             },
 
             async loadIntersecciones(){

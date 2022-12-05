@@ -36,6 +36,7 @@ Route::post('intersecciones/setPatrones','InterseccionController@setPatrones')->
 Route::get('intersecciones/listado','InterseccionController@getIntersecciones')->name('intersecciones.listado.index');
 Route::get('intersecciones/listado/search/{search?}','InterseccionController@searchInterseccion')->name('intersecciones.listado.search');
 
+Route::post('mqtt/publish','MqttController@publish')->name('mqtt.publish');
 
 
 
