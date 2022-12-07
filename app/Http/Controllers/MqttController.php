@@ -11,23 +11,39 @@ class MqttController extends Controller
 
         try{
 
+            $instruccion = '';
+            $topico = '';
+
             if( $request->sentido != '' && $request->color == '' && $request->tiempo > 0){
 
-                $instruccion = $request->sentido.':'.$request->tiempo;
+                $instruccion = $request->sentido.':'.$request->tiempo.null;
 
-                MQTT::publish('vit/topic/prueba', $instruccion);
+                $topico = 'vit/topic/prueba/'.$request->ip_equipo;
+
+                MQTT::publish( $topico, $instruccion.null);
+            }
+
+            else if ( $request->sentido != '' && $request->color == '' && $request->tiempo < 1){
+
+                $instruccion = trim($request->sentido.null);
+
+                $topico = 'vit/topic/prueba/'.$request->ip_equipo;
+
+                MQTT::publish($topico, $instruccion);
             }
 
             else if ( $request->sentido == '' && $request->color != '' ){
 
-                $instruccion = $request->color.':'.$request->tiempo;
+                $instruccion = $request->color.':'.$request->tiempo.null;
 
-                MQTT::publish('vit/topic/prueba', $instruccion);
+                $topico = 'vit/topic/prueba/'.$request->ip_equipo;
+
+                MQTT::publish($topico, $instruccion.null);
             }
         
             MQTT::disconnect();
 
-            \Log::info('Instruccion enviada: '.$instruccion);
+            \Log::info('Instruccion enviada: '.$instruccion.' a topico: '.$topico);
             return ['code'=>200, 'exito' => true,'msg' => 'Instruccion enviada'];
 
         }catch( \Exception $e ){

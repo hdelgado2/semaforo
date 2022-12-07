@@ -342,6 +342,7 @@ export default {
                     sentido:'',
                     color:'',
                     tiempo:0,
+                    ip_equipo: '',
                 }),
 
                 isReady : false,
@@ -350,7 +351,7 @@ export default {
                 interseccion:{},
 
                 sentidos:['NORTE','SUR','OESTE','ESTE'],
-                sentidosEmergencia:['NORTE','SUR','OESTE','ESTE','DETENTE'],
+                sentidosEmergencia:['NORTE-SUR','ESTE-OESTE','ROJOS','AMARILLOS','VERDES','CRUCE-1','CRUCE-2','ALTO'],
                 colores:['ROJO','VERDE','AMARILLO','ROJO CRUCE IZQ','ROJO CRUCE DER','AMARILLO CRUCE IZQ','AMARILLO CRUCE DER','VERDE CRUCE IZQ','VERDE CRUCE DER'],
                 // sentido:'',
                 // sentido_nombre:'',
@@ -675,6 +676,9 @@ export default {
             },
 
             async publishMessage(){
+
+                this.form_instrucciones.ip_equipo = this.form.ip_equipo;
+                
                 await axios.post("/api/mqtt/publish", this.form_instrucciones).then(({data})=>{
 
                     console.log(data)
@@ -695,7 +699,7 @@ export default {
                             this.form_instrucciones.color = '';
                             this.form_instrucciones.tiempo = 0;
 
-                            $('#modalInstruccion').modal('hide');
+                            //$('#modalInstruccion').modal('hide');
                 
                         })
                     }
