@@ -18,14 +18,16 @@ class MqttController extends Controller
 
                 $instruccion = $request->sentido.':'.$request->tiempo.null;
 
+                $instruccion = trim($instruccion);
+
                 $topico = 'vit/topic/prueba/'.$request->ip_equipo;
 
-                MQTT::publish( $topico, $instruccion.null);
+                MQTT::publish( $topico, $instruccion);
             }
 
             else if ( $request->sentido != '' && $request->color == '' && $request->tiempo < 1){
 
-                $instruccion = trim($request->sentido.null);
+                $instruccion = $request->sentido.'';
 
                 $topico = 'vit/topic/prueba/'.$request->ip_equipo;
 
@@ -36,9 +38,11 @@ class MqttController extends Controller
 
                 $instruccion = $request->color.':'.$request->tiempo.null;
 
+                $instruccion = trim($instruccion);
+
                 $topico = 'vit/topic/prueba/'.$request->ip_equipo;
 
-                MQTT::publish($topico, $instruccion.null);
+                MQTT::publish($topico, $instruccion);
             }
         
             MQTT::disconnect();

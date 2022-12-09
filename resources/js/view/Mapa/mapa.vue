@@ -213,8 +213,8 @@
                 </table>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" @click="guardarInterseccion" class="btn btn-primary">{{ editMode ? 'Guardar cambios' : 'Guardar Interseccion' }} </button>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" @click="guardarInterseccion" class="btn btn-outline-primary"><strong>{{ editMode ? 'Guardar cambios' : 'Guardar Interseccion' }} </strong></button>
               </div>
             </div>
           </div>
@@ -227,7 +227,7 @@
           <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="modalSemaforoInfoLabel">INSTRUCCIONES PARA SEMAFORO {{ this.form.interseccion }}</h5>
+                <h5 class="modal-title" id="modalSemaforoInfoLabel">INSTRUCCIONES PARA INTERSECCIÓN {{ this.form.interseccion }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -237,7 +237,7 @@
                 <div class="row">
 
                     <div class="form-group col">
-                        <label class="mt-2">Sentido</label>
+                        <label class="mt-2">Sentido - Instrucción</label>
                         <v-select 
                             v-model="form_instrucciones.sentido" 
                             :options="sentidosEmergencia"
@@ -258,15 +258,15 @@
 
                     <div class="form-group col">
                         <label for="tiempo" class="col-form-label">Tiempo</label>
-                        <input v-model="form_instrucciones.tiempo" type="number" class="form-control" id="tiempo">
+                        <input :disabled="disableTiempo" v-model="form_instrucciones.tiempo" type="number" class="form-control" id="tiempo">
                     </div>
         
                 </div>
 
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" @click="publishMessage" class="btn btn-primary">{{ editMode ? 'Guardar cambios' : 'Guardar Interseccion' }} </button>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" @click="publishMessage" class="btn btn-outline-primary"><strong> Enviar Instrucción </strong></button>
               </div>
             </div>
           </div>
@@ -405,6 +405,13 @@ export default {
 
                 return true;
             },
+            disableTiempo(){
+                if( this.form_instrucciones.sentido && this.form_instrucciones.sentido != 'ALTO' ){
+                        return false;
+                }
+
+                return true;
+            }
         },
         methods: {
 
@@ -539,11 +546,12 @@ export default {
                 let sem = semaforo
 
                 Swal.fire({
-                    title: 'Seleccione una acción?',
+                    title: 'Seleccione una acción',
                     showDenyButton: true,
                     showCancelButton: true,
-                    confirmButtonText: 'Editar',
-                    denyButtonText: `Enviar instrucción`,
+                    confirmButtonText: '<strong>Editar</strong>',
+                    cancelButtonText: 'Cancelar',
+                    denyButtonText: `<strong>Enviar instrucción</strong>`,
                 }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
@@ -802,6 +810,7 @@ export default {
     .filtro{
         float: right;
     }
+
 
     @media (max-width: 400px) {
         .map-container{
