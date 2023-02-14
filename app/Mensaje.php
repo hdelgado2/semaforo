@@ -11,4 +11,5 @@ class Mensaje extends Model
 
     protected $table = 'crear_mensaje';
     protected $fillable = ['tipo_mensaje','motivo_mensaje','mensaje','estado_mensaje','desactivar'];
+
 }

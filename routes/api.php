@@ -38,6 +38,8 @@ Route::get('intersecciones/listado/search/{search?}','InterseccionController@sea
 
 Route::post('mqtt/publish','MqttController@publish')->name('mqtt.publish');
 
+Route::apiResources(['mensajes' => 'MensajesController']);
+
 
 
 
