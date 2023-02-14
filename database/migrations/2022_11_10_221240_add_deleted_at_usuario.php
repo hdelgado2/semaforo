@@ -14,7 +14,7 @@ class AddDeletedAtUsuario extends Migration
     public function up()
     {
         Schema::table('usuarios', function (Blueprint $table) {
-            
+            $table->id();
             $table->softDeletes();
         });
     }
