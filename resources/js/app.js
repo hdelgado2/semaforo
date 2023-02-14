@@ -24,7 +24,7 @@ Vue.prototype.Routes = window.routes;
 import  L  from "leaflet";
 import 'leaflet/dist/leaflet.css';
 Vue.use( L );
-import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from 'vue2-leaflet';
+import { LMap, LTileLayer, LMarker, LPopup, LTooltip, LPolyline } from 'vue2-leaflet';
 
 
 
@@ -33,6 +33,7 @@ Vue.component('l-tile-layer', LTileLayer);
 Vue.component('l-marker', LMarker);
 Vue.component('l-tooltip', LTooltip);
 Vue.component('l-popup', LPopup);
+Vue.component('l-polyline', LPolyline);
 
 import Vue from "vue";
 import vSelect from "vue-select";

@@ -13,21 +13,6 @@
             </v-select>
         </div>
 
-     <!--    <div style="height: 200px; overflow: auto;">
-            <p>First marker is placed at {{ withPopup.lat }}, {{ withPopup.lng }}</p>
-            <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
-         
-            <button @click="showMap = !showMap">
-                Toggle map
-            </button>
-        </div>
-
-        <div class="info" style="height: 5%">
-            <span>Center: {{ center }}</span>
-            <span>Zoom: {{ zoom }}</span>
-            <span>Bounds: {{ bounds }}</span>
-        </div> -->
-
         <div class="map-container">
             <l-map  @ready="doSomethingOnReady()"
                 v-if="isReady"
@@ -65,6 +50,7 @@
                         </l-tooltip>
 
                 </l-marker>
+                <l-polyline :lat-lngs="polyline.latlngs" :color="polyline.color"></l-polyline>
             </l-map>
         </div>
         
@@ -280,11 +266,10 @@
 
 import { latLng, Icon } from "leaflet";
 import Swal from 'sweetalert2/dist/sweetalert2.js'
-
+import Ruta from './Ruta.vue'
 import 'sweetalert2/src/sweetalert2.scss'
 
 export default {
-
         data(){
             return {
                 url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -306,6 +291,10 @@ export default {
                 iconUrl: require('leaflet/dist/images/marker-icon.png'),
                 semaforos: [],
                 filtro: '',
+                polyline: {
+                    latlngs: [],
+                    color: 'green'
+                },
 
                 form: new Form({
                     id:"",
@@ -353,10 +342,9 @@ export default {
                 sentidos:['NORTE','SUR','OESTE','ESTE'],
                 sentidosEmergencia:['NORTE-SUR','ESTE-OESTE','ROJOS','AMARILLOS','VERDES','CRUCE-1','CRUCE-2','ALTO'],
                 colores:['ROJO','VERDE','AMARILLO','ROJO CRUCE IZQ','ROJO CRUCE DER','AMARILLO CRUCE IZQ','AMARILLO CRUCE DER','VERDE CRUCE IZQ','VERDE CRUCE DER'],
-                // sentido:'',
-                // sentido_nombre:'',
-
-                direcciones_arr:[]
+                
+                direcciones_arr:[],
+                rutas:[]
             };
 
         },
@@ -437,6 +425,10 @@ export default {
             },
             removeMarker(index) {
                 this.markers.splice(index, 1);
+            },
+
+            addRuta(semaforo){
+                this.polyline.latlngs.push([semaforo.latitud, semaforo.longitud])
             },
 
             addMarker(event) {
@@ -550,7 +542,7 @@ export default {
                     showDenyButton: true,
                     showCancelButton: true,
                     confirmButtonText: '<strong>Editar</strong>',
-                    cancelButtonText: 'Cancelar',
+                    cancelButtonText: 'Añadir a ruta',
                     denyButtonText: `<strong>Enviar instrucción</strong>`,
                 }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
@@ -560,6 +552,9 @@ export default {
                     } 
                     else if (result.isDenied) {
                         this.openInstructionModal(sem)
+                    }
+                    else if( result.dismiss === Swal.DismissReason.cancel){
+                        this.addRuta(sem)
                     }
                 })
             },
