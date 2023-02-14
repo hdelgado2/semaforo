@@ -66,6 +66,9 @@ let routes = [
     { path: '/addpermisos/:id', component: require('./view/Seguridad/agregarPermisos.vue').default },
     { path: '/lintersecciones', component: require('./view/Intersecciones/intersecciones.vue').default },
     { path: '/mensajes', component: require('./view/Mensajes/Mensajes.vue').default },
+    { path: '/gestionar_mensaje', component: require('./view/GestionarMensaje/GestionarMensaje.vue').default },
+    { path: '/gestionar_displays', component: require('./view/GestionarDisplays/GestionarDisplays.vue').default },
+    { path: '/centro_mando_displays', component: require('./view/CentroMandoDisplays/CentroMandoDisplay.vue').default },
     { path: '*', component: Foo }
 
 
