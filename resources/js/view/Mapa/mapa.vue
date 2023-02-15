@@ -246,6 +246,11 @@
                         <label for="tiempo" class="col-form-label">Tiempo</label>
                         <input :disabled="disableTiempo" v-model="form_instrucciones.tiempo" type="number" class="form-control" id="tiempo">
                     </div>
+
+                    <div v-if="isRuta" class="form-group col">
+                        <label for="intervaloEntre" class="col-form-label">Intervalo entre intersección</label>
+                        <input :disabled="!isRuta" v-model="form_instrucciones.intervalo_entre_interseccion" type="number" class="form-control" id="tiempo">
+                    </div>
         
                 </div>
 
@@ -332,6 +337,8 @@ export default {
                     color:'',
                     tiempo:0,
                     ip_equipo: '',
+                    intervalo_entre_interseccion: 0,
+                    ips: []
                 }),
 
                 isReady : false,
@@ -390,16 +397,17 @@ export default {
                 if( this.form_cruces.sentido_nombre && this.form_cruces.sentido ){
                         return false;
                 }
-
                 return true;
             },
             disableTiempo(){
                 if( this.form_instrucciones.sentido && this.form_instrucciones.sentido != 'ALTO' ){
                         return false;
                 }
-
                 return true;
-            }
+            },
+            isRuta(){
+                return this.polyline.latlngs.length > 0;
+            },
         },
         methods: {
 
@@ -429,15 +437,14 @@ export default {
 
             addRuta(semaforo){
                 this.polyline.latlngs.push([semaforo.latitud, semaforo.longitud])
+                this.form_instrucciones.ips.push(semaforo.ip_equipo)
             },
 
             addMarker(event) {
-
                 let newSemaforo = {
                     lat : event.latlng.lat,
                     lng : event.latlng.lng
                 }
-
                 this.intersecciones.push(newSemaforo)
                 this.$refs.map.mapObject.addMarker(newSemaforo)
             },

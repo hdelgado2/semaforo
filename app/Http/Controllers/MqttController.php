@@ -7,7 +7,27 @@ use PhpMqtt\Client\Facades\MQTT;
 
 class MqttController extends Controller
 {
+
     public function publish(Request $request){
+        try{
+            if( count($request->ips) ){
+                foreach($request->ips as $ip){
+                    $request->ip_equipo = $ip;
+                    \Log::info($request->ip_equipo);
+                    $this->handlePublish($request);
+                }
+            }else{
+                $this->handlePublish($request);
+            }
+            return ['code'=>200, 'exito' => true,'msg' => 'Instruccion enviada'];
+        }catch( \Exception $e ){
+            \Log::info('Error al enviar instrucción: '.$e->getMessage());
+            return ['code' => 500, 'exito' => false, 'msg' => 'Ha ocurrido un error: '];
+        }
+        
+    }
+
+    public function handlePublish(Request $request){
 
         try{
 
@@ -55,11 +75,6 @@ class MqttController extends Controller
             \Log::info('Error al enviar instrucción: '.$e->getMessage());
             return ['code' => 500, 'exito' => false, 'msg' => 'Ha ocurrido un error: '];
         }
-
-        //$topic; 
-        //$host;
-      //  dd($request->color);
-        
 
     }
 }
