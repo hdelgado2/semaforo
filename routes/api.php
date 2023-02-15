@@ -40,6 +40,15 @@ Route::post('mqtt/publish','MqttController@publish')->name('mqtt.publish');
 
 Route::apiResources(['mensajes' => 'MensajesController']);
 
+//
+
+Route::post('editmensaje','MensajesController@editmensaje')->name('editmensaje');
+
+Route::post('cargarmensaje/{id}','MensajesController@cargarmensajeedit')->name('cargarmensajeedit');
+Route::post('botoneditar','MensajesController@botoneditar')->name('botoneditar');
+Route::post('deletemensaje/{id}','MensajesController@deletemensaje')->name('deletemensaje');
+
+
 
 
 

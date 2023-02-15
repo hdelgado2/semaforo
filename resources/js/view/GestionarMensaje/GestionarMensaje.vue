@@ -45,8 +45,10 @@
                         <td>{{ mensaje.motivo_mensaje }}</td>
                         <td>{{ mensaje.mensaje  }}</td>
                         <td>
-                            <button @click="editMensaje(mensaje)" class="btn btn-outline-primary"><i class="fa-solid fa-pencil"></i></button>
-                            <button @click="showMensaje(mensaje)" class="btn btn-outline-info"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            <button @click="cargamensaje(mensaje)" class="btn btn-outline-primary"><i class="fa-solid fa-pencil"></i></button>
+                            <button @click="deletemensaje(mensaje)" class="btn btn-outline-info"><i class="fa-sharp fa-solid fa-trash-can"></i>
+
+</button>
                         </td>
                         
                     </tr>
@@ -62,7 +64,8 @@
                     <div class="modal-dialog modal-xl" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="modalMensajeInfoLabel">Mensaje</h5>
+                                <h5 v-if="accioneditar !=false" class="modal-title" id="modalMensajeInfoLabel">Crear Mensaje</h5>
+                                <h5 v-if="accioneditar !=true" class="modal-title" id="modalMensajeInfoLabel">Editar Mensaje</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -87,7 +90,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="button" @click="guardarMensaje" class="btn btn-primary">{{ editMode ? 'Guardar cambios' : 'Guardar Mensaje' }} </button>
+                            <button v-if="accioneditar!= false" type="button" @click="guardarMensaje" class="btn btn-primary"> Guardar Mensaje  </button>
+                            <button v-if="accioneditar != true" type="button" @click="editMensaje" class="btn btn-primary">Guardar cambios </button>
                         </div>
                     </div>
                 </div>
@@ -124,7 +128,8 @@ export default {
                 direcciones_arr:[],
                 sentidos:['NORTE','SUR','OESTE','ESTE'],
                 editMode : false,
-                search: ''
+                search: '',
+                accioneditar:true,
             }
         },methods: {
 
@@ -142,34 +147,109 @@ export default {
                     })
             },
 
-            editMensaje(){
+            //cargar mensaje
+
+            async cargamensaje(mensaje_id){
+                console.log('here i go', mensaje_id.id)
+                 this.form.id = mensaje_id;
+              
+               await this.form.post('/api/cargarmensaje/'+mensaje_id).then(({data}) => {
+
+                 console.log('ver que hay aqui', data);
+                this.form.tipo_mensaje = data.tipo_mensaje;
+                this.form.mensaje = data.mensaje;
+                this.form.motivo_mensaje = data.motivo_mensaje; 
+                //this.form.id = mensaje_id;
+                if(data.exito === 200){
+                    Swal.fire({
+                    icon  :'success',
+                    title:'Success!',
+                    text  : data.msg
+                  });
+                }
+                
+               
+            })
+                 this.accioneditar= false;
+           
+                 this.editMode = false;
+                $('#modalMensaje').modal('show')
+                
+          
+            
+        },
+
+        async deletemensaje(id){
+            this.form.id = id;
+            await this.form.post('/api/deletemensaje/'+id).then((result) => {
+                 this.loadMensajes();
+            //  this.Lista = result['data']
+              Swal.fire({
+                    icon  :'success',
+                    title:'Success!',
+                    text  : "eliminado con exito",
+                    toast : true
+                  });
+            });
+          },
+
+
+          async  editMensaje(){
+
+            const response = axios.post('/api/botoneditar', this.form).then(({data})=>{
+                   
+                    if( data.exito ){
+
+                        if( data.id )
+                            this.form.id = data.id;
+
+                         Swal.fire({
+                            title: 'Hecho!',
+                            text: data.msg,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
+                        }).then((result) => {
+
+                            $('#modalMensaje').modal('hide')
+                            this.loadMensajes();
+                        
+                        })
+                    }
+
+                });
+
+
+
                 console.log('editar')
             },
 
-            showMensaje(interseccion){
+            // showMensaje(interseccion){
 
-                console.log('open modal')
-                this.editMode = false;
-                this.form = interseccion;
-                this.form.sentidos = []; 
-                this.direcciones_arr = [];
-                this.form.sentidos = interseccion.patrones;
+            //     console.log('open modal')
+            //     this.editMode = false;
+            //     this.form = interseccion;
+            //     this.form.sentidos = []; 
+            //     this.direcciones_arr = [];
+            //     this.form.sentidos = interseccion.patrones;
 
-                interseccion.patrones.forEach( (el) => {
+            //     interseccion.patrones.forEach( (el) => {
 
-                    if( el.id != null ){
-                        console.log('id')
-                        this.direcciones_arr.push(el)
-                        // this.form.sentidos.push(el)
+            //         if( el.id != null ){
+            //             console.log('id')
+            //             this.direcciones_arr.push(el)
+            //             // this.form.sentidos.push(el)
 
-                    }else{
-                        console.log('!id')
-                        this.direcciones_arr.push(el)
-                    }
-                })
+            //         }else{
+            //             console.log('!id')
+            //             this.direcciones_arr.push(el)
+            //         }
+            //     })
 
-                $('#showInterseccion').modal('show')
-            },
+            //     $('#showInterseccion').modal('show')
+            // },
 
 
             async loadMensajes(){
@@ -177,6 +257,7 @@ export default {
             },
 
             async openModal(){
+                this.accioneditar= true;
                 this.editMode = false;
                 $('#modalMensaje').modal('show')
             },  
