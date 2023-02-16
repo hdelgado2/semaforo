@@ -33,6 +33,7 @@ Route::post('addpermisos','PermisosController@addpermisos')->name('addpermisos')
 
 Route::apiResources(['intersecciones' => 'InterseccionController']);
 Route::post('intersecciones/setPatrones','InterseccionController@setPatrones')->name('intersecciones.patrones.guardar');
+
 Route::get('intersecciones/listado','InterseccionController@getIntersecciones')->name('intersecciones.listado.index');
 Route::get('intersecciones/listado/search/{search?}','InterseccionController@searchInterseccion')->name('intersecciones.listado.search');
 
@@ -48,7 +49,11 @@ Route::post('cargarmensaje/{id}','MensajesController@cargarmensajeedit')->name('
 Route::post('botoneditar','MensajesController@botoneditar')->name('botoneditar');
 Route::post('deletemensaje/{id}','MensajesController@deletemensaje')->name('deletemensaje');
 
+Route::post('loadDisplays/listado','LocalizacionDisplayController@index')->name('loadDisplays.listado.index');
 
+Route::post('guardarlacalizacionesdisplays','LocalizacionDisplayController@guardarlacalizacionesdisplays')->name('guardarlacalizacionesdisplays');
+
+Route::post('cargardisplay/{id}','LocalizacionDisplayController@cargardisplayedit')->name('cargardisplayedit');
 
 
 

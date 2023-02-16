@@ -8,7 +8,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Lista de Intersecciones</h3>
+                <h3 class="card-title">Lista de Localizaciones Displays</h3>
                <!--  <router-link to="/create/groles" class="btn btn-primary">Registrar</router-link> -->
                 <div class="card-tools">
                  
@@ -21,7 +21,13 @@
                         <i class="fas fa-search"></i>
                       </button>
                     </div>
+
+                      <button type="submit" @click="crearlocalizacion" class="btn btn-primary">
+                            <i class="fa-solid fa-plus"></i> Crear
+                        </button>
                   </div>
+
+
                 </div>
               </div>
               <!-- /.card-header -->
@@ -30,15 +36,16 @@
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Intersección</th>
+                      <th>Localizacion</th>
                       <th>Acciones</th>
                     </tr>
-                    <tr v-for="interseccion in intersecciones.data" :key="interseccion.id">
+                    <tr v-for="interseccion in intersecciones" :key="interseccion.id">
                         <td>{{interseccion.id}}</td>
-                        <td>{{interseccion.interseccion}}</td>
+                        <td>{{interseccion.nombre_display}}</td>
                         <td>
-                            <button @click="editInterseccion(interseccion)" class="btn btn-outline-primary"><i class="fa-solid fa-pencil"></i></button>
+                            <button @click="cargaredit(interseccion)" class="btn btn-outline-primary"><i class="fa-solid fa-pencil"></i></button>
                             <button @click="showInterseccion(interseccion)" class="btn btn-outline-info"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            <button @click="showInterseccion(interseccion)" class="btn btn-outline-info"><i class="fa-sharp fa-solid fa-trash-can" style="color:red;"></i></button>
                         </td>
                         
                     </tr>
@@ -50,7 +57,9 @@
                     </pagination>
                 </div>
 
-                <div class="modal fade" id="showInterseccion" tabindex="-1" role="dialog" aria-labelledby=" showInterseccionInfoLabel" aria-hidden="true">
+                <!-- -->
+
+                 <div class="modal fade" id="showInterseccion" tabindex="-1" role="dialog" aria-labelledby=" showInterseccionInfoLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -96,110 +105,20 @@
                                 </div>
 
                                 <hr>
-                                <h5>Cruces</h5>
+                               
 
-                                <div v-if="editMode == true" class="row">
+                               
 
-                                    <div class="form-group col">
-
-                                        <label class="mt-2">Sentido</label>
-                                        <v-select 
-                                            v-model="form_cruces.sentido" 
-                                            :options="sentidos"
-                                        >
-                                            <has-error :form="form" field="sentido"></has-error>    
-                                        </v-select>
-
-                                        <label for="sentido-nombre" class="col-form-label">Dirección :</label>
-                                        <input v-model="form_cruces.sentido_nombre" type="text" @input="toUpperCaseText()" class="form-control" id="sentido-nombre">
-
-                                        <button :disabled="disabledAñadir" @click="añadirPatron()" type="button" class="btn btn-outline-info mt-4 btn-lg btn-block" >Añadir patrón</button>
-                                    </div>
-
-                                <div class="form-group col">
-                                    <label for="rojo" class="col-form-label">Rojo:</label>
-                                    <input v-model="form_cruces.rojo" type="number" class="form-control" id="rojo">
-
-                                    <label for="rojo-cruce-izq" class="col-form-label">Rojo cruce izq:</label>
-                                    <input v-model="form_cruces.rojo_cruce_izq" type="number" class="form-control" id="rojo-cruce-izq">
-
-                                    <label for="rojo-cruce-der" class="col-form-label">Rojo cruce der:</label>
-                                    <input v-model="form_cruces.rojo_cruce_der" type="number" class="form-control" id="rojo-cruce-der">
-                                </div>
-
-                                <div class="form-group col">
-                                    <label for="amarillo" class="col-form-label">Amarillo:</label>
-                                    <input v-model="form_cruces.amarillo" type="number" class="form-control" id="amarillo">
-
-                                    <label for="amarillo-cruce-izq" class="col-form-label">Amarillo cruce izq:</label>
-                                    <input v-model="form_cruces.amarillo_cruce_izq" type="number" class="form-control" id="amarillo-cruce-izq">
-
-                                    <label for="amarillo-cruce-der" class="col-form-label">Amarillo cruce der:</label>
-                                    <input v-model="form_cruces.amarillo_cruce_der" type="number" class="form-control" id="amarillo-cruce-der">
-                                </div>
-
-                                <div class="form-group col">
-                                    <label for="verde" class="col-form-label">Verde:</label>
-                                    <input v-model="form_cruces.verde" type="number" class="form-control" id="verde">
-
-                                    <label for="verde-cruce-izq" class="col-form-label">Verde cruce izq:</label>
-                                    <input v-model="form_cruces.verde_cruce_izq" type="number" class="form-control" id="verde-cruce-izq">
-
-                                    <label for="verde-cruce-der" class="col-form-label">Verde cruce der:</label>
-                                    <input v-model="form_cruces.verde_cruce_der" type="number" class="form-control" id="verde-cruce-der">
-                                </div>
-        
-                            </div>
-
-
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Dirección</th>
-                                        <th scope="col">Sentido</th>
-                                        <th scope="col">Rojo</th>
-                                        <th scope="col">Rojo cruce izq</th>
-                                        <th scope="col">Rojo cruce der</th>
-                                        <th scope="col">Amarillo</th>
-                                        <th scope="col">Amarillo cruce izq</th>
-                                        <th scope="col">Amarillo cruce der</th>
-                                        <th scope="col">Verde</th>
-                                        <th scope="col">Verde cruce izq</th>
-                                        <th scope="col">Verde cruce der</th>
-                                        <th v-if="editMode == true" scope="col">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr  v-for="d, index in direcciones_arr" :key="index+1">
-                                        <td>{{ index+1 }}</td>
-                                        <td>{{ d.direccion ?? d.sentido_nombre  }}</td>
-                                        <td>{{ d.sentido }}</td>
-                                        <td style="color: red;">{{ d.rojo }}</td>
-                                        <td style="color: red;">{{ d.rojo_cruce_izq }}</td>
-                                        <td style="color: red;">{{ d.rojo_cruce_der }}</td>
-                                        <td style="color: orange;">{{ d.amarillo }}</td>
-                                        <td style="color: orange;">{{ d.amarillo_cruce_izq }}</td>
-                                        <td style="color: orange;">{{ d.amarillo_cruce_der }}</td>
-                                        <td style="color: green;">{{ d.verde }}</td>
-                                        <td style="color: green;">{{ d.verde_cruce_izq }}</td>
-                                        <td style="color: green;">{{ d.verde_cruce_der }}</td>
-                                        <td class="text-center">
-                                            <a v-if="editMode == true" href="#" @click="deleteDireccionArr(index)">
-                                                <i class="fa-solid fa-trash red"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="button" @click="guardarInterseccion" class="btn btn-primary">{{ editMode ? 'Guardar cambios' : 'Guardar Interseccion' }} </button>
+                            <button type="button" @click="guardarInterseccion" class="btn btn-primary">Guardar</button>
+                            <button type="button" @click="guardarInterseccion" class="btn btn-primary"> Guardar Cambios</button>
                         </div>
                     </div>
                 </div>
             </div>
+
               </div>
               <!-- /.card-body -->
             </div>
@@ -305,6 +224,54 @@ export default {
               
             },
 
+                //
+
+
+            crearlocalizacion(interseccion){
+                this.editMode = true;
+                this.form = interseccion;
+                this.form.sentidos = []; 
+                this.direcciones_arr = [];
+              
+
+                $('#showInterseccion').modal('show')
+            },
+            //
+            async cargaredit(id){
+
+                 console.log('here i go', id.id)
+                 this.form.id = id;
+              
+               await this.form.post('/api/cargardisplay/'+id).then(({data}) => {
+
+                 console.log('ver que hay aqui', data);
+                
+                this.form.interseccion = data.observacion;
+                this.form.latitud = data.latitud;
+                this.form.longitud = data.longitud;
+                this.form.ip_equipo = data.ip_equipo; 
+                this.form.mac_equipo = data.mac_equipo;
+                this.form.zoom = data.zoom;
+                this.form.observacion = data.observacion;
+
+                //this.form.id = mensaje_id;
+                if(data.exito === 200){
+                    Swal.fire({
+                    icon  :'success',
+                    title:'Success!',
+                    text  : data.msg
+                  });
+                }
+                
+               
+            })
+                 this.accioneditar= false;
+           
+                 this.editMode = false;
+                console.log('listo');
+                $('#showInterseccion').modal('show')
+            },
+
             editInterseccion(interseccion){
                 this.editMode = true;
                 this.form = interseccion;
@@ -312,18 +279,7 @@ export default {
                 this.direcciones_arr = [];
                 this.form.sentidos = interseccion.patrones;
 
-                interseccion.patrones.forEach( (el) => {
-
-                    if( el.id != null ){
-                        console.log('id')
-                        this.direcciones_arr.push(el)
-                        // this.form.sentidos.push(el)
-
-                    }else{
-                        console.log('!id')
-                        this.direcciones_arr.push(el)
-                    }
-                })
+               
 
                 $('#showInterseccion').modal('show')
             },
@@ -403,7 +359,8 @@ export default {
             },
 
             async loadIntersecciones(){
-                await axios.get('api/intersecciones/listado').then(({data}) => this.intersecciones = data);
+               await axios.post('api/loadDisplays/listado').then(({data}) => this.intersecciones = data);
+               console.log(this.intersecciones);
             },
             async getRoles(){
                 await axios.get('api/listroles').then(({data}) => this.listaRoles = data.data);
@@ -424,13 +381,8 @@ export default {
             },
             async guardarInterseccion(){
 
-                const response = axios.post('/api/intersecciones', this.form).then(({data})=>{
-                //const response = await this.form.post('/api/intersecciones').then(({data}) => {
-                   
-                    if( data.exito ){
-
-                        if( data.id )
-                            this.form.id = data.id;
+                const response = axios.post('/api/guardarlacalizacionesdisplays', this.form).then(({data})=>{
+               
 
                          Swal.fire({
                             title: 'Hecho!',
@@ -442,19 +394,13 @@ export default {
 
                         }).then((result) => {
 
-                            $('#modalSemaforoInfo').modal('hide')
-                            
-                            if( this.direcciones_arr.length > 0 ){
-                                this.guardarPatrones();
-                            }
-
-                            else{
-                                this.reloadPage()
-                            }
+                            $('#showInterseccion').modal('hide')
+                            this.loadIntersecciones();
+                           
                                 
                         
                         })
-                    }
+                    
 
                 });
       
