@@ -1,17 +1,27 @@
 <template>
 
     <div style="height: 100%; width: 100%">
-        <div class="col-4 form-group ml-5 filtro">
-            <v-select 
-                v-model="filtro" 
-                :options="semaforos"
-                placeholder="SELECCIONE INTERSECCIÓN"
-                label="interseccion"
-                @input="selectLocationFilter()"
-            >
-                <has-error :form="form" field="filtro"></has-error>    
-            </v-select>
+        <div class="row">
+            <div class="col-7 form-group ml-4">
+                <div class="row">
+                    <p>Se encuentran seleccionadas {{ rutaLength }} intersecciones</p>
+                    <button @click="resetRutas" :disabled="!isRuta" class="btn btn-outline-primary ml-2">Reiniciar</button>
+                </div>
+                
+            </div>
+            <div class="col-4 form-group ml-5 filtro">
+                <v-select 
+                    v-model="filtro" 
+                    :options="semaforos"
+                    placeholder="SELECCIONE INTERSECCIÓN"
+                    label="interseccion"
+                    @input="selectLocationFilter()"
+                >
+                    <has-error :form="form" field="filtro"></has-error>    
+                </v-select>
+            </div>
         </div>
+        
 
         <div class="map-container">
             <l-map  @ready="doSomethingOnReady()"
@@ -213,14 +223,15 @@
           <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="modalSemaforoInfoLabel">INSTRUCCIONES PARA INTERSECCIÓN {{ this.form.interseccion }}</h5>
+                <h5 v-if="!isRuta" class="modal-title" id="modalSemaforoInfoLabel">INSTRUCCIONES PARA INTERSECCIÓN {{ this.form.interseccion }}</h5>
+                <h5 v-else class="modal-title" id="modalSemaforoInfoLabel">INSTRUCCIONES PARA INTERSECCIONES EN RUTA</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
 
-                <div class="row">
+                <div v-if="!isRuta" class="row">
 
                     <div class="form-group col">
                         <label class="mt-2">Sentido - Instrucción</label>
@@ -252,6 +263,53 @@
                         <input :disabled="!isRuta" v-model="form_instrucciones.intervalo_entre_interseccion" type="number" class="form-control" id="tiempo">
                     </div>
         
+                </div>
+                <div v-else class="row">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>IP</th>
+                                <th>Nombre</th>
+                                <th width="20%" >Sentido/Instrucción</th>
+                                <th width="20%">Color</th>
+                                <th width="10%">Tiempo</th>
+                            </tr>
+                            <tr v-for="(semaforo, index) in form_instrucciones.rutas.semaforos" :key="index">
+                                <td>{{semaforo.ip_equipo}}</td>
+                                <td>{{ semaforo.nombre.substring(0,50) }}</td>
+                                <td>
+                                    <div class="form-group col">
+                                            <v-select 
+                                                v-model="form_instrucciones.rutas.semaforos[index].sentido" 
+                                                :options="sentidosEmergencia"
+                                            >
+                                            <has-error :form="form" field="sentido"></has-error>    
+                                            </v-select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group col">
+                                        <v-select 
+                                            v-model="form_instrucciones.rutas.semaforos[index].color" 
+                                            :options="colores"
+                                        >
+                                        <has-error :form="form" field="color"></has-error>    
+                                        </v-select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input v-model="form_instrucciones.rutas.semaforos[index].tiempo" type="number" class="form-control" id="tiempo">
+                                    </div>
+                                </td>
+                        
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="col-3" >
+                        <label class="mt-2">Tiempo entre intersección</label>
+                        <input v-model="form_instrucciones.intervalo_entre_interseccion" type="number" class="form-control" id="intervalo_entre_interseccion">
+                    </div>
                 </div>
 
               </div>
@@ -338,7 +396,9 @@ export default {
                     tiempo:0,
                     ip_equipo: '',
                     intervalo_entre_interseccion: 0,
-                    ips: []
+                    rutas: {
+                        semaforos:[]
+                    }
                 }),
 
                 isReady : false,
@@ -408,6 +468,9 @@ export default {
             isRuta(){
                 return this.polyline.latlngs.length > 0;
             },
+            rutaLength(){
+                return this.form_instrucciones.rutas.semaforos.length
+            }
         },
         methods: {
 
@@ -437,7 +500,7 @@ export default {
 
             addRuta(semaforo){
                 this.polyline.latlngs.push([semaforo.latitud, semaforo.longitud])
-                this.form_instrucciones.ips.push(semaforo.ip_equipo)
+                this.form_instrucciones.rutas.semaforos.push({ ip_equipo: semaforo.ip_equipo, nombre: semaforo.interseccion, tiempo: 0, sentido:'', color:'' })
             },
 
             addMarker(event) {
@@ -466,7 +529,6 @@ export default {
 
             openModal(event){
                 console.log('openModal')
-                //this.form.reset();
                 this.form.interseccion = ''
                 this.form.latitud = ''
                 this.form.longitud = ''
@@ -503,7 +565,6 @@ export default {
                 if( el.id != null ){
                     console.log('id')
                     this.direcciones_arr.push(el)
-                   // this.form.sentidos.push(el)
 
                 }else{
                     console.log('!id')
@@ -516,7 +577,6 @@ export default {
           },
 
             innerClick(semaforo) {
-                //this.form.reset();
                 console.log('innerClick')
                 this.editMode = true;
                 this.form = semaforo;
@@ -567,7 +627,6 @@ export default {
             },
 
             openInstructionModal(semaforo) {
-                //this.form.reset();
                 console.log('intructionModal')
                 this.editMode = true;
                 this.form = semaforo;
@@ -580,21 +639,17 @@ export default {
                     if( el.id != null ){
                         console.log('id')
                         this.direcciones_arr.push(el)
-                        // this.form.sentidos.push(el)
 
                     }else{
                         console.log('!id')
                         this.direcciones_arr.push(el)
                     }
                 })
-
                 $('#modalInstruccion').modal('show')
-                
             },
 
 
             toUpperCaseText(){
-                console.log('upper')
                 this.form_cruces.sentido_nombre = this.form_cruces.sentido_nombre.toUpperCase(); 
             },
 
@@ -636,15 +691,12 @@ export default {
                         )
                     }
                 })
-                
             },
 
             añadirPatron(){
 
-                //console.log("añadir patron")
                 if( !this.patronExiste(this.form_cruces.sentido) ){
 
-                    //this.direcciones_arr.push(this.form_cruces);
                     this.direcciones_arr.push({ sentido: this.form_cruces.sentido, direccion: this.form_cruces.sentido_nombre, rojo: this.form_cruces.rojo,
                     rojo_cruce_izq: this.form_cruces.rojo_cruce_izq, rojo_cruce_der: this.form_cruces.rojo_cruce_der, amarillo: this.form_cruces.amarillo, amarillo_cruce_izq: this.form_cruces.amarillo_cruce_izq,
                     amarillo_cruce_der: this.form_cruces.amarillo_cruce_der, verde: this.form_cruces.verde, verde_cruce_izq: this.form_cruces.verde_cruce_izq, verde_cruce_der: this.form_cruces.verde_cruce_der });
@@ -660,10 +712,6 @@ export default {
                     this.form_cruces.verde = 0;
                     this.form_cruces.verde_cruce_izq = 0;
                     this.form_cruces.verde_cruce_der = 0;
-                    //this.form_cruces. = {}
-                    //this.form.cantidad = ''
-                    //this.form.precio_unitario = ''
-                    //this.form.descuento = ''
                 
                 }else{
 
@@ -673,8 +721,6 @@ export default {
             },
 
             selectLocationFilter(){
-                console.log("filtrando");
-                console.log(this.filtro)
                 if( this.filtro.latitud ){
                     this.currentZoom = 16;
                     this.zoom = 16;
@@ -691,8 +737,6 @@ export default {
                 
                 await axios.post("/api/mqtt/publish", this.form_instrucciones).then(({data})=>{
 
-                    console.log(data)
-
                     if( data.exito  ){
 
                          Swal.fire({
@@ -705,12 +749,14 @@ export default {
 
                         }).then((result)=>{
 
+                            $('#modalInstruccion').modal('hide');
+
                             this.form_instrucciones.sentido = '';
                             this.form_instrucciones.color = '';
                             this.form_instrucciones.tiempo = 0;
 
-                            //$('#modalInstruccion').modal('hide');
-                
+                            this.resetRutas()
+
                         })
                     }
                     else{
@@ -737,8 +783,7 @@ export default {
             async guardarInterseccion(){
 
                 const response = axios.post('/api/intersecciones', this.form).then(({data})=>{
-                //const response = await this.form.post('/api/intersecciones').then(({data}) => {
-                   
+
                     if( data.exito ){
 
                         if( data.id )
@@ -790,6 +835,12 @@ export default {
                         this.reloadPage()
                      }
                 })
+            },
+
+            resetRutas(){
+                console.log('ay')
+                this.form_instrucciones.rutas.semaforos = []
+                this.polyline.latlngs = []
             }
 
     

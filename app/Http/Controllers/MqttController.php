@@ -10,11 +10,11 @@ class MqttController extends Controller
 
     public function publish(Request $request){
         try{
-            if( count($request->ips) ){
-                foreach($request->ips as $ip){
-                    $request->ip_equipo = $ip;
-                    \Log::info($request->ip_equipo);
-                    $this->handlePublish($request);
+            $time = $request->intervalo_entre_interseccion > 0 ? $request->intervalo_entre_interseccion : 2;
+            if( count($request->rutas['semaforos']) ){
+                foreach($request->rutas['semaforos'] as $semaforo){
+                    $this->handlePublish($semaforo);
+                    sleep($time);
                 }
             }else{
                 $this->handlePublish($request);
@@ -27,41 +27,33 @@ class MqttController extends Controller
         
     }
 
-    public function handlePublish(Request $request){
+    public function handlePublish($objeto){
 
         try{
 
             $instruccion = '';
             $topico = '';
 
-            if( $request->sentido != '' && $request->color == '' && $request->tiempo > 0){
-
-                $instruccion = $request->sentido.':'.$request->tiempo.null;
-
+            if( $objeto['sentido'] != '' && $objeto['color'] == '' && $objeto['tiempo'] > 0){
+                $instruccion = $objeto['sentido'].':'.$objeto['tiempo'].null;
                 $instruccion = trim($instruccion);
-
-                $topico = 'vit/topic/prueba/'.$request->ip_equipo;
-
+                $topico = 'vit/topic/prueba/'.$objeto['ip_equipo'];
+                \Log::warning($topico);
                 MQTT::publish( $topico, $instruccion);
             }
 
-            else if ( $request->sentido != '' && $request->color == '' && $request->tiempo < 1){
-
-                $instruccion = $request->sentido.'';
-
-                $topico = 'vit/topic/prueba/'.$request->ip_equipo;
-
+            else if ( $objeto['sentido'] != '' && $objeto['color'] == '' && $objeto['tiempo'] < 1){
+                $instruccion = $objeto['sentido'].'';
+                $topico = 'vit/topic/prueba/'.$objeto['ip_equipo'];
+                \Log::warning($topico);
                 MQTT::publish($topico, $instruccion);
             }
 
-            else if ( $request->sentido == '' && $request->color != '' ){
-
-                $instruccion = $request->color.':'.$request->tiempo.null;
-
+            else if ( $objeto['sentido'] == '' && $objeto['color'] != '' ){
+                $instruccion = $objeto['color'].':'.$objeto['tiempo'].null;
                 $instruccion = trim($instruccion);
-
-                $topico = 'vit/topic/prueba/'.$request->ip_equipo;
-
+                $topico = 'vit/topic/prueba/'.$objeto['ip_equipo'];
+                \Log::warning($topico);
                 MQTT::publish($topico, $instruccion);
             }
         
