@@ -37,7 +37,7 @@ return [
             // The host and port to which the client shall connect.
             //'host' => env('MQTT_HOST'),
             'host' => 'test.mosquitto.org',
-            'port' => env('MQTT_PORT', 1882),
+            'port' => env('MQTT_PORT', 1883),
 
             // The MQTT protocol version used for the connection.
             'protocol' => MqttClient::MQTT_3_1,
