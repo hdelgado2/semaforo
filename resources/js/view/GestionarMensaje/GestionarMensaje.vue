@@ -19,7 +19,7 @@
                         </button>
                     </div>
                     <div class="col">
-                        <input type="text" v-model="search" @input="buscarInterseccion"  name="table_search" class="form-control float-right" placeholder="Search">
+                        <input type="text" v-model="search" @input="buscarMensaje"  name="table_search" class="form-control float-right" placeholder="Search">
                     </div>
                    
                     
@@ -140,9 +140,18 @@ export default {
                     });
             },
 
+            //vanessa function 
+            // async buscarInterseccion(){
+            //     await axios.get('api/mensajes/listado/search/'+this.search).then(({ data }) => {
+            //             this.mensajes = data
+            //         })
+            // },
 
-            async buscarInterseccion(){
-                await axios.get('api/mensajes/listado/search/'+this.search).then(({ data }) => {
+             async buscarMensaje(){
+                console.log('trying angel', this.search);
+                let query= this.search;
+                await axios.get('api/mensajesearch?q='+query).then(({ data }) => {
+                    console.log('probando datos retornados: ', data);
                         this.mensajes = data
                     })
             },

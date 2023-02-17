@@ -55,5 +55,14 @@ Route::post('guardarlacalizacionesdisplays','LocalizacionDisplayController@guard
 
 Route::post('cargardisplay/{id}','LocalizacionDisplayController@cargardisplayedit')->name('cargardisplayedit');
 
+Route::post('botoneditardisplay','LocalizacionDisplayController@botoneditardisplay')->name('botoneditardisplay');
+
+Route::post('deletedisplay','LocalizacionDisplayController@deletedisplay')->name('deletedisplay');
+
+//search mensaje
+Route::get('mensajesearch','MensajesController@search')->name('mensajesearch');
+Route::get('displaysearch','LocalizacionDisplayController@search')->name('displaysearch');
 
 
+displayselect
+Route::apiResources(['displayselect' => 'InterseccionController']);

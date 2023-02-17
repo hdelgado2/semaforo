@@ -12,19 +12,22 @@
                <!--  <router-link to="/create/groles" class="btn btn-primary">Registrar</router-link> -->
                 <div class="card-tools">
                  
-                  <div class="input-group input-group-sm" style="width: 150px;">
+                  <div class="input-group input-group-md" style="width: 250px;">
 
-                    <input type="text" v-model="search" @input="buscarInterseccion"  name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" @click="searchRoles" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
-                    </div>
-
+                    <div class="col">
                       <button type="submit" @click="crearlocalizacion" class="btn btn-primary">
                             <i class="fa-solid fa-plus"></i> Crear
                         </button>
+                    </div>
+
+                    <div class="col">
+                         <input type="text" v-model="search" @input="BuscarDisplay"  name="table_search" class="form-control float-right" placeholder="Search">
+                    </div>
+                   
+
+                    
+
+                     
                   </div>
 
 
@@ -44,8 +47,8 @@
                         <td>{{interseccion.nombre_display}}</td>
                         <td>
                             <button @click="cargaredit(interseccion)" class="btn btn-outline-primary"><i class="fa-solid fa-pencil"></i></button>
-                            <button @click="showInterseccion(interseccion)" class="btn btn-outline-info"><i class="fa-solid fa-magnifying-glass"></i></button>
-                            <button @click="showInterseccion(interseccion)" class="btn btn-outline-info"><i class="fa-sharp fa-solid fa-trash-can" style="color:red;"></i></button>
+                            <button @click="showdatosdisplay(interseccion)" class="btn btn-outline-info"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            <button @click="deletedisplay(interseccion)" class="btn btn-outline-info"><i class="fa-sharp fa-solid fa-trash-can" style="color:red;"></i></button>
                         </td>
                         
                     </tr>
@@ -72,7 +75,7 @@
                                 <div class="row">
                                     <div class="form-group col-8">
                                         <label for="interseccion" class="col-form-label">Nombre intersección:</label>
-                                        <input :readonly="!editMode"  v-model="form.interseccion" type="text" class="form-control" id="interseccion">
+                                        <input :readonly="!editMode"  v-model="form.nombre_display" type="text" class="form-control" id="interseccion">
                                     </div>
                                     <div class="form-group col-2">
                                         <label for="latitud" class="col-form-label">Latitud:</label>
@@ -113,7 +116,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                             <button type="button" @click="guardarInterseccion" class="btn btn-primary">Guardar</button>
-                            <button type="button" @click="guardarInterseccion" class="btn btn-primary"> Guardar Cambios</button>
+                            <button type="button" @click="editDisplay" class="btn btn-primary"> Guardar Cambios</button>
                         </div>
                     </div>
                 </div>
@@ -138,7 +141,8 @@ export default {
         },
         data(){
             return{
-                intersecciones:[],
+
+                intersecciones:{},
                 paginate: ['intersecciones'],
 
                 form: new Form({
@@ -150,7 +154,7 @@ export default {
                     mac_equipo:'',
                     zoom:'',
                     observacion:'',
-                    sentidos:[]
+                   // sentidos:[]
                 }),
 
                 form_cruces: new Form({
@@ -237,98 +241,89 @@ export default {
                 $('#showInterseccion').modal('show')
             },
             //
-            async cargaredit(id){
 
-                 console.log('here i go', id.id)
-                 this.form.id = id;
-              
-               await this.form.post('/api/cargardisplay/'+id).then(({data}) => {
+           async deletedisplay(interseccion){
 
-                 console.log('ver que hay aqui', data);
+            this.form = interseccion;
+             const response = axios.post('/api/deletedisplay/', this.form).then((result) => {
                 
-                this.form.interseccion = data.observacion;
-                this.form.latitud = data.latitud;
-                this.form.longitud = data.longitud;
-                this.form.ip_equipo = data.ip_equipo; 
-                this.form.mac_equipo = data.mac_equipo;
-                this.form.zoom = data.zoom;
-                this.form.observacion = data.observacion;
-
-                //this.form.id = mensaje_id;
-                if(data.exito === 200){
-                    Swal.fire({
+            //  this.Lista = result['data']
+              Swal.fire({
                     icon  :'success',
                     title:'Success!',
-                    text  : data.msg
+                    text  : "eliminado con exito",
+                    toast : true
                   });
-                }
-                
-               
-            })
-                 this.accioneditar= false;
-           
-                 this.editMode = false;
-                console.log('listo');
-                $('#showInterseccion').modal('show')
+
+
+
+                            this.loadIntersecciones();
+            });
+
             },
 
-            editInterseccion(interseccion){
-                this.editMode = true;
+
+            async cargaredit(interseccion){
+
+                 console.log('open modal')
+                
                 this.form = interseccion;
-                this.form.sentidos = []; 
-                this.direcciones_arr = [];
-                this.form.sentidos = interseccion.patrones;
-
-               
-
-                $('#showInterseccion').modal('show')
-            },
-
-            patronExiste(sentido) {
-                if( this.direcciones_arr.length > 0)
-                    return this.direcciones_arr.some(el => el.sentido  === sentido);
-
-                return false;
-            },
-
-            patronArrExiste(sentido) {
-                return this.direcciones_arr.some(el => el.interseccion === interseccion);
-            },
-
-            async buscarInterseccion(){
-                await axios.get('api/intersecciones/listado/search/'+this.search).then(({ data }) => {
-                        this.intersecciones = data
-                    })
-                // if(this.search != ''){
-                //     await axios.get('api/intersecciones/listado/search/'+this.search).then(({ data }) => {
-                //         this.intersecciones = data
-                //     })
-                // }
                 
+                $('#showInterseccion').modal('show')
+
+                 this.editMode = true;
+
+
+           
             },
 
-            showInterseccion(interseccion){
+            editDisplay(){
+                const response = axios.post('/api/botoneditardisplay', this.form).then(({data})=>{
+                   
+                    if( data.exito ){
+
+                        if( data.id )
+                            this.form.id = data.id;
+
+                         Swal.fire({
+                            title: 'Hecho!',
+                            text: data.msg,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
+                        }).then((result) => {
+
+                            $('#showInterseccion').modal('hide')
+                            this.loadIntersecciones();
+                        
+                        })
+                    }
+
+                });
+
+
+
+                console.log('editar')
+            },
+
+            async BuscarDisplay(){
+            console.log('trying angel', this.search);
+               let query= this.search;
+                await axios.get('api/displaysearch?q='+query).then(({ data }) => {
+                    console.log('probando datos retornados: ', data.data);
+                        this.intersecciones = data.data;
+                    })
+
+            },
+
+            showdatosdisplay(interseccion){
 
                 console.log('open modal')
                 this.editMode = false;
                 this.form = interseccion;
-                this.form.sentidos = []; 
-                this.direcciones_arr = [];
-                this.form.sentidos = interseccion.patrones;
-
-                interseccion.patrones.forEach( (el) => {
-
-                    if( el.id != null ){
-                        console.log('id')
-                        this.direcciones_arr.push(el)
-                        // this.form.sentidos.push(el)
-
-                    }else{
-                        console.log('!id')
-                        this.direcciones_arr.push(el)
-                    }
-                })
-
+                
                 $('#showInterseccion').modal('show')
             },
 
@@ -360,7 +355,7 @@ export default {
 
             async loadIntersecciones(){
                await axios.post('api/loadDisplays/listado').then(({data}) => this.intersecciones = data);
-               console.log(this.intersecciones);
+               console.log('es esta',this.intersecciones);
             },
             async getRoles(){
                 await axios.get('api/listroles').then(({data}) => this.listaRoles = data.data);

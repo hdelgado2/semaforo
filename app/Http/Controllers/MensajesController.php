@@ -54,34 +54,7 @@ public function cargarmensajeedit(Request $request)
 
 return ['exito' => 200,'msg' => 'Se ha Registrado con exito'];
 
-        // $this->validate($request, [
-        //     'login' => 'required',
-        //     'password' => 'required',
-        //     'nombre' => 'required',
-        //     'apellido' => 'required',
-        //     'roles' => 'required',
-        //     'cedula' => 'required'
-        // ]);
-
-        // try {
-        //     \DB::beginTransaction();
-
-        //     User::find($request->idUserEdit)->update([
-        //         'login'    => $request->login, 
-        //         'password' => md5($request->password),
-        //         'nombre'   => $request->nombre,
-        //         'apellido' => $request->apellido,
-        //         'roles_id' => $request->roles,
-        //         'cedula'   => $request->cedula
-        //     ]);
-
-        //     \DB::commit();
-        // } catch (\Exception $e) {
-        //     \DB::rollback();
-        //     dd($e->getMessage());
-        // }
-
-        // return ['exito' => 200,'msg' => 'Se ha Registrado con exito'];
+      
     }
 
 
@@ -96,6 +69,28 @@ return ['exito' => 200,'msg' => 'Se ha Registrado con exito'];
             // return $user1;
 
     }
+
+
+
+    public function search(){
+        
+         if ($search = \Request::get('q')) {
+       $mensajesSearch = Mensaje::where(function($query) use ($search){
+        $query->where('mensaje', 'ilike', "%$search%")
+            // ->orWhere('pfd_presupuesto', 'ilike', "%$search%")
+            ->orWhere('tipo_mensaje', 'ilike', "%$search%")
+            ->orWhere('motivo_mensaje', 'ilike', "%$search%");
+            
+       })->paginate(10);
+       
+   }else{
+        $mensajesSearch = Mensaje::latest()->paginate(10);
+        
+   }
+   return $mensajesSearch;
+        
+    }
+    
 
 
     
