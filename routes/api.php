@@ -67,3 +67,7 @@ Route::get('displaysearch','LocalizacionDisplayController@search')->name('displa
 //displayselect
 //Route::apiResources(['displayselect' => 'InterseccionController']);
 Route::apiResources(['displaysonline' => 'CentroMandoController']);
+Route::apiResources(['mensajeselect' => 'CentroMandoController@selectmensajes']);
+//route to turn back the information of the vselect of the modal mensaje
+Route::get('mensajeselect','CentroMandoController@selectmensajes')->name('mensajeselect');
+

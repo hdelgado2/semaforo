@@ -120,14 +120,16 @@
                     <div class="form-group col">
                         <label class="mt-2">Mensaje a Desplegar :</label>
                         <v-select 
-                            v-model="form_cruces.sentido" 
-                            :options="sentidos"
+                            v-model="form_mensajes.mensaje" 
+                            :options="mensajes"
+                            placeholder="SELECCIONE INTERSECCIÓN"
+                           label="mensaje"
                              >
                             <has-error :form="form" field="sentido"></has-error>    
                         </v-select>
 
                         <label for="sentido-nombre" class="col-form-label">Tiempo del Mensaje :</label>
-                        <input v-model="form_cruces.sentido_nombre" type="text" @input="toUpperCaseText()" class="form-control" id="sentido-nombre">
+                        <input v-model="form_mensajes.tiempo" type="text" @input="toUpperCaseText()" class="form-control" id="sentido-nombre">
 
                         <button :disabled="disabledAñadir" @click="añadirPatron()" type="button" class="btn btn-outline-info mt-4 btn-lg btn-block" >Agregar</button>
                     </div>
@@ -199,6 +201,8 @@
                         <v-select 
                             v-model="form_instrucciones.sentido" 
                             :options="sentidosEmergencia"
+                             placeholder="SELECCIONE INTERSECCIÓN"
+                              label="mensaje"
                              >
                             <has-error :form="form" field="sentido"></has-error>    
                         </v-select>
@@ -314,6 +318,7 @@ export default {
                 popupAnchor: [0, -40],
                 iconUrl: require('leaflet/dist/images/marker-icon.png'),
                 semaforos: [],
+                mensajes:[],
                 filtro: '',
                 polyline: {
                     latlngs: [],
@@ -330,6 +335,12 @@ export default {
                     zoom:'',
                     observacion:'',
                     sentidos:[]
+                }),
+
+                form_mensajes: new Form({
+                    mensaje:'',
+                    tiempo:'',
+
                 }),
 
                 form_cruces: new Form({
@@ -381,6 +392,7 @@ export default {
 
             //this.loadIntersecciones();
             this.loadLocationDisplay();
+            this.loadMensajesDisplay();
 
             
             this.$nextTick(() => {
@@ -747,12 +759,22 @@ export default {
 
             async loadLocationDisplay(){
                 await axios.get('api/displaysonline').then(({data}) => this.semaforos = data );
-                console.log("listo");
-                console.log('estos son los datos', this.semaforos);
+                // console.log("listo");
+                // console.log('estos son los datos', this.semaforos);
                 if( this.semaforos.length > 0) this.isReady = true;
             },
 
             //end
+
+            //function to load the information of the select
+            async loadMensajesDisplay(){
+                await axios.get('api/mensajeselect').then(({data}) => this.mensajes = data );
+                console.log("listo");
+                console.log('estos son los datos', this.mensajes);
+                if( this.mensajes.length > 0) this.isReady = true;
+            },
+
+            //
 
             async guardarInterseccion(){
 

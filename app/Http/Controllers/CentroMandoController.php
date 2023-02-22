@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Interseccion;
 use App\LocalizacionDisplay;
+use App\Mensaje;
 use Illuminate\Support\Facades\DB;
 use App\PatronSemaforo;
 
@@ -161,4 +162,13 @@ class CentroMandoController extends Controller
 
         
     }
+
+    public function selectmensajes(){
+ 
+        $datos = Mensaje::get();
+//dd('llegue bro', $datos);
+       return $datos;
+    }
+
+
 }
