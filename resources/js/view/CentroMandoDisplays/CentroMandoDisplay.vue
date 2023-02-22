@@ -173,7 +173,8 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" @click="guardarInterseccion" class="btn btn-outline-primary"><strong>{{ editMode ? 'Guardar cambios' : 'Guardar Interseccion' }} </strong></button>
+                <button type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Guardar</button>
+                <button type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Editar</button>
               </div>
             </div>
           </div>
@@ -340,6 +341,9 @@ export default {
                 form_mensajes: new Form({
                     mensaje:'',
                     tiempo:'',
+                    idDisplay:'',
+                    idMensaje:'',
+
 
                 }),
 
@@ -383,7 +387,9 @@ export default {
                 colores:['ROJO','VERDE','AMARILLO','ROJO CRUCE IZQ','ROJO CRUCE DER','AMARILLO CRUCE IZQ','AMARILLO CRUCE DER','VERDE CRUCE IZQ','VERDE CRUCE DER'],
                 
                 direcciones_arr:[],
-                rutas:[]
+                rutas:[],
+                idDisplay:'',
+                idMensaje:'',
             };
 
         },
@@ -393,6 +399,7 @@ export default {
             //this.loadIntersecciones();
             this.loadLocationDisplay();
             this.loadMensajesDisplay();
+
 
             
             this.$nextTick(() => {
@@ -551,33 +558,25 @@ export default {
           },
 
             innerClick(semaforo) {
-                console.log('innerClick')
+
+             //   console.log('innerClick',semaforo)
                 this.editMode = true;
                 this.form = semaforo;
+                this.form.interseccion = semaforo.nombre_display;
                 this.form.sentidos = []; 
                 this.direcciones_arr = [];
                 this.form.sentidos = semaforo.patrones;
 
-                semaforo.patrones.forEach( (el) => {
-
-                    if( el.id != null ){
-                        console.log('id')
-                        this.direcciones_arr.push(el)
-                        // this.form.sentidos.push(el)
-
-                    }else{
-                        console.log('!id')
-                        this.direcciones_arr.push(el)
-                    }
-                })
+               this.loadMensajesDisplayTable(semaforo);
 
                 $('#modalSemaforoInfo').modal('show')
                 
             },
 
             showOptions(semaforo){
-                let sem = semaforo
 
+                let sem = semaforo
+//console.log('esto es sem:',sem);
                 Swal.fire({
                     title: 'Seleccione una acción',
                     showDenyButton: true,
@@ -776,9 +775,18 @@ export default {
 
             //
 
-            async guardarInterseccion(){
+            //function to save the information and create a new massage in a display.
 
-                const response = axios.post('/api/intersecciones', this.form).then(({data})=>{
+
+            async guardarDisplaymassages(){
+                console.log('probando', this.mensajes);
+
+                const response = axios.post('/api/LocationDisplay', this.form).then(({data})=>{
+                console.log('este es el id que estoy buscando :', data.id);   
+                this.form_mensajes.idDisplay =  data.id;
+                this.form_mensajes.idMensaje = this.mensajes.id;   
+                this.guardarMensajeDisplay();
+                            
 
                     if( data.exito ){
 
@@ -812,6 +820,130 @@ export default {
                 });
       
             },
+            //function to load the table messages and displays
+
+
+            loadMensajesDisplayTable(semaforo){
+                //console.log('this is the data bro :',semaforo);
+                 const response = axios.post('/api/loadtabla', semaforo).then(({data})=>{
+                console.log('guardo con exito :', data);   
+                this.idDisplay = this.form_mensajes.mensaje.id;
+                this.idMensaje =  data.id;               
+
+                    if( data.exito ){
+
+                        if( data.id )
+                            this.form.id = data.id;
+
+                         Swal.fire({
+                            title: 'Hecho!',
+                            text: data.msg,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
+                        }).then((result) => {
+
+                            $('#modalSemaforoInfo').modal('hide')
+                            this.guardarMensajeDisplay();
+                            if( this.direcciones_arr.length > 0 ){
+                                this.guardarPatrones();
+                            }
+
+                            else{
+                                this.reloadPage()
+                            }
+                                
+                        
+                        })
+                    }
+
+                });
+
+            },
+            //
+
+            async guardarMensajeDisplay(){
+
+                //console.log('probando', this.form_mensajes.mensaje.id);
+
+                const response = axios.post('/api/saveMassageDisplay', this.form_mensajes).then(({data})=>{
+                console.log('guardo con exito :', data);   
+                this.idDisplay = this.form_mensajes.mensaje.id;
+                this.idMensaje =  data.id;               
+
+                    if( data.exito ){
+
+                        if( data.id )
+                            this.form.id = data.id;
+
+                         Swal.fire({
+                            title: 'Hecho!',
+                            text: data.msg,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
+                        }).then((result) => {
+
+                            $('#modalSemaforoInfo').modal('hide')
+                            this.guardarMensajeDisplay();
+                            if( this.direcciones_arr.length > 0 ){
+                                this.guardarPatrones();
+                            }
+
+                            else{
+                                this.reloadPage()
+                            }
+                                
+                        
+                        })
+                    }
+
+                });
+
+
+            },
+            //
+
+            // async guardarInterseccion(){
+
+            //     const response = axios.post('/api/intersecciones', this.form).then(({data})=>{
+
+            //         if( data.exito ){
+
+            //             if( data.id )
+            //                 this.form.id = data.id;
+
+            //              Swal.fire({
+            //                 title: 'Hecho!',
+            //                 text: data.msg,
+            //                 icon: 'success',
+            //                 showCancelButton: false,
+            //                 confirmButtonColor: '#3085d6',
+            //                 confirmButtonText: 'Ok'
+
+            //             }).then((result) => {
+
+            //                 $('#modalSemaforoInfo').modal('hide')
+                            
+            //                 if( this.direcciones_arr.length > 0 ){
+            //                     this.guardarPatrones();
+            //                 }
+
+            //                 else{
+            //                     this.reloadPage()
+            //                 }
+                                
+                        
+            //             })
+            //         }
+
+            //     });
+      
+            // },
 
             async guardarPatrones(){
 

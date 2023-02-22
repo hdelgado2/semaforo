@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Interseccion;
 use App\LocalizacionDisplay;
 use App\Mensaje;
+use App\MensajeDisplay;
 use Illuminate\Support\Facades\DB;
 use App\PatronSemaforo;
 
@@ -169,6 +170,60 @@ class CentroMandoController extends Controller
 //dd('llegue bro', $datos);
        return $datos;
     }
+
+     public function LocationDisplay(Request $request){
+ //dd('hey bro this work', $request);
+
+        //dd('llego aqui', $request);
+
+
+        $localizacion = new LocalizacionDisplay();
+        $localizacion->nombre_display = $request->interseccion;
+        $localizacion->ip_equipo = $request->ip_equipo;
+        $localizacion->mac_equipo = $request->mac_equipo;
+        $localizacion->latitud = $request->latitud;
+        $localizacion->longitud = $request->longitud;
+        $localizacion->zoom = $request->zoom;
+        $localizacion->observacion = $request->observacion;
+   //     dd($localizacion);
+        $localizacion->save();
+
+        return $localizacion;
+    
+
+    }
+
+     public function saveMassageDisplay(Request $request){
+//dd('hey bro is working', $request->mensaje['id']);
+        //dd($request->idDisplay);
+        $mensajedisplay = new MensajeDisplay();
+        $mensajedisplay->id_crear_mensaje = $request->mensaje['id'];
+        $mensajedisplay->id_localizacion_display = $request->idDisplay;
+        $mensajedisplay->tiempo = $request->tiempo;
+        
+   //     dd($localizacion);
+        $mensajedisplay->save();
+
+        return $mensajedisplay;
+    
+
+        
+
+     }
+
+     public function loadtabla(Request $request){
+        //dd('chegue', $request);
+        $datos = Mensajedisplay::with('LocationDisplay','Mensaje')->orderBy('id','desc')->paginate();
+        //$datos = Mensajedisplay::has('Mensaje')->with('Mensaje')->get();
+        // $datos = LocalizacionDisplay::with('mensajeDisplay')->orderBy('id','desc')->paginate();
+        return $datos;
+
+        //dd('chegue', $datos);
+     }
+//return Interseccion::with('patrones')->orderBy('id','desc')->paginate();
+    //
+
+      // $intersecciones = Interseccion::where('interseccion','ilike','%'.$search.'%')->has('patrones')->with('patrones')->orderBy('id','desc')->paginate();where('id_localizacion_display','=', $request['id'])
 
 
 }

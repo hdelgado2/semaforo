@@ -70,4 +70,12 @@ Route::apiResources(['displaysonline' => 'CentroMandoController']);
 Route::apiResources(['mensajeselect' => 'CentroMandoController@selectmensajes']);
 //route to turn back the information of the vselect of the modal mensaje
 Route::get('mensajeselect','CentroMandoController@selectmensajes')->name('mensajeselect');
+//route to save the information of a new message assigned to the display.
+Route::post('LocationDisplay','CentroMandoController@LocationDisplay')->name('LocationDisplay');
+
+Route::post('saveMassageDisplay','CentroMandoController@saveMassageDisplay')->name('saveMassageDisplay');
+
+Route::post('loadtabla','CentroMandoController@loadtabla')->name('loadtabla');
+
+
 
