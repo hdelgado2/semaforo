@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCrearMensajesTable extends Migration
+class CreateGuardiasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateCrearMensajesTable extends Migration
      */
     public function up()
     {
-        Schema::create('crear_mensaje', function (Blueprint $table) {
+        Schema::create('guardias', function (Blueprint $table) {
             $table->id();
-            $table->string("tipo_mensaje");
-            $table->string("motivo_mensaje")->nullable();
-            $table->string("mensaje");
-            $table->boolean("estado_mensaje")->default(true);
-            $table->boolean("desactivar")->default(false);
+            $table->foreignId('usuarios_id')->constrained('usuarios');
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
+            $table->time('hora_inicio')->nullable();
+            $table->time('hora_fin')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateCrearMensajesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('crear_mensaje');
+        Schema::dropIfExists('guardias');
     }
 }

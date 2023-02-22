@@ -26,6 +26,7 @@ class CreatePatronSemaforoTable extends Migration
             $table->integer('verde')->default(0);
             $table->integer('verde_cruce_izq')->default(0);
             $table->integer('verde_cruce_der')->default(0);
+            $table->string('sentido')->nullable();
             $table->timestamps();
         });
     }

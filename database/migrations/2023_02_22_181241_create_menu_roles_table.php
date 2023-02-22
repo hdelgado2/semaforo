@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddSentidoFieldToPatronSemaforoTable extends Migration
+class CreateMenuRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AddSentidoFieldToPatronSemaforoTable extends Migration
      */
     public function up()
     {
-        Schema::table('patron_semaforo', function (Blueprint $table) {
-            $table->string('sentido')->nullable();
+        Schema::create('menu_roles', function (Blueprint $table) {
+            $table->id();
+            $table->integer('menu_id');
+            $table->integer('roles_id');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ class AddSentidoFieldToPatronSemaforoTable extends Migration
      */
     public function down()
     {
-        Schema::table('patron_semaforo', function (Blueprint $table) {
-            $table->dropColumn('sentido');
-        });
+        Schema::dropIfExists('menu_roles');
     }
 }

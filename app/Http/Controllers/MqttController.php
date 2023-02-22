@@ -35,23 +35,21 @@ class MqttController extends Controller
             $topico = '';
 
             if( $objeto['sentido'] != '' && $objeto['color'] == '' && $objeto['tiempo'] > 0){
-                $instruccion = $objeto['sentido'].':'.$objeto['tiempo'].null;
-                $instruccion = trim($instruccion);
+                $instruccion = $this->makeInstruction($objeto['sentido'], $objeto['color'], $objeto['tiempo']);
                 $topico = 'vit/topic/prueba/'.$objeto['ip_equipo'];
                 \Log::warning($topico);
                 MQTT::publish( $topico, $instruccion);
             }
 
             else if ( $objeto['sentido'] != '' && $objeto['color'] == '' && $objeto['tiempo'] < 1){
-                $instruccion = $objeto['sentido'].'';
+                $instruccion = $this->makeInstruction($objeto['sentido'], $objeto['color'], $objeto['tiempo']);
                 $topico = 'vit/topic/prueba/'.$objeto['ip_equipo'];
                 \Log::warning($topico);
                 MQTT::publish($topico, $instruccion);
             }
 
             else if ( $objeto['sentido'] == '' && $objeto['color'] != '' ){
-                $instruccion = $objeto['color'].':'.$objeto['tiempo'].null;
-                $instruccion = trim($instruccion);
+                $instruccion = $this->makeInstruction($objeto['sentido'], $objeto['color'], $objeto['tiempo']);
                 $topico = 'vit/topic/prueba/'.$objeto['ip_equipo'];
                 \Log::warning($topico);
                 MQTT::publish($topico, $instruccion);
@@ -67,6 +65,17 @@ class MqttController extends Controller
             \Log::info('Error al enviar instrucción: '.$e->getMessage());
             return ['code' => 500, 'exito' => false, 'msg' => 'Ha ocurrido un error: '];
         }
+    }
 
+    public function makeInstruction( $inst = null, $color = null, $tiempo = 0)
+    {
+        $instruccion = '';
+
+        if( $inst != '' && $inst != null ) $instruccion = $inst;
+        else if ($color != '' && $color != null ) $instruccion = $color.':';
+        
+        if( $tiempo > 0 && $tiempo != null ) $instruccion.':'.$tiempo.null;
+
+        return trim($instruccion);
     }
 }
