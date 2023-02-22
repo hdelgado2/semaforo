@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCrearMensajeTable extends Migration
+class CreateUsuariosInterseccionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateCrearMensajeTable extends Migration
      */
     public function up()
     {
-        Schema::create('crear_mensaje', function (Blueprint $table) {
+        Schema::create('usuarios_interseccion', function (Blueprint $table) {
             $table->id();
-            $table->string('tipo_mensaje');
-            $table->string('motivo_mensaje');
-            $table->string('mensaje');
-            $table->boolean('estado_mensaje');
-            $table->boolean('desactivar');
+            $table->integer('intersecciones_id');
+            $table->integer('usuarios_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -31,6 +29,6 @@ class CreateCrearMensajeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('crear_mensaje');
+        Schema::dropIfExists('usuarios_interseccion');
     }
 }
