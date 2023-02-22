@@ -64,5 +64,6 @@ Route::get('mensajesearch','MensajesController@search')->name('mensajesearch');
 Route::get('displaysearch','LocalizacionDisplayController@search')->name('displaysearch');
 
 
-displayselect
-Route::apiResources(['displayselect' => 'InterseccionController']);
+//displayselect
+//Route::apiResources(['displayselect' => 'InterseccionController']);
+Route::apiResources(['displaysonline' => 'CentroMandoController']);

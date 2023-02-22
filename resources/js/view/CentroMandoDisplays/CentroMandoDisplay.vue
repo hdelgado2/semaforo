@@ -14,7 +14,7 @@
                     v-model="filtro" 
                     :options="semaforos"
                     placeholder="SELECCIONE INTERSECCIÓN"
-                    label="interseccion"
+                    label="nombre_display"
                     @input="selectLocationFilter()"
                 >
                     <has-error :form="form" field="filtro"></has-error>    
@@ -70,7 +70,7 @@
           <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="modalSemaforoInfoLabel">Semaforo {{ this.form.interseccion }}</h5>
+                <h5 class="modal-title" id="modalSemaforoInfoLabel">Display {{ this.form.interseccion }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -112,12 +112,13 @@
                 </div>
 
                 <hr>
-                <h5>Cruces</h5>
+                <h5>Programacion del display</h5>
 
+                
                 <div class="row">
 
                     <div class="form-group col">
-                        <label class="mt-2">Sentido</label>
+                        <label class="mt-2">Mensaje a Desplegar :</label>
                         <v-select 
                             v-model="form_cruces.sentido" 
                             :options="sentidos"
@@ -125,64 +126,27 @@
                             <has-error :form="form" field="sentido"></has-error>    
                         </v-select>
 
-                        <label for="sentido-nombre" class="col-form-label">Dirección :</label>
+                        <label for="sentido-nombre" class="col-form-label">Tiempo del Mensaje :</label>
                         <input v-model="form_cruces.sentido_nombre" type="text" @input="toUpperCaseText()" class="form-control" id="sentido-nombre">
 
-                        <button :disabled="disabledAñadir" @click="añadirPatron()" type="button" class="btn btn-outline-info mt-4 btn-lg btn-block" >Añadir patrón</button>
+                        <button :disabled="disabledAñadir" @click="añadirPatron()" type="button" class="btn btn-outline-info mt-4 btn-lg btn-block" >Agregar</button>
                     </div>
 
-                    <div class="form-group col">
-                        <label for="rojo" class="col-form-label">Rojo:</label>
-                        <input v-model="form_cruces.rojo" type="number" class="form-control" id="rojo">
-
-                        <label for="rojo-cruce-izq" class="col-form-label">Rojo cruce izq:</label>
-                        <input v-model="form_cruces.rojo_cruce_izq" type="number" class="form-control" id="rojo-cruce-izq">
-
-                        <label for="rojo-cruce-der" class="col-form-label">Rojo cruce der:</label>
-                        <input v-model="form_cruces.rojo_cruce_der" type="number" class="form-control" id="rojo-cruce-der">
-                    </div>
-
-                    <div class="form-group col">
-                        <label for="amarillo" class="col-form-label">Amarillo:</label>
-                        <input v-model="form_cruces.amarillo" type="number" class="form-control" id="amarillo">
-
-                        <label for="amarillo-cruce-izq" class="col-form-label">Amarillo cruce izq:</label>
-                        <input v-model="form_cruces.amarillo_cruce_izq" type="number" class="form-control" id="amarillo-cruce-izq">
-
-                        <label for="amarillo-cruce-der" class="col-form-label">Amarillo cruce der:</label>
-                        <input v-model="form_cruces.amarillo_cruce_der" type="number" class="form-control" id="amarillo-cruce-der">
-                    </div>
-
-                    <div class="form-group col">
-                        <label for="verde" class="col-form-label">Verde:</label>
-                        <input v-model="form_cruces.verde" type="number" class="form-control" id="verde">
-
-                        <label for="verde-cruce-izq" class="col-form-label">Verde cruce izq:</label>
-                        <input v-model="form_cruces.verde_cruce_izq" type="number" class="form-control" id="verde-cruce-izq">
-
-                        <label for="verde-cruce-der" class="col-form-label">Verde cruce der:</label>
-                        <input v-model="form_cruces.verde_cruce_der" type="number" class="form-control" id="verde-cruce-der">
-                    </div>
-        
+                    
                 </div>
 
+              <!--  -->
 
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Dirección</th>
-                            <th scope="col">Sentido</th>
-                            <th scope="col">Rojo</th>
-                            <th scope="col">Rojo cruce izq</th>
-                            <th scope="col">Rojo cruce der</th>
-                            <th scope="col">Amarillo</th>
-                            <th scope="col">Amarillo cruce izq</th>
-                            <th scope="col">Amarillo cruce der</th>
-                            <th scope="col">Verde</th>
-                            <th scope="col">Verde cruce izq</th>
-                            <th scope="col">Verde cruce der</th>
+                            <th scope="col">Mensaje </th>
+                            <th scope="col">Motivo del mensaje</th>
+                            <th scope="col">Estatus</th>
+                            <th scope="col">Tiempo</th>
                             <th scope="col">Acciones</th>
+                         
                         </tr>
                     </thead>
                     <tbody>
@@ -195,10 +159,7 @@
                             <td style="color: red;">{{ d.rojo_cruce_der }}</td>
                             <td style="color: orange;">{{ d.amarillo }}</td>
                             <td style="color: orange;">{{ d.amarillo_cruce_izq }}</td>
-                            <td style="color: orange;">{{ d.amarillo_cruce_der }}</td>
-                            <td style="color: green;">{{ d.verde }}</td>
-                            <td style="color: green;">{{ d.verde_cruce_izq }}</td>
-                            <td style="color: green;">{{ d.verde_cruce_der }}</td>
+                           
                             <td class="text-center">
                                 <a href="#" @click="deleteDireccionArr(index)">
                                     <i class="fa-solid fa-trash red"></i>
@@ -418,7 +379,8 @@ export default {
 
          mounted() {
 
-            this.loadIntersecciones();
+            //this.loadIntersecciones();
+            this.loadLocationDisplay();
 
             
             this.$nextTick(() => {
@@ -774,11 +736,23 @@ export default {
                 })
             },
 
-            async loadIntersecciones(){
-                await axios.get('api/intersecciones').then(({data}) => this.semaforos = data );
+            // async loadIntersecciones(){
+            //     await axios.get('api/intersecciones').then(({data}) => this.semaforos = data );
+            //     console.log("listo");
+            //     if( this.semaforos.length > 0) this.isReady = true;
+            // },
+
+
+            //here i start to work
+
+            async loadLocationDisplay(){
+                await axios.get('api/displaysonline').then(({data}) => this.semaforos = data );
                 console.log("listo");
+                console.log('estos son los datos', this.semaforos);
                 if( this.semaforos.length > 0) this.isReady = true;
             },
+
+            //end
 
             async guardarInterseccion(){
 
