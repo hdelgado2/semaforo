@@ -28,7 +28,7 @@ class RolSeed extends Seeder
 
         roles::create([
             'nombre_rol' => 'OPERADOR',
-            'descripcion' => 'USUARIO CON PERSIMO EN PANEL DE CONTROL',
+            'descripcion' => 'USUARIO CON PERMISO EN PANEL DE CONTROL',
             'activo' => true
         ]);
     }
