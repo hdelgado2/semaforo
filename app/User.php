@@ -21,6 +21,7 @@ class User extends Authenticatable
     protected $fillable = [
         'login', 'password','nombre','cedula','apellido','roles_id','id'
     ];
+    protected $appends = ['nombre_completo'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -39,4 +40,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getNombreCompletoAttribute(){
+        return $this->nombre.' '.$this->apellido;
+    }
 }

@@ -66,6 +66,7 @@ let routes = [
     { path: '/permisosuser', component: require('./view/Seguridad/Lista.vue').default },
     { path: '/addpermisos/:id', component: require('./view/Seguridad/agregarPermisos.vue').default },
     { path: '/lintersecciones', component: require('./view/Intersecciones/intersecciones.vue').default },
+    { path: '/incidencias', component: require('./view/Incidencias/Incidencias.vue').default },
     { path: '/mensajes', component: require('./view/Mensajes/Mensajes.vue').default },
     { path: '*', component: Foo }
 
