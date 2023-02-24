@@ -268,16 +268,13 @@ export default {
             },
 
             toUpperCaseText(){
-                console.log('upper')
                 this.form_cruces.sentido_nombre = this.form_cruces.sentido_nombre.toUpperCase(); 
             },
 
             añadirPatron(){
 
-                //console.log("añadir patron")
                 if( !this.patronExiste(this.form_cruces.sentido) ){
 
-                    //this.direcciones_arr.push(this.form_cruces);
                     this.direcciones_arr.push({ sentido: this.form_cruces.sentido, direccion: this.form_cruces.sentido_nombre, rojo: this.form_cruces.rojo,
                     rojo_cruce_izq: this.form_cruces.rojo_cruce_izq, rojo_cruce_der: this.form_cruces.rojo_cruce_der, amarillo: this.form_cruces.amarillo, amarillo_cruce_izq: this.form_cruces.amarillo_cruce_izq,
                     amarillo_cruce_der: this.form_cruces.amarillo_cruce_der, verde: this.form_cruces.verde, verde_cruce_izq: this.form_cruces.verde_cruce_izq, verde_cruce_der: this.form_cruces.verde_cruce_der });
@@ -293,11 +290,6 @@ export default {
                     this.form_cruces.verde = 0;
                     this.form_cruces.verde_cruce_izq = 0;
                     this.form_cruces.verde_cruce_der = 0;
-                    //this.form_cruces. = {}
-                    //this.form.cantidad = ''
-                    //this.form.precio_unitario = ''
-                    //this.form.descuento = ''
-                
                 }else{
 
                     Swal.fire("Oh no!", "Ya se encuentra añadido un patron en ese sentido.", "warning")
@@ -342,13 +334,7 @@ export default {
             async buscarInterseccion(){
                 await axios.get('api/intersecciones/listado/search/'+this.search).then(({ data }) => {
                         this.intersecciones = data
-                    })
-                // if(this.search != ''){
-                //     await axios.get('api/intersecciones/listado/search/'+this.search).then(({ data }) => {
-                //         this.intersecciones = data
-                //     })
-                // }
-                
+                    })                
             },
 
             showInterseccion(interseccion){
@@ -377,8 +363,6 @@ export default {
             },
 
             deleteDireccionArr(index){
-                console.log(index)
-
                 Swal.fire({
                     title: 'Eliminar?',
                     text: "No podra revertir esta acción!",
@@ -389,9 +373,7 @@ export default {
                     confirmButtonText: 'Si, eliminar!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-
                         this.direcciones_arr = this.direcciones_arr.filter( (direccion, i )=> i != index);
-
                         Swal.fire(
                             'Hecho!',
                             'Patron eliminado.',
@@ -423,14 +405,11 @@ export default {
                 });
             },
             async guardarInterseccion(){
-
                 const response = axios.post('/api/intersecciones', this.form).then(({data})=>{
-                //const response = await this.form.post('/api/intersecciones').then(({data}) => {
-                   
+
                     if( data.exito ){
 
-                        if( data.id )
-                            this.form.id = data.id;
+                        if( data.id ) this.form.id = data.id;
 
                          Swal.fire({
                             title: 'Hecho!',
@@ -443,18 +422,13 @@ export default {
                         }).then((result) => {
 
                             $('#modalSemaforoInfo').modal('hide')
-                            
                             if( this.direcciones_arr.length > 0 ){
                                 this.guardarPatrones();
-                            }
-
-                            else{
+                            }else{
                                 this.reloadPage()
                             }
-                                
-                        
                         })
-                    }
+                    }else Swal.fire('Oops there has been an error');
 
                 });
       

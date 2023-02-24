@@ -41,6 +41,11 @@ Route::post('mqtt/publish','MqttController@publish')->name('mqtt.publish');
 Route::apiResources(['mensajes' => 'MensajesController']);
 
 Route::apiResources(['incidencias' => 'IncidenciaController']);
+Route::get('incidencias-tipos','IncidenciaController@getTipos')->name('incidencia.tipos');
+Route::get('incidencias/search/{filtro}','IncidenciaController@search')->name('incidencia.search');
+Route::apiResources(['guardias' => 'GuardiaController']);
+Route::get('guardias-all','GuardiaController@getGuardias')->name('guardias.listado');
+
 
 
 
