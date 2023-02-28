@@ -41,8 +41,7 @@ Route::post('mqtt/publish','MqttController@publish')->name('mqtt.publish');
 
 Route::apiResources(['mensajes' => 'MensajesController']);
 
-//
-
+//here
 Route::post('editmensaje','MensajesController@editmensaje')->name('editmensaje');
 
 Route::post('cargarmensaje/{id}','MensajesController@cargarmensajeedit')->name('cargarmensajeedit');
@@ -58,6 +57,15 @@ Route::post('cargardisplay/{id}','LocalizacionDisplayController@cargardisplayedi
 Route::post('botoneditardisplay','LocalizacionDisplayController@botoneditardisplay')->name('botoneditardisplay');
 
 Route::post('deletedisplay','LocalizacionDisplayController@deletedisplay')->name('deletedisplay');
+
+Route::apiResources(['incidencias' => 'IncidenciaController']);
+Route::get('incidencias-tipos','IncidenciaController@getTipos')->name('incidencia.tipos');
+Route::get('incidencias/search/{filtro}','IncidenciaController@search')->name('incidencia.search');
+Route::apiResources(['guardias' => 'GuardiaController']);
+Route::get('guardias-all','GuardiaController@getGuardias')->name('guardias.listado');
+
+
+
 
 //search mensaje
 Route::get('mensajesearch','MensajesController@search')->name('mensajesearch');

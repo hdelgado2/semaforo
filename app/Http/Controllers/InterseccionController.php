@@ -63,15 +63,11 @@ class InterseccionController extends Controller
             DB::commit();
 
             \Log::info('Se ha creado nueva interseccion '.$interseccion->interseccion);
-            return ['exito' => 200, 'id' => $interseccion->id,'msg' => 'Se ha registrado con exito'];
+            return ['exito' => true, 'code' => 200, 'id' => $interseccion->id,'msg' => 'Se ha registrado con exito'];
 
         } catch (\Exception $e) {
-
             DB::rollback();
-
-            return ['exito' => 500,'msg' => 'Ha ocurrido un error: '.$e->getMessage()];
-
-            dd($e->getMessage());
+            return ['exito' => false, 'code' => 500, 'msg' => 'Ha ocurrido un error: '.$e->getMessage()];
         }
 
     }
@@ -153,8 +149,6 @@ class InterseccionController extends Controller
 
         if($intersecciones == null)
             return $this->show();
-        
-
         
     }
 }
