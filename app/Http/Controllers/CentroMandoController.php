@@ -213,17 +213,36 @@ class CentroMandoController extends Controller
 
      public function loadtabla(Request $request){
         //dd('chegue', $request);
-        $datos = Mensajedisplay::with('LocationDisplay','Mensaje')->orderBy('id','desc')->paginate();
-        //$datos = Mensajedisplay::has('Mensaje')->with('Mensaje')->get();
-        // $datos = LocalizacionDisplay::with('mensajeDisplay')->orderBy('id','desc')->paginate();
+
+
+          $datos = Mensajedisplay::with('Mensaje')->where('id_localizacion_display','=',$request['id'])->orderBy('id','desc')->paginate();
+
+
+        // $datos = Mensajedisplay::with(['Mensaje:mensaje,tipo_mensaje'])->where('id_localizacion_display','=',$request['id'])->orderBy('id','desc')->paginate();
+       
+     //   dd('chegue', $datos);
+
+        //$send= $datos[0]->Mensaje[0];
         return $datos;
 
-        //dd('chegue', $datos);
+        
      }
+
+
+
+
+
+
+
+
+
 //return Interseccion::with('patrones')->orderBy('id','desc')->paginate();
     //
 
       // $intersecciones = Interseccion::where('interseccion','ilike','%'.$search.'%')->has('patrones')->with('patrones')->orderBy('id','desc')->paginate();where('id_localizacion_display','=', $request['id'])
+      //$datos = Mensajedisplay::has('Mensaje')->with('Mensaje')->get();
+        // $datos = LocalizacionDisplay::with('mensajeDisplay')->orderBy('id','desc')->paginate();
+       
 
 
 }

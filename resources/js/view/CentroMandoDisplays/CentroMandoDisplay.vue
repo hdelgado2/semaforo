@@ -131,7 +131,7 @@
                         <label for="sentido-nombre" class="col-form-label">Tiempo del Mensaje :</label>
                         <input v-model="form_mensajes.tiempo" type="text" @input="toUpperCaseText()" class="form-control" id="sentido-nombre">
 
-                        <button :disabled="disabledAñadir" @click="añadirPatron()" type="button" class="btn btn-outline-info mt-4 btn-lg btn-block" >Agregar</button>
+                        <button v-if="editar" :disabled="disabledAñadir" @click="añadirPatron()" type="button" class="btn btn-outline-info mt-4 btn-lg btn-block" >Agregar</button>
                     </div>
 
                     
@@ -152,29 +152,41 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr  v-for="d, index in direcciones_arr" :key="index+1">
+
+                         <tr  v-for="d, index in DatosTable" :key="index+1">
                             <td>{{ index+1 }}</td>
-                            <!-- <td>{{ d.direccion ?? d.sentido_nombre  }}</td> -->
-                            <td>{{ d.sentido }}</td>
-                            <td style="color: red;">{{ d.rojo }}</td>
-                            <td style="color: red;">{{ d.rojo_cruce_izq }}</td>
-                            <td style="color: red;">{{ d.rojo_cruce_der }}</td>
-                            <td style="color: orange;">{{ d.amarillo }}</td>
-                            <td style="color: orange;">{{ d.amarillo_cruce_izq }}</td>
+                          
+                            <td>{{ d.mensaje[0].mensaje }}</td>
+                            <td>{{ d.mensaje[0].motivo_mensaje }}</td>
+                            <td>Activo</td>
+                            <td>{{ d.tiempo }}</td>
+                           
+                           
+                            <td class="text-center">
+                                <a href="#" @click="deleteMensajeDisplay(d)">
+                                    <i class="fa-solid fa-trash red"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <!-- <tr  v-for="d in DatosTable">
+                        
+                            <td>{{ d }}</td>
+                           
+                            
                            
                             <td class="text-center">
                                 <a href="#" @click="deleteDireccionArr(index)">
                                     <i class="fa-solid fa-trash red"></i>
                                 </a>
                             </td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Guardar</button>
-                <button type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Editar</button>
+                <button v-if="!editar" type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Guardar</button>
+                <button v-if="editar" type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Editar</button>
               </div>
             </div>
           </div>
@@ -379,6 +391,7 @@ export default {
 
                 isReady : false,
                 editMode : false,
+                editar: false,
 
                 interseccion:{},
 
@@ -388,8 +401,8 @@ export default {
                 
                 direcciones_arr:[],
                 rutas:[],
-                idDisplay:'',
-                idMensaje:'',
+                DatosTable:{},
+                
             };
 
         },
@@ -520,6 +533,8 @@ export default {
                 this.form.sentidos = []
                 this.form.latitud = event.latlng.lat;
                 this.form.longitud = event.latlng.lng;
+                this.DatosTable = {};
+                this.editar= false;
                 
                 $('#modalSemaforoInfo').modal('show')
             },
@@ -561,6 +576,7 @@ export default {
 
              //   console.log('innerClick',semaforo)
                 this.editMode = true;
+                this.editar = true;
                 this.form = semaforo;
                 this.form.interseccion = semaforo.nombre_display;
                 this.form.sentidos = []; 
@@ -643,6 +659,31 @@ export default {
 
             deleteDireccionArr(index){
                 console.log(index)
+
+                Swal.fire({
+                    title: 'Eliminar?',
+                    text: "No podra revertir esta acción!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, eliminar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        this.direcciones_arr = this.direcciones_arr.filter( (direccion, i )=> i != index);
+
+                        Swal.fire(
+                            'Hecho!',
+                            'Patron eliminado.',
+                            'success'
+                        )
+                    }
+                })
+            },
+
+             deleteMensajeDisplay(d){
+                console.log(d)
 
                 Swal.fire({
                     title: 'Eliminar?',
@@ -826,9 +867,9 @@ export default {
             loadMensajesDisplayTable(semaforo){
                 //console.log('this is the data bro :',semaforo);
                  const response = axios.post('/api/loadtabla', semaforo).then(({data})=>{
-                console.log('guardo con exito :', data);   
-                this.idDisplay = this.form_mensajes.mensaje.id;
-                this.idMensaje =  data.id;               
+                   
+                this.DatosTable = data.data;
+                console.log('ESTOS SON LOS DATOS :', this.DatosTable);           
 
                     if( data.exito ){
 
@@ -862,7 +903,7 @@ export default {
                 });
 
             },
-            //
+            //end
 
             async guardarMensajeDisplay(){
 

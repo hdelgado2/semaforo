@@ -12,12 +12,6 @@ class MensajeDisplay extends Model
     protected $fillable = ['id_crear_mensaje','id_localizacion_display','localizacion_display','tipo_programacion','etiqueta_proceso','tiempo'];
 
 
-    // public function Mensaje(){
-    //    return $this->hasMany('App\Mensaje','id_crear_mensaje','id');
-    // }
-    // public function LocationDisplay(){
-    //    return $this->hasMany('App\LocalizacionDisplay','id_localizacion_display','id');
-    // }
 
 
     

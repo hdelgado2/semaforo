@@ -12,4 +12,9 @@ class Mensaje extends Model
     protected $table = 'crear_mensaje';
     protected $fillable = ['tipo_mensaje','motivo_mensaje','mensaje','estado_mensaje','desactivar'];
 
+
+     public function mensajeDisplay(){
+       return $this->hasMany('App\MensajeDisplay','id_crear_mensaje','id');
+    }
+
 }
