@@ -86,10 +86,13 @@ Route::post('saveMassageDisplay','CentroMandoController@saveMassageDisplay')->na
 Route::post('loadtabla','CentroMandoController@loadtabla')->name('loadtabla');
 
 
-//ELIMINAR MENSAJES ASOCIADOS A UN DISPLAY
+//ELIMINAR MENSAJES ASOCIADOS A UN DISPLAY  deleteDisplayMensaje
 
 Route::post('deletedisplay','LocalizacionDisplayController@deletedisplay')->name('deletedisplay');
 //here we send the message to  the display-
 
-Route::post('mqtt/publish','MqttController@publish')->name('mqtt.publish');
+Route::post('mqtt/publishMessages','mqttMensajeController@publish')->name('publishMessages');
+
+//
+Route::post('deleteDisplayMensaje','CentroMandoController@deleteDisplayMensaje')->name('deleteDisplayMensaje');
 

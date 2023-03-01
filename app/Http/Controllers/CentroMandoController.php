@@ -213,7 +213,7 @@ class CentroMandoController extends Controller
 
      public function loadtabla(Request $request){
         //dd('chegue', $request);
-
+//dd('i m sure than you ARE THE  throble:',$request);
 
           $datos = Mensajedisplay::with('Mensaje')->where('id_localizacion_display','=',$request['id'])->orderBy('id','desc')->paginate();
 
@@ -227,6 +227,15 @@ class CentroMandoController extends Controller
 
         
      }
+
+      public function deleteDisplayMensaje(Request $request){
+
+        $Datos = Mensajedisplay::find($request->id)->delete();
+
+                 return ['exito' => 200,'msg' => 'Se ha eliminado con exito'];
+    //dd('informacion llego', $request);
+
+      }
 
 
 
