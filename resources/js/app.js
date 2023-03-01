@@ -68,9 +68,8 @@ let routes = [
     { path: '/lintersecciones', component: require('./view/Intersecciones/intersecciones.vue').default },
     { path: '/incidencias', component: require('./view/Incidencias/Incidencias.vue').default },
     { path: '/mensajes', component: require('./view/Mensajes/Mensajes.vue').default },
-    { path: '*', component: Foo }
-
-
+    { path: '/rAuditoria', component: require('./view/Auditoria/Auditoria.vue').default },
+    { path: '*', component: Foo },
   ]
 
 //Vue.component('example-component', require('./view/Usuarios/ListUser.vue').default);

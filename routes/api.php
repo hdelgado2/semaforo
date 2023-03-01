@@ -45,6 +45,10 @@ Route::get('incidencias-tipos','IncidenciaController@getTipos')->name('incidenci
 Route::get('incidencias/search/{filtro}','IncidenciaController@search')->name('incidencia.search');
 Route::apiResources(['guardias' => 'GuardiaController']);
 Route::get('guardias-all','GuardiaController@getGuardias')->name('guardias.listado');
+Route::get('guardias/search/{filtro}','GuardiaController@search')->name('guardias.search');
+Route::apiResources(['auditoria' => 'AuditoriaController']);
+Route::get('auditorias','AuditoriaController@getAuditoria')->name('auditoria.listado');
+Route::get('auditorias/search/{filtro}','AuditoriaController@search')->name('auditoria.search');
 
 
 
