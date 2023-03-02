@@ -115,8 +115,12 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="button" @click="guardarInterseccion" class="btn btn-primary">Guardar</button>
-                            <button type="button" @click="editDisplay" class="btn btn-primary"> Guardar Cambios</button>
+                           
+                            <div v-if="!modoeditar1">
+                                 <button v-if="modoeditar" type="button" @click="guardarInterseccion" class="btn btn-primary">Guardar</button>
+                            <button v-if="!modoeditar" type="button" @click="editDisplay" class="btn btn-primary"> Guardar Cambios</button>
+                            </div>
+                           
                         </div>
                     </div>
                 </div>
@@ -179,6 +183,8 @@ export default {
                 direcciones_arr:[],
                 sentidos:['NORTE','SUR','OESTE','ESTE'],
                 editMode : false,
+                modoeditar: false,
+                modoeditar1:false,
                 search: ''
             }
         },methods: {
@@ -232,6 +238,8 @@ export default {
 
 
             crearlocalizacion(interseccion){
+                this.modoeditar1= false;
+                this.modoeditar = true;
                 this.editMode = true;
                 this.form = interseccion;
                 this.form.sentidos = []; 
@@ -278,6 +286,8 @@ export default {
             },
 
             editDisplay(){
+                this.modoeditar=true;
+                this.modoeditar1= false;
                 const response = axios.post('/api/botoneditardisplay', this.form).then(({data})=>{
                    
                     if( data.exito ){
@@ -321,6 +331,7 @@ export default {
             showdatosdisplay(interseccion){
 
                 console.log('open modal')
+                this.modoeditar1 =true;
                 this.editMode = false;
                 this.form = interseccion;
                 
