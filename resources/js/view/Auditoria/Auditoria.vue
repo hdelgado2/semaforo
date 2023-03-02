@@ -6,7 +6,7 @@
 
               <div class="card-header">
                 <h3 class="card-title">Lista de Auditoria</h3>
-                <div class="card-tools">
+                <!-- <div class="card-tools">
                     <div class="row" style="width: 630px;">
                         <div class="form-group col">
                             <v-select 
@@ -29,7 +29,7 @@
                         
                     </div>
                     
-                </div>
+                </div> -->
               </div>
 
               <div class="card-body table-responsive p-0">

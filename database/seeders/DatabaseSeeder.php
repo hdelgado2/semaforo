@@ -1,7 +1,6 @@
 <?php
-
-use Illuminate\Database\Seeder;
 namespace Database\Seeders;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,5 +12,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(MenuSeeder::class);
+        $this->call(InterseccionListadoSeeder::class);
+        $this->call(MenuGuardiaSeeder::class);
+        $this->call(MenuMensajeSeeder::class);
+        $this->call(SentidoPatronSeeder::class);
     }
 }

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Menu;
 
-class MenuAuditoriaSeeder extends Seeder
+class MenuGuardiaSeeder extends Seeder
 {
     /**
      * Run the database seeds.
