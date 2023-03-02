@@ -79,15 +79,15 @@
                 <div class="row">
                     <div class="form-group col-8">
                         <label for="interseccion" class="col-form-label">Nombre intersección:</label>
-                        <input  v-model="form.interseccion" type="text" class="form-control" id="interseccion">
+                        <input :readonly="editarenviarinstruccion" v-model="form.interseccion" type="text" class="form-control" id="interseccion">
                     </div>
                     <div class="form-group col-2">
                         <label for="latitud" class="col-form-label">Latitud:</label>
-                        <input v-model="form.latitud" type="text" class="form-control" id="latitud">
+                        <input :readonly="editarenviarinstruccion" v-model="form.latitud" type="text" class="form-control" id="latitud">
                     </div>
                     <div class="form-group col-2">
                         <label for="longitud" class="col-form-label">Longitud:</label>
-                        <input v-model="form.longitud" type="text" class="form-control" id="longitud">
+                        <input :readonly="editarenviarinstruccion" v-model="form.longitud" type="text" class="form-control" id="longitud">
                     </div>
                 </div>
 
@@ -95,19 +95,19 @@
                     
                     <div class="form-group col">
                         <label for="ip-equipo" class="col-form-label">IP equipo:</label>
-                        <input v-model="form.ip_equipo" type="text" class="form-control" id="ip-equipo">
+                        <input :readonly="editarenviarinstruccion" v-model="form.ip_equipo" type="text" class="form-control" id="ip-equipo">
                     </div>
                     <div class="form-group col">
                         <label for="mac-equipo" class="col-form-label">MAC equipo:</label>
-                        <input v-model="form.mac_equipo" type="text" class="form-control" id="mac-equipo">
+                        <input :readonly="editarenviarinstruccion" v-model="form.mac_equipo" type="text" class="form-control" id="mac-equipo">
                     </div>
                     <div class="form-group col">
                         <label for="zoom" class="col-form-label">Zoom:</label>
-                        <input v-model="form.zoom" type="number" class="form-control" id="zoom">
+                        <input :readonly="editarenviarinstruccion"  v-model="form.zoom" type="number" class="form-control" id="zoom">
                     </div>
                     <div class="form-group col">
                         <label for="observacion" class="col-form-label">Observación:</label>
-                        <input v-model="form.observacion" type="text" class="form-control" id="observacion">
+                        <input :readonly="editarenviarinstruccion"  v-model="form.observacion" type="text" class="form-control" id="observacion">
                     </div>
                 </div>
 
@@ -117,7 +117,7 @@
                 
                 <div class="row">
 
-                    <div class="form-group col">
+                    <div v-if="modevista" class="form-group col">
                         <label class="mt-2">Mensaje a Desplegar :</label>
                         <v-select 
                             v-model="form_mensajes.mensaje" 
@@ -186,6 +186,7 @@
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cerrar</button>
                 <button v-if="!editar" type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Guardar</button>
                 <button v-if="editar" type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Editar</button>
+                <button v-if="editar" type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Enviar instrucccion</button>
               </div>
             </div>
           </div>
@@ -288,6 +289,8 @@ export default {
                 isReady : false,
                 editMode : false,
                 editar: false,
+                editarenviarinstruccion: false,
+                modevista:false,
 
                 interseccion:{},
 
@@ -420,6 +423,9 @@ export default {
 
             openModal(event){
                 console.log('openModal')
+                this.editarenviarinstruccion=false;
+                this.modevista = true;
+            
                 this.form.interseccion = ''
                 this.form.latitud = ''
                 this.form.longitud = ''
@@ -470,7 +476,12 @@ export default {
           },
 
             innerClick(semaforo) {
+                //  this.form_mensajes.tiempo='';
+                // this.form_mensajes.mensaje='';
 
+                this.editarenviarinstruccion = false;
+                this.modevista = true;
+                
              //   console.log('innerClick',semaforo)
                 this.editMode = true;
                 this.editar = true;
@@ -513,12 +524,15 @@ export default {
             },
 
             openInstructionModal(semaforo) {
+                this.modevista = false;
                 this.loadMensajesDisplayTable;
                 console.log('intructionModal')
+                this.editarenviarinstruccion = true;
                 this.editMode = true;
                 this.form = semaforo;
                 this.form.sentidos = []; 
                 this.direcciones_arr = [];
+                this.loadMensajesDisplayTable(semaforo);
               //  this.form.sentidos = semaforo.patrones;
 
                 // semaforo.patrones.forEach( (el) => {
@@ -586,7 +600,7 @@ export default {
                 console.log(d);
 
 
-            this.form = interseccion;
+            //this.form = interseccion;
              const response = axios.post('/api/deleteDisplayMensaje/', d).then((result) => {
                 
             //  this.Lista = result['data']
@@ -762,13 +776,18 @@ export default {
 
             async guardarDisplaymassages(){
                 console.log('probando', this.mensajes);
+                   this.form_mensajes.tiempo='';
+                this.form_mensajes.mensaje='';
+
 
                 const response = axios.post('/api/LocationDisplay', this.form).then(({data})=>{
                 console.log('este es el id que estoy buscando :', data.id);   
                 this.form_mensajes.idDisplay =  data.id;
                 this.form_mensajes.idMensaje = this.mensajes.id;   
                 this.guardarMensajeDisplay();
-                            
+                $('#modalSemaforoInfo').modal('hide');
+                   this.loadLocationDisplay();
+            this.loadMensajesDisplay();            
 
                     if( data.exito ){
 
@@ -785,7 +804,7 @@ export default {
 
                         }).then((result) => {
 
-                            $('#modalSemaforoInfo').modal('hide')
+                           // $('#modalSemaforoInfo').modal('hide')
                             
                             if( this.direcciones_arr.length > 0 ){
                                 this.guardarPatrones();
@@ -820,7 +839,7 @@ export default {
                     if( data.exito ){
 
                         if( data.id )
-                            this.form.id = data.id;
+                          //  this.form.id = data.id;
 
                          Swal.fire({
                             title: 'Hecho!',
@@ -854,7 +873,7 @@ export default {
             async guardarMensajeDisplay(){
 
                 //console.log('probando', this.form_mensajes.mensaje.id);
-
+                console.log('vanessa',this.form_mensajes);
                 const response = axios.post('/api/saveMassageDisplay', this.form_mensajes).then(({data})=>{
                 console.log('guardo con exito :', data);   
                 this.idDisplay = this.form_mensajes.mensaje.id;
@@ -936,6 +955,9 @@ export default {
 
                  //console.log('añadir mensaje');
                 console.log('esta es la form',this.form_mensajes);
+                // this.form_mensajes.tiempo='';
+                // this.form_mensajes.mensaje='';
+
 
                 const response = axios.post('/api/saveMassageDisplay', this.form_mensajes).then(({data})=>{  
                     this.loadMensajesDisplayTable(this.dataclicked);
