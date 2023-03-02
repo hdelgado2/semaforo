@@ -14,7 +14,7 @@
                     v-model="filtro" 
                     :options="semaforos"
                     placeholder="SELECCIONE INTERSECCIÓN"
-                    label="interseccion"
+                    label="nombre_display"
                     @input="selectLocationFilter()"
                 >
                     <has-error :form="form" field="filtro"></has-error>    
@@ -70,7 +70,7 @@
           <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="modalSemaforoInfoLabel">Semaforo {{ this.form.interseccion }}</h5>
+                <h5 class="modal-title" id="modalSemaforoInfoLabel">Display {{ this.form.interseccion }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -79,15 +79,15 @@
                 <div class="row">
                     <div class="form-group col-8">
                         <label for="interseccion" class="col-form-label">Nombre intersección:</label>
-                        <input v-model="form.interseccion" type="text" class="form-control" id="interseccion">
+                        <input :readonly="editarenviarinstruccion" v-model="form.interseccion" type="text" class="form-control" id="interseccion">
                     </div>
                     <div class="form-group col-2">
                         <label for="latitud" class="col-form-label">Latitud:</label>
-                        <input v-model="form.latitud" type="text" class="form-control" id="latitud">
+                        <input :readonly="editarenviarinstruccion" v-model="form.latitud" type="text" class="form-control" id="latitud">
                     </div>
                     <div class="form-group col-2">
                         <label for="longitud" class="col-form-label">Longitud:</label>
-                        <input v-model="form.longitud" type="text" class="form-control" id="longitud">
+                        <input :readonly="editarenviarinstruccion" v-model="form.longitud" type="text" class="form-control" id="longitud">
                     </div>
                 </div>
 
@@ -95,122 +95,102 @@
                     
                     <div class="form-group col">
                         <label for="ip-equipo" class="col-form-label">IP equipo:</label>
-                        <input v-model="form.ip_equipo" type="text" class="form-control" id="ip-equipo">
+                        <input :readonly="editarenviarinstruccion" v-model="form.ip_equipo" type="text" class="form-control" id="ip-equipo">
                     </div>
                     <div class="form-group col">
                         <label for="mac-equipo" class="col-form-label">MAC equipo:</label>
-                        <input v-model="form.mac_equipo" type="text" class="form-control" id="mac-equipo">
+                        <input :readonly="editarenviarinstruccion" v-model="form.mac_equipo" type="text" class="form-control" id="mac-equipo">
                     </div>
                     <div class="form-group col">
                         <label for="zoom" class="col-form-label">Zoom:</label>
-                        <input v-model="form.zoom" type="number" class="form-control" id="zoom">
+                        <input :readonly="editarenviarinstruccion"  v-model="form.zoom" type="number" class="form-control" id="zoom">
                     </div>
                     <div class="form-group col">
                         <label for="observacion" class="col-form-label">Observación:</label>
-                        <input v-model="form.observacion" type="text" class="form-control" id="observacion">
+                        <input :readonly="editarenviarinstruccion"  v-model="form.observacion" type="text" class="form-control" id="observacion">
                     </div>
                 </div>
 
                 <hr>
-                <h5>Cruces</h5>
+                <h5>Programacion del display</h5>
 
+                
                 <div class="row">
 
-                    <div class="form-group col">
-                        <label class="mt-2">Sentido</label>
+                    <div v-if="modevista" class="form-group col">
+                        <label class="mt-2">Mensaje a Desplegar :</label>
                         <v-select 
-                            v-model="form_cruces.sentido" 
-                            :options="sentidos"
+                            v-model="form_mensajes.mensaje" 
+                            :options="mensajes"
+                            placeholder="SELECCIONE INTERSECCIÓN"
+                           label="mensaje"
                              >
                             <has-error :form="form" field="sentido"></has-error>    
                         </v-select>
 
-                        <label for="sentido-nombre" class="col-form-label">Dirección :</label>
-                        <input v-model="form_cruces.sentido_nombre" type="text" @input="toUpperCaseText()" class="form-control" id="sentido-nombre">
+                        <label for="sentido-nombre" class="col-form-label">Tiempo del Mensaje :</label>
+                        <input v-model="form_mensajes.tiempo" type="text" @input="toUpperCaseText()" class="form-control" id="sentido-nombre">
 
-                        <button :disabled="disabledAñadir" @click="añadirPatron()" type="button" class="btn btn-outline-info mt-4 btn-lg btn-block" >Añadir patrón</button>
+                        <button v-if="editar"  @click="AñadirMensaje()" type="button" class="btn btn-outline-info mt-4 btn-lg btn-block" >Agregar</button>
                     </div>
 
-                    <div class="form-group col">
-                        <label for="rojo" class="col-form-label">Rojo:</label>
-                        <input v-model="form_cruces.rojo" type="number" class="form-control" id="rojo">
-
-                        <label for="rojo-cruce-izq" class="col-form-label">Rojo cruce izq:</label>
-                        <input v-model="form_cruces.rojo_cruce_izq" type="number" class="form-control" id="rojo-cruce-izq">
-
-                        <label for="rojo-cruce-der" class="col-form-label">Rojo cruce der:</label>
-                        <input v-model="form_cruces.rojo_cruce_der" type="number" class="form-control" id="rojo-cruce-der">
-                    </div>
-
-                    <div class="form-group col">
-                        <label for="amarillo" class="col-form-label">Amarillo:</label>
-                        <input v-model="form_cruces.amarillo" type="number" class="form-control" id="amarillo">
-
-                        <label for="amarillo-cruce-izq" class="col-form-label">Amarillo cruce izq:</label>
-                        <input v-model="form_cruces.amarillo_cruce_izq" type="number" class="form-control" id="amarillo-cruce-izq">
-
-                        <label for="amarillo-cruce-der" class="col-form-label">Amarillo cruce der:</label>
-                        <input v-model="form_cruces.amarillo_cruce_der" type="number" class="form-control" id="amarillo-cruce-der">
-                    </div>
-
-                    <div class="form-group col">
-                        <label for="verde" class="col-form-label">Verde:</label>
-                        <input v-model="form_cruces.verde" type="number" class="form-control" id="verde">
-
-                        <label for="verde-cruce-izq" class="col-form-label">Verde cruce izq:</label>
-                        <input v-model="form_cruces.verde_cruce_izq" type="number" class="form-control" id="verde-cruce-izq">
-
-                        <label for="verde-cruce-der" class="col-form-label">Verde cruce der:</label>
-                        <input v-model="form_cruces.verde_cruce_der" type="number" class="form-control" id="verde-cruce-der">
-                    </div>
-        
+                    
                 </div>
-
+<!-- :disabled="disabledAñadir" po si acaso-->
+              <!--  -->
 
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Dirección</th>
-                            <th scope="col">Sentido</th>
-                            <th scope="col">Rojo</th>
-                            <th scope="col">Rojo cruce izq</th>
-                            <th scope="col">Rojo cruce der</th>
-                            <th scope="col">Amarillo</th>
-                            <th scope="col">Amarillo cruce izq</th>
-                            <th scope="col">Amarillo cruce der</th>
-                            <th scope="col">Verde</th>
-                            <th scope="col">Verde cruce izq</th>
-                            <th scope="col">Verde cruce der</th>
+                            <th scope="col">Mensaje </th>
+                            <th scope="col">Motivo del mensaje</th>
+                            <th scope="col">Estatus</th>
+                            <th scope="col">Tiempo</th>
                             <th scope="col">Acciones</th>
+                         
                         </tr>
                     </thead>
                     <tbody>
-                        <tr  v-for="d, index in direcciones_arr" :key="index+1">
+
+                         <tr  v-for="d, index in DatosTable" :key="index+1">
                             <td>{{ index+1 }}</td>
-                            <!-- <td>{{ d.direccion ?? d.sentido_nombre  }}</td> -->
-                            <td>{{ d.sentido }}</td>
-                            <td style="color: red;">{{ d.rojo }}</td>
-                            <td style="color: red;">{{ d.rojo_cruce_izq }}</td>
-                            <td style="color: red;">{{ d.rojo_cruce_der }}</td>
-                            <td style="color: orange;">{{ d.amarillo }}</td>
-                            <td style="color: orange;">{{ d.amarillo_cruce_izq }}</td>
-                            <td style="color: orange;">{{ d.amarillo_cruce_der }}</td>
-                            <td style="color: green;">{{ d.verde }}</td>
-                            <td style="color: green;">{{ d.verde_cruce_izq }}</td>
-                            <td style="color: green;">{{ d.verde_cruce_der }}</td>
+                            <td>{{ d.mensaje[0].mensaje }}</td>
+                            <td>{{ d.mensaje[0].motivo_mensaje }}</td>
+                            <td>Activo</td>
+                            <td>{{ d.tiempo }}</td>
+                           
+                           
+                            <td class="text-center">
+                                <a href="#" @click="deleteMensajeDisplay(d)">
+                                    <i class="fa-solid fa-trash red"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <!-- <tr  v-for="d in DatosTable">
+                        
+                            <td>{{ d }}</td>
+                           
+                            
+                           
                             <td class="text-center">
                                 <a href="#" @click="deleteDireccionArr(index)">
                                     <i class="fa-solid fa-trash red"></i>
                                 </a>
                             </td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" @click="guardarInterseccion" class="btn btn-outline-primary"><strong>{{ editMode ? 'Guardar cambios' : 'Guardar Interseccion' }} </strong></button>
+                <div v-if="!editarenviarinstruccion">
+                    
+                     <button v-if="!editar" type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Guardar</button>
+                <button v-if="editar" type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Editar</button>
+                </div>
+               
+                <button v-if="editarenviarinstruccion" type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Enviar instrucccion</button>
               </div>
             </div>
           </div>
@@ -218,108 +198,7 @@
 
         <!-- -->
 
-        <!-- Modal -->
-        <div class="modal fade" id="modalInstruccion" tabindex="-1" role="dialog" aria-labelledby="modalInstruccionLabel" aria-hidden="true">
-          <div class="modal-dialog modal-xl" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 v-if="!isRuta" class="modal-title" id="modalSemaforoInfoLabel">INSTRUCCIONES PARA INTERSECCIÓN {{ this.form.interseccion }}</h5>
-                <h5 v-else class="modal-title" id="modalSemaforoInfoLabel">INSTRUCCIONES PARA INTERSECCIONES EN RUTA</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-
-                <div v-if="!isRuta" class="row">
-
-                    <div class="form-group col">
-                        <label class="mt-2">Sentido - Instrucción</label>
-                        <v-select 
-                            v-model="form_instrucciones.sentido" 
-                            :options="sentidosEmergencia"
-                             >
-                            <has-error :form="form" field="sentido"></has-error>    
-                        </v-select>
-                    </div>
-
-                    <div class="form-group col">
-                        <label class="mt-2">Color</label>
-                        <v-select 
-                            v-model="form_instrucciones.color" 
-                            :options="colores"
-                             >
-                            <has-error :form="form" field="color"></has-error>    
-                        </v-select>
-                    </div>
-
-                    <div class="form-group col">
-                        <label for="tiempo" class="col-form-label">Tiempo</label>
-                        <input :disabled="disableTiempo" v-model="form_instrucciones.tiempo" type="number" class="form-control" id="tiempo">
-                    </div>
-
-                    <div v-if="isRuta" class="form-group col">
-                        <label for="intervaloEntre" class="col-form-label">Intervalo entre intersección</label>
-                        <input :disabled="!isRuta" v-model="form_instrucciones.intervalo_entre_interseccion" type="number" class="form-control" id="tiempo">
-                    </div>
-        
-                </div>
-                <div v-else class="row">
-                    <table class="table table-hover text-nowrap">
-                        <thead>
-                            <tr>
-                                <th>IP</th>
-                                <th>Nombre</th>
-                                <th width="20%" >Sentido/Instrucción</th>
-                                <th width="20%">Color</th>
-                                <th width="10%">Tiempo</th>
-                            </tr>
-                            <tr v-for="(semaforo, index) in form_instrucciones.rutas.semaforos" :key="index">
-                                <td>{{semaforo.ip_equipo}}</td>
-                                <td>{{ semaforo.nombre.substring(0,50) }}</td>
-                                <td>
-                                    <div class="form-group col">
-                                            <v-select 
-                                                v-model="form_instrucciones.rutas.semaforos[index].sentido" 
-                                                :options="sentidosEmergencia"
-                                            >
-                                            <has-error :form="form" field="sentido"></has-error>    
-                                            </v-select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group col">
-                                        <v-select 
-                                            v-model="form_instrucciones.rutas.semaforos[index].color" 
-                                            :options="colores"
-                                        >
-                                        <has-error :form="form" field="color"></has-error>    
-                                        </v-select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input v-model="form_instrucciones.rutas.semaforos[index].tiempo" type="number" class="form-control" id="tiempo">
-                                    </div>
-                                </td>
-                        
-                            </tr>
-                        </thead>
-                    </table>
-                    <div class="col-3" >
-                        <label class="mt-2">Tiempo entre intersección</label>
-                        <input v-model="form_instrucciones.intervalo_entre_interseccion" type="number" class="form-control" id="intervalo_entre_interseccion">
-                    </div>
-                </div>
-
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" @click="publishMessage" class="btn btn-outline-primary"><strong> Enviar Instrucción </strong></button>
-              </div>
-            </div>
-          </div>
-        </div>
+      
 
     </div>
 </template>
@@ -353,6 +232,7 @@ export default {
                 popupAnchor: [0, -40],
                 iconUrl: require('leaflet/dist/images/marker-icon.png'),
                 semaforos: [],
+                mensajes:[],
                 filtro: '',
                 polyline: {
                     latlngs: [],
@@ -369,6 +249,15 @@ export default {
                     zoom:'',
                     observacion:'',
                     sentidos:[]
+                }),
+
+                form_mensajes: new Form({
+                    mensaje:'',
+                    tiempo:'',
+                    idDisplay:'',
+                    idMensaje:'',
+
+
                 }),
 
                 form_cruces: new Form({
@@ -403,6 +292,9 @@ export default {
 
                 isReady : false,
                 editMode : false,
+                editar: false,
+                editarenviarinstruccion: false,
+                modevista:false,
 
                 interseccion:{},
 
@@ -411,14 +303,20 @@ export default {
                 colores:['ROJO','VERDE','AMARILLO','ROJO CRUCE IZQ','ROJO CRUCE DER','AMARILLO CRUCE IZQ','AMARILLO CRUCE DER','VERDE CRUCE IZQ','VERDE CRUCE DER'],
                 
                 direcciones_arr:[],
-                rutas:[]
+                rutas:[],
+                DatosTable:{},
+                dataclicked:{},
+                
             };
 
         },
 
          mounted() {
 
-            this.loadIntersecciones();
+            //this.loadIntersecciones();
+            this.loadLocationDisplay();
+            this.loadMensajesDisplay();
+
 
             
             this.$nextTick(() => {
@@ -529,6 +427,9 @@ export default {
 
             openModal(event){
                 console.log('openModal')
+                this.editarenviarinstruccion=false;
+                this.modevista = true;
+            
                 this.form.interseccion = ''
                 this.form.latitud = ''
                 this.form.longitud = ''
@@ -539,6 +440,8 @@ export default {
                 this.form.sentidos = []
                 this.form.latitud = event.latlng.lat;
                 this.form.longitud = event.latlng.lng;
+                this.DatosTable = {};
+                this.editar= false;
                 
                 $('#modalSemaforoInfo').modal('show')
             },
@@ -559,51 +462,49 @@ export default {
                 this.form.longitud = event.latlng.lng;
 
                 this.form = semaforo;
-            
-                semaforo.patrones.forEach( (el) => {
+            //por eliminar
+             //    semaforo.patrones.forEach( (el) => {
 
-                if( el.id != null ){
-                    console.log('id')
-                    this.direcciones_arr.push(el)
+             //    if( el.id != null ){
+             //        console.log('id')
+             //        this.direcciones_arr.push(el)
 
-                }else{
-                    console.log('!id')
-                    this.direcciones_arr.push(el)
+             //    }else{
+             //        console.log('!id')
+             //        this.direcciones_arr.push(el)
 
-                }
-             })
+             //    }
+             // })
 
              $('#modalSemaforoInfo').modal('show')
           },
 
             innerClick(semaforo) {
-                console.log('innerClick')
+                //  this.form_mensajes.tiempo='';
+                // this.form_mensajes.mensaje='';
+
+                this.editarenviarinstruccion = false;
+                this.modevista = true;
+                
+             //   console.log('innerClick',semaforo)
                 this.editMode = true;
+                this.editar = true;
                 this.form = semaforo;
+                this.form.interseccion = semaforo.nombre_display;
                 this.form.sentidos = []; 
                 this.direcciones_arr = [];
-                this.form.sentidos = semaforo.patrones;
-
-                semaforo.patrones.forEach( (el) => {
-
-                    if( el.id != null ){
-                        console.log('id')
-                        this.direcciones_arr.push(el)
-                        // this.form.sentidos.push(el)
-
-                    }else{
-                        console.log('!id')
-                        this.direcciones_arr.push(el)
-                    }
-                })
+                //this.form.sentidos = semaforo.patrones;
+                this.dataclicked = semaforo; 
+               this.loadMensajesDisplayTable(semaforo);
 
                 $('#modalSemaforoInfo').modal('show')
                 
             },
 
             showOptions(semaforo){
-                let sem = semaforo
 
+                let sem = semaforo
+//console.log('esto es sem:',sem);
                 Swal.fire({
                     title: 'Seleccione una acción',
                     showDenyButton: true,
@@ -627,25 +528,30 @@ export default {
             },
 
             openInstructionModal(semaforo) {
+                this.form.interseccion = semaforo.nombre_display;
+                this.modevista = false;
+                this.loadMensajesDisplayTable;
                 console.log('intructionModal')
+                this.editarenviarinstruccion = true;
                 this.editMode = true;
                 this.form = semaforo;
                 this.form.sentidos = []; 
                 this.direcciones_arr = [];
-                this.form.sentidos = semaforo.patrones;
+                this.loadMensajesDisplayTable(semaforo);
+              //  this.form.sentidos = semaforo.patrones;
 
-                semaforo.patrones.forEach( (el) => {
+                // semaforo.patrones.forEach( (el) => {
 
-                    if( el.id != null ){
-                        console.log('id')
-                        this.direcciones_arr.push(el)
+                //     if( el.id != null ){
+                //         console.log('id')
+                //         this.direcciones_arr.push(el)
 
-                    }else{
-                        console.log('!id')
-                        this.direcciones_arr.push(el)
-                    }
-                })
-                $('#modalInstruccion').modal('show')
+                //     }else{
+                //         console.log('!id')
+                //         this.direcciones_arr.push(el)
+                //     }
+                // })
+                $('#modalSemaforoInfo').modal('show')
             },
 
 
@@ -693,6 +599,29 @@ export default {
                 })
             },
 
+             deleteMensajeDisplay(d){
+
+
+                console.log(d);
+
+
+            //this.form = interseccion;
+             const response = axios.post('/api/deleteDisplayMensaje/', d).then((result) => {
+                
+            //  this.Lista = result['data']
+              Swal.fire({
+                    icon  :'success',
+                    title:'Success!',
+                    text  : "eliminado con exito",
+                    toast : true
+                  });
+
+
+
+                            this.loadMensajesDisplayTable(this.dataclicked);
+            });
+            },
+
             añadirPatron(){
 
                 if( !this.patronExiste(this.form_cruces.sentido) ){
@@ -730,12 +659,14 @@ export default {
 
                 return;
             },
+            // here the new change.
 
-            async publishMessage(){
 
-                this.form_instrucciones.ip_equipo = this.form.ip_equipo;
+             async publishMessage(){
+                console.log('hey bro : ', this.form);
+                //this.form_instrucciones.ip_equipo = this.form.ip_equipo;
                 
-                await axios.post("/api/mqtt/publish", this.form_instrucciones).then(({data})=>{
+                await axios.post("/api/publishMessages", this.form_instrucciones).then(({data})=>{
 
                     if( data.exito  ){
 
@@ -774,15 +705,184 @@ export default {
                 })
             },
 
-            async loadIntersecciones(){
-                await axios.get('api/intersecciones').then(({data}) => this.semaforos = data );
-                console.log("listo");
+            // async publishMessage(){
+
+            //     this.form_instrucciones.ip_equipo = this.form.ip_equipo;
+                
+            //     await axios.post("/api/mqtt/publish", this.form_instrucciones).then(({data})=>{
+
+            //         if( data.exito  ){
+
+            //              Swal.fire({
+            //                 title: 'Hecho!',
+            //                 text: data.msg,
+            //                 icon: 'success',
+            //                 showCancelButton: false,
+            //                 confirmButtonColor: '#3085d6',
+            //                 confirmButtonText: 'Ok'
+
+            //             }).then((result)=>{
+
+            //                 $('#modalInstruccion').modal('hide');
+
+            //                 this.form_instrucciones.sentido = '';
+            //                 this.form_instrucciones.color = '';
+            //                 this.form_instrucciones.tiempo = 0;
+
+            //                 this.resetRutas()
+
+            //             })
+            //         }
+            //         else{
+
+            //              Swal.fire({
+            //                 title: 'Oops!',
+            //                 text: data.msg,
+            //                 icon: 'warning',
+            //                 showCancelButton: false,
+            //                 confirmButtonColor: '#3085d6',
+            //                 confirmButtonText: 'Ok'
+
+            //             })
+            //         }
+            //     })
+            // },
+
+            // async loadIntersecciones(){
+            //     await axios.get('api/intersecciones').then(({data}) => this.semaforos = data );
+            //     console.log("listo");
+            //     if( this.semaforos.length > 0) this.isReady = true;
+            // },
+
+
+            //here i start to work
+
+            async loadLocationDisplay(){
+                await axios.get('api/displaysonline').then(({data}) => this.semaforos = data );
+                // console.log("listo");
+                // console.log('estos son los datos', this.semaforos);
                 if( this.semaforos.length > 0) this.isReady = true;
             },
 
-            async guardarInterseccion(){
+            //end
 
-                const response = axios.post('/api/intersecciones', this.form).then(({data})=>{
+            //function to load the information of the select
+            async loadMensajesDisplay(){
+                await axios.get('api/mensajeselect').then(({data}) => this.mensajes = data );
+                console.log("listo");
+                console.log('estos son los datos', this.mensajes);
+                if( this.mensajes.length > 0) this.isReady = true;
+            },
+
+            //
+
+            //function to save the information and create a new massage in a display.
+
+
+            async guardarDisplaymassages(){
+                console.log('probando', this.mensajes);
+                   this.form_mensajes.tiempo='';
+                this.form_mensajes.mensaje='';
+
+
+                const response = axios.post('/api/LocationDisplay', this.form).then(({data})=>{
+                console.log('este es el id que estoy buscando :', data.id);   
+                this.form_mensajes.idDisplay =  data.id;
+                this.form_mensajes.idMensaje = this.mensajes.id;   
+                this.guardarMensajeDisplay();
+                $('#modalSemaforoInfo').modal('hide');
+                   this.loadLocationDisplay();
+            this.loadMensajesDisplay();            
+
+                    if( data.exito ){
+
+                        if( data.id )
+                            this.form.id = data.id;
+
+                         Swal.fire({
+                            title: 'Hecho!',
+                            text: data.msg,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
+                        }).then((result) => {
+
+                           // $('#modalSemaforoInfo').modal('hide')
+                            
+                            if( this.direcciones_arr.length > 0 ){
+                                this.guardarPatrones();
+                            }
+
+                            else{
+                                this.reloadPage()
+                            }
+                                
+                        
+                        })
+                    }
+
+                });
+      
+            },
+            //function to load the table messages and displays
+
+
+            loadMensajesDisplayTable(semaforo){
+                //console.log('this is the data bro :',semaforo);
+                 const response = axios.post('/api/loadtabla', semaforo).then(({data})=>{
+                 //
+                 //
+                  console.log('this is the data clicked',this.dataclicked.id);
+
+                 this.form_mensajes.idDisplay=this.dataclicked.id;
+
+                this.DatosTable = data.data;
+                console.log('ESTOS SON LOS DATOS :', this.DatosTable);           
+
+                    if( data.exito ){
+
+                        if( data.id )
+                          //  this.form.id = data.id;
+
+                         Swal.fire({
+                            title: 'Hecho!',
+                            text: data.msg,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
+                        }).then((result) => {
+
+                            // $('#modalSemaforoInfo').modal('hide')
+                            // this.guardarMensajeDisplay();
+                            // if( this.direcciones_arr.length > 0 ){
+                            //     this.guardarPatrones();
+                            // }
+
+                            // else{
+                            //     this.reloadPage()
+                            // }
+                                
+                        
+                        })
+                    }
+
+                });
+
+            },
+            //end
+
+            async guardarMensajeDisplay(){
+
+                //console.log('probando', this.form_mensajes.mensaje.id);
+                console.log('vanessa',this.form_mensajes);
+                const response = axios.post('/api/saveMassageDisplay', this.form_mensajes).then(({data})=>{
+                console.log('guardo con exito :', data);   
+                this.idDisplay = this.form_mensajes.mensaje.id;
+                this.idMensaje =  data.id;               
 
                     if( data.exito ){
 
@@ -800,7 +900,7 @@ export default {
                         }).then((result) => {
 
                             $('#modalSemaforoInfo').modal('hide')
-                            
+                            this.guardarMensajeDisplay();
                             if( this.direcciones_arr.length > 0 ){
                                 this.guardarPatrones();
                             }
@@ -814,7 +914,88 @@ export default {
                     }
 
                 });
+
+
+            },
+            //
+
+            // async guardarInterseccion(){
+
+            //     const response = axios.post('/api/intersecciones', this.form).then(({data})=>{
+
+            //         if( data.exito ){
+
+            //             if( data.id )
+            //                 this.form.id = data.id;
+
+            //              Swal.fire({
+            //                 title: 'Hecho!',
+            //                 text: data.msg,
+            //                 icon: 'success',
+            //                 showCancelButton: false,
+            //                 confirmButtonColor: '#3085d6',
+            //                 confirmButtonText: 'Ok'
+
+            //             }).then((result) => {
+
+            //                 $('#modalSemaforoInfo').modal('hide')
+                            
+            //                 if( this.direcciones_arr.length > 0 ){
+            //                     this.guardarPatrones();
+            //                 }
+
+            //                 else{
+            //                     this.reloadPage()
+            //                 }
+                                
+                        
+            //             })
+            //         }
+
+            //     });
       
+            // },
+
+            AñadirMensaje(){
+
+                 //console.log('añadir mensaje');
+                console.log('esta es la form',this.form_mensajes);
+                // this.form_mensajes.tiempo='';
+                // this.form_mensajes.mensaje='';
+
+
+                const response = axios.post('/api/saveMassageDisplay', this.form_mensajes).then(({data})=>{  
+                    this.loadMensajesDisplayTable(this.dataclicked);
+                console.log('guardo con exito :', data);   
+                // this.idDisplay = this.form_mensajes.mensaje.id;
+                // this.idMensaje =  data.id;               
+
+                    if( data.exito ){
+
+                        if( data.id )
+                            // this.form.id = data.id;
+
+                         Swal.fire({
+                            title: 'Hecho!',
+                            text: data.msg,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
+                        }).then((result) => {
+
+                            //$('#modalSemaforoInfo').modal('hide')
+                           
+                              
+                            
+                                
+                        
+                        })
+                    }
+
+                });
+
             },
 
             async guardarPatrones(){
