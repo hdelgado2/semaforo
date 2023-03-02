@@ -84,7 +84,6 @@ Route::apiResources(['mensajeselect' => 'CentroMandoController@selectmensajes'])
 Route::get('mensajeselect','CentroMandoController@selectmensajes')->name('mensajeselect');
 //route to save the information of a new message assigned to the display.
 Route::post('LocationDisplay','CentroMandoController@LocationDisplay')->name('LocationDisplay');
-
 Route::post('saveMassageDisplay','CentroMandoController@saveMassageDisplay')->name('saveMassageDisplay');
 
 Route::post('loadtabla','CentroMandoController@loadtabla')->name('loadtabla');

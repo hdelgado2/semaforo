@@ -120,16 +120,17 @@
                     <div v-if="modevista" class="form-group col">
                         <label class="mt-2">Mensaje a Desplegar :</label>
                         <v-select 
-                            v-model="form_mensajes.mensaje" 
+                            v-model="form.mensaje_id" 
                             :options="mensajes"
                             placeholder="SELECCIONE INTERSECCIÓN"
                            label="mensaje"
+                           :reduce="mensaje => mensaje.id"
                              >
                             <has-error :form="form" field="sentido"></has-error>    
                         </v-select>
 
                         <label for="sentido-nombre" class="col-form-label">Tiempo del Mensaje :</label>
-                        <input v-model="form_mensajes.tiempo" type="text" @input="toUpperCaseText()" class="form-control" id="sentido-nombre">
+                        <input v-model="form.tiempo" type="text" @input="toUpperCaseText()" class="form-control" id="sentido-nombre">
 
                         <button v-if="editar"  @click="AñadirMensaje()" type="button" class="btn btn-outline-info mt-4 btn-lg btn-block" >Agregar</button>
                     </div>
@@ -248,7 +249,9 @@ export default {
                     mac_equipo:'',
                     zoom:'',
                     observacion:'',
-                    sentidos:[]
+                    sentidos:[],
+                    mensaje_id:null,
+                    tiempo: 0,
                 }),
 
                 form_mensajes: new Form({
@@ -482,7 +485,7 @@ export default {
             innerClick(semaforo) {
                 //  this.form_mensajes.tiempo='';
                 // this.form_mensajes.mensaje='';
-
+                console.log(semaforo,'semaforo')
                 this.editarenviarinstruccion = false;
                 this.modevista = true;
                 
@@ -705,56 +708,7 @@ export default {
                 })
             },
 
-            // async publishMessage(){
-
-            //     this.form_instrucciones.ip_equipo = this.form.ip_equipo;
-                
-            //     await axios.post("/api/mqtt/publish", this.form_instrucciones).then(({data})=>{
-
-            //         if( data.exito  ){
-
-            //              Swal.fire({
-            //                 title: 'Hecho!',
-            //                 text: data.msg,
-            //                 icon: 'success',
-            //                 showCancelButton: false,
-            //                 confirmButtonColor: '#3085d6',
-            //                 confirmButtonText: 'Ok'
-
-            //             }).then((result)=>{
-
-            //                 $('#modalInstruccion').modal('hide');
-
-            //                 this.form_instrucciones.sentido = '';
-            //                 this.form_instrucciones.color = '';
-            //                 this.form_instrucciones.tiempo = 0;
-
-            //                 this.resetRutas()
-
-            //             })
-            //         }
-            //         else{
-
-            //              Swal.fire({
-            //                 title: 'Oops!',
-            //                 text: data.msg,
-            //                 icon: 'warning',
-            //                 showCancelButton: false,
-            //                 confirmButtonColor: '#3085d6',
-            //                 confirmButtonText: 'Ok'
-
-            //             })
-            //         }
-            //     })
-            // },
-
-            // async loadIntersecciones(){
-            //     await axios.get('api/intersecciones').then(({data}) => this.semaforos = data );
-            //     console.log("listo");
-            //     if( this.semaforos.length > 0) this.isReady = true;
-            // },
-
-
+   
             //here i start to work
 
             async loadLocationDisplay(){
@@ -780,24 +734,15 @@ export default {
 
 
             async guardarDisplaymassages(){
-                console.log('probando', this.mensajes);
-                   this.form_mensajes.tiempo='';
-                this.form_mensajes.mensaje='';
+                    console.log('aca3')
 
-
-                const response = axios.post('/api/LocationDisplay', this.form).then(({data})=>{
-                console.log('este es el id que estoy buscando :', data.id);   
-                this.form_mensajes.idDisplay =  data.id;
-                this.form_mensajes.idMensaje = this.mensajes.id;   
-                this.guardarMensajeDisplay();
-                $('#modalSemaforoInfo').modal('hide');
-                   this.loadLocationDisplay();
-            this.loadMensajesDisplay();            
+                const response = axios.post('/api/saveMassageDisplay', this.form).then(({data})=>{ 
+                    //this.guardarMensajeDisplay();
+                    $('#modalSemaforoInfo').modal('hide');
+                    this.loadLocationDisplay();
+                    this.loadMensajesDisplay();            
 
                     if( data.exito ){
-
-                        if( data.id )
-                            this.form.id = data.id;
 
                          Swal.fire({
                             title: 'Hecho!',
@@ -809,17 +754,19 @@ export default {
 
                         }).then((result) => {
 
-                           // $('#modalSemaforoInfo').modal('hide')
-                            
-                            if( this.direcciones_arr.length > 0 ){
-                                this.guardarPatrones();
-                            }
-
-                            else{
-                                this.reloadPage()
-                            }
+                            $('#modalSemaforoInfo').modal('hide')
                                 
                         
+                        })
+                    }else{
+                        Swal.fire({
+                            title: 'Oops!',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
                         })
                     }
 
@@ -836,7 +783,7 @@ export default {
                  //
                   console.log('this is the data clicked',this.dataclicked.id);
 
-                 this.form_mensajes.idDisplay=this.dataclicked.id;
+                 this.form.id=this.dataclicked.id;
 
                 this.DatosTable = data.data;
                 console.log('ESTOS SON LOS DATOS :', this.DatosTable);           
@@ -855,17 +802,6 @@ export default {
                             confirmButtonText: 'Ok'
 
                         }).then((result) => {
-
-                            // $('#modalSemaforoInfo').modal('hide')
-                            // this.guardarMensajeDisplay();
-                            // if( this.direcciones_arr.length > 0 ){
-                            //     this.guardarPatrones();
-                            // }
-
-                            // else{
-                            //     this.reloadPage()
-                            // }
-                                
                         
                         })
                     }
@@ -877,8 +813,7 @@ export default {
 
             async guardarMensajeDisplay(){
 
-                //console.log('probando', this.form_mensajes.mensaje.id);
-                console.log('vanessa',this.form_mensajes);
+               console.log('aca2')
                 const response = axios.post('/api/saveMassageDisplay', this.form_mensajes).then(({data})=>{
                 console.log('guardo con exito :', data);   
                 this.idDisplay = this.form_mensajes.mensaje.id;
@@ -899,16 +834,7 @@ export default {
 
                         }).then((result) => {
 
-                            $('#modalSemaforoInfo').modal('hide')
-                            this.guardarMensajeDisplay();
-                            if( this.direcciones_arr.length > 0 ){
-                                this.guardarPatrones();
-                            }
-
-                            else{
-                                this.reloadPage()
-                            }
-                                
+                            $('#modalSemaforoInfo').modal('hide') 
                         
                         })
                     }
@@ -917,63 +843,14 @@ export default {
 
 
             },
-            //
 
-            // async guardarInterseccion(){
-
-            //     const response = axios.post('/api/intersecciones', this.form).then(({data})=>{
-
-            //         if( data.exito ){
-
-            //             if( data.id )
-            //                 this.form.id = data.id;
-
-            //              Swal.fire({
-            //                 title: 'Hecho!',
-            //                 text: data.msg,
-            //                 icon: 'success',
-            //                 showCancelButton: false,
-            //                 confirmButtonColor: '#3085d6',
-            //                 confirmButtonText: 'Ok'
-
-            //             }).then((result) => {
-
-            //                 $('#modalSemaforoInfo').modal('hide')
-                            
-            //                 if( this.direcciones_arr.length > 0 ){
-            //                     this.guardarPatrones();
-            //                 }
-
-            //                 else{
-            //                     this.reloadPage()
-            //                 }
-                                
-                        
-            //             })
-            //         }
-
-            //     });
-      
-            // },
-
+   
             AñadirMensaje(){
-
-                 //console.log('añadir mensaje');
-                console.log('esta es la form',this.form_mensajes);
-                // this.form_mensajes.tiempo='';
-                // this.form_mensajes.mensaje='';
-
-
-                const response = axios.post('/api/saveMassageDisplay', this.form_mensajes).then(({data})=>{  
-                    this.loadMensajesDisplayTable(this.dataclicked);
+                const response = axios.post('/api/saveMassageDisplay',this.form).then(({data})=>{  
+                this.loadMensajesDisplayTable(this.dataclicked);
                 console.log('guardo con exito :', data);   
-                // this.idDisplay = this.form_mensajes.mensaje.id;
-                // this.idMensaje =  data.id;               
 
                     if( data.exito ){
-
-                        if( data.id )
-                            // this.form.id = data.id;
 
                          Swal.fire({
                             title: 'Hecho!',
@@ -986,10 +863,7 @@ export default {
                         }).then((result) => {
 
                             //$('#modalSemaforoInfo').modal('hide')
-                           
-                              
-                            
-                                
+     
                         
                         })
                     }

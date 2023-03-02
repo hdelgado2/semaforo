@@ -10,7 +10,6 @@ use App\MensajeDisplay;
 use Illuminate\Support\Facades\DB;
 use App\PatronSemaforo;
 
-
 class CentroMandoController extends Controller
 {
     public function index()
@@ -69,13 +68,13 @@ class CentroMandoController extends Controller
             DB::commit();
 
             \Log::info('Se ha creado nueva interseccion '.$interseccion->interseccion);
-            return ['exito' => 200, 'id' => $interseccion->id,'msg' => 'Se ha registrado con exito'];
+            return ['exito' => true, 'code' => 200, 'id' => $interseccion->id,'msg' => 'Se ha registrado con exito'];
 
         } catch (\Exception $e) {
 
             DB::rollback();
 
-            return ['exito' => 500,'msg' => 'Ha ocurrido un error: '.$e->getMessage()];
+            return ['exito' => false, 'code' => 500, 'msg' => 'Ha ocurrido un error: '.$e->getMessage()];
 
             dd($e->getMessage());
         }
@@ -124,13 +123,13 @@ class CentroMandoController extends Controller
             DB::commit();
 
             \Log::info('Se han guardado los patrones nuevos ');
-            return ['exito' => 200,'msg' => 'Se ha registrado con exito'];
+            return ['exito' => true, 'code' => 200, 'id' => $interseccion->id,'msg' => 'Se ha registrado con exito'];
 
         } catch (\Exception $e) {
 
             DB::rollback();
             \Log::info('Error al guardar patron: '.$e->getMessage());
-            return ['exito' => 500,'msg' => 'Ha ocurrido un error: '.$e->getMessage()];
+            return ['exito' => false, 'code' => 500, 'id' => null,'msg' => 'Ha ocurrido un error'];
 
             dd($e->getMessage());
         }
@@ -171,7 +170,7 @@ class CentroMandoController extends Controller
        return $datos;
     }
 
-     public function LocationDisplay(Request $request){
+     public function LocalizacionDisplay(Request $request){
  //dd('hey bro this work', $request);
 
         //dd('llego aqui', $request);
@@ -194,19 +193,48 @@ class CentroMandoController extends Controller
     }
 
      public function saveMassageDisplay(Request $request){
-//dd('hey bro is working', $request->mensaje['id']);
-        //dd($request->idDisplay);
-        $mensajedisplay = new MensajeDisplay();
-        $mensajedisplay->id_crear_mensaje = $request->mensaje['id'];
-        $mensajedisplay->id_localizacion_display = $request->idDisplay;
-        $mensajedisplay->tiempo = $request->tiempo;
-        
-   //     dd($localizacion);
-        $mensajedisplay->save();
+        try{
+            DB::beginTransaction();
+            $display = LocalizacionDisplay::find($request->id);
 
-        return $mensajedisplay;
-    
+            if(!$display){
+                $display = LocalizacionDisplay::create([
+                    'nombre_display' => $request->interseccion,
+                    'ip_equipo' => $request->ip_equipo,
+                    'mac_equipo' => $request->mac_equipo,
+                    'latitud'=> $request->latitud,
+                    'longitud'=> $request->longitud,
+                    'zoom'=> $request->zoom,
+                    'observacion'=> $request->observacion
+                ]);
+            }else{
+                $display->nombre_display = $request->interseccion;
+                $display->ip_equipo = $request->ip_equipo;
+                $display->mac_equipo = $request->mac_equipo;
+                $display->latitud = $request->latitud;
+                $display->longitud = $request->longitud;
+                $display->zoom = $request->zoom;
+                $display->observacion = $request->observacion;
+                $display->save();
+            }
 
+            if($request->mensaje_id){
+                $mensajedisplay = new MensajeDisplay();
+                $mensajedisplay->id_crear_mensaje = $request->mensaje_id;
+                $mensajedisplay->id_localizacion_display = $display->id;
+                $mensajedisplay->tiempo = $request->tiempo;
+                $mensajedisplay->save();
+            }
+            
+            DB::commit();
+            return ['exito' => true, 'code' => 200, 'id' => $display->id,'msg' => 'Se ha registrado con exito'];
+
+            // return $mensajedisplay;  
+        }catch( \Exception $e){
+            DB::rollback();
+            \Log::error('Ha ocurrido un error en CentroMandoController@saveMassageDisplay '.$e->getMessage());
+            return ['exito' => false, 'code' => 500, 'id' => null,'msg' => 'Ha ocurrido un error'];
+        }
         
 
      }
