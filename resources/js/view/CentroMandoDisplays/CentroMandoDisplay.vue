@@ -184,9 +184,13 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cerrar</button>
-                <button v-if="!editar" type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Guardar</button>
+                <div v-if="!editarenviarinstruccion">
+                    
+                     <button v-if="!editar" type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Guardar</button>
                 <button v-if="editar" type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Editar</button>
-                <button v-if="editar" type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Enviar instrucccion</button>
+                </div>
+               
+                <button v-if="editarenviarinstruccion" type="button" @click="guardarDisplaymassages" class="btn btn-outline-primary"><strong></strong>Enviar instrucccion</button>
               </div>
             </div>
           </div>
@@ -524,6 +528,7 @@ export default {
             },
 
             openInstructionModal(semaforo) {
+                this.form.interseccion = semaforo.nombre_display;
                 this.modevista = false;
                 this.loadMensajesDisplayTable;
                 console.log('intructionModal')
