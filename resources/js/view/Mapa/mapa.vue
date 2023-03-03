@@ -1,7 +1,10 @@
 <template>
 
     <div style="height: 100%; width: 100%">
-        <div class="row">
+        <div class="cargando" v-show="!loading === false" style="display:none">
+            <img class="image" width="50" height="50" :src="imageCarga">
+        </div>
+        <div v-show="loading" class="row">
             <div class="col-7 form-group ml-4">
                 <div class="row">
                     <p>Se encuentran seleccionadas {{ rutaLength }} intersecciones</p>
@@ -410,7 +413,8 @@ export default {
                 sentidos:['NORTE','SUR','OESTE','ESTE'],
                 sentidosEmergencia:['NORTE-SUR','ESTE-OESTE','ROJOS','AMARILLOS','VERDES','CRUCE-1','CRUCE-2','ALTO'],
                 colores:['ROJO','VERDE','AMARILLO','ROJO CRUCE IZQ','ROJO CRUCE DER','AMARILLO CRUCE IZQ','AMARILLO CRUCE DER','VERDE CRUCE IZQ','VERDE CRUCE DER'],
-                
+                imageCarga:"https://img1.picmix.com/output/stamp/normal/8/5/2/9/509258_fb107.gif",
+                loading: false,
                 direcciones_arr:[],
                 rutas:[]
             };
@@ -540,6 +544,7 @@ export default {
                 this.form.sentidos = []
                 this.form.latitud = event.latlng.lat;
                 this.form.longitud = event.latlng.lng;
+                this.direcciones_arr = []
                 
                 $('#modalSemaforoInfo').modal('show')
             },
@@ -547,6 +552,7 @@ export default {
             editModal(semaforo){
 
                 console.log('editar');
+                this.direcciones_arr = []
                 this.editMode = true;
                 this.form.interseccion = ''
                 this.form.latitud = ''
@@ -735,11 +741,11 @@ export default {
             async publishMessage(){
 
                 this.form_instrucciones.ip_equipo = this.form.ip_equipo;
-                
+                this.loading = true;
                 await axios.post("/api/mqtt/publish", this.form_instrucciones).then(({data})=>{
-
+                    
                     if( data.exito  ){
-
+                        this.loading = false
                          Swal.fire({
                             title: 'Hecho!',
                             text: data.msg,
@@ -755,13 +761,14 @@ export default {
                             this.form_instrucciones.sentido = '';
                             this.form_instrucciones.color = '';
                             this.form_instrucciones.tiempo = 0;
+                            this.direcciones_arr = []
 
                             this.resetRutas()
 
                         })
                     }
                     else{
-
+                         this.loading = false
                          Swal.fire({
                             title: 'Oops!',
                             text: data.msg,
@@ -849,6 +856,21 @@ export default {
 }   
 </script>
 <style>
+    .cargando {
+      width: 100%;height: 100%;
+      overflow: hidden; 
+      top: 0px;
+      left: 0px;
+      z-index: 10000;
+      text-align: center;
+      position:absolute; 
+      background-color: /*#FFFFFF*/ #FFF;
+      opacity:0.9;
+      filter:alpha(opacity=40);  
+   }
+   .image{
+    margin-top: 500px
+   }
 
     .popup:hover{
         display: block;
