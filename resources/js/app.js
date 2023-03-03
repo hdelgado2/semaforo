@@ -53,13 +53,13 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-const Foo = {template:'<p>prueba</p>'}
+const Foo = {template:'<p>prueba</p>'};
 
 let routes = [
     { path: '/guser', component: require('./view/Usuarios/ListUser.vue').default },
     { path: '/createuser', component: require('./view/Usuarios/createUser.vue').default },
     { path: '/edituser/:id', component: require('./view/Usuarios/editUser.vue').default },
-    { path: '/groles', component: require('./view/Roles/ListRoles.vue').default },
+    { path: '/roles', component: require('./view/Roles/ListRoles.vue').default },
     { path: '/create/groles', component: require('./view/Roles/createRoles.vue').default },
     { path: '/ginterseccion', component: require('./view/Mapa/mapa.vue').default },
     { path: '/deleteRoles/:id', component: require('./view/Roles/editRoles.vue').default },
