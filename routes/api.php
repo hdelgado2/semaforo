@@ -86,7 +86,7 @@ Route::get('mensajeselect','CentroMandoController@selectmensajes')->name('mensaj
 Route::post('LocationDisplay','CentroMandoController@LocationDisplay')->name('LocationDisplay');
 Route::post('saveMassageDisplay','CentroMandoController@saveMassageDisplay')->name('saveMassageDisplay');
 
-Route::post('loadtabla','CentroMandoController@loadtabla')->name('loadtabla');
+Route::post('loadtabla','CentroMandoController@ltabla')->name('loadtabla');
 
 
 //ELIMINAR MENSAJES ASOCIADOS A UN DISPLAY  deleteDisplayMensaje
