@@ -140,13 +140,6 @@ export default {
                     });
             },
 
-            //vanessa function 
-            // async buscarInterseccion(){
-            //     await axios.get('api/mensajes/listado/search/'+this.search).then(({ data }) => {
-            //             this.mensajes = data
-            //         })
-            // },
-
              async buscarMensaje(){
                 console.log('trying angel', this.search);
                 let query= this.search;
@@ -221,11 +214,6 @@ export default {
 
                         })
                     }
-            
-
-
-
-
             });
           },
 
@@ -261,32 +249,6 @@ export default {
 
                 console.log('editar')
             },
-
-            // showMensaje(interseccion){
-
-            //     console.log('open modal')
-            //     this.editMode = false;
-            //     this.form = interseccion;
-            //     this.form.sentidos = []; 
-            //     this.direcciones_arr = [];
-            //     this.form.sentidos = interseccion.patrones;
-
-            //     interseccion.patrones.forEach( (el) => {
-
-            //         if( el.id != null ){
-            //             console.log('id')
-            //             this.direcciones_arr.push(el)
-            //             // this.form.sentidos.push(el)
-
-            //         }else{
-            //             console.log('!id')
-            //             this.direcciones_arr.push(el)
-            //         }
-            //     })
-
-            //     $('#showInterseccion').modal('show')
-            // },
-
 
             async loadMensajes(){
                 await axios.get('api/mensajes').then(({data}) => this.mensajes = data);
