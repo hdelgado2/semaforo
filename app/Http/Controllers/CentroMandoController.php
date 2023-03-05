@@ -15,7 +15,8 @@ class CentroMandoController extends Controller
     public function index()
     {
 //        dd('llegue bro');
-        $datos = LocalizacionDisplay::has('mensajeDisplay')->with('mensajeDisplay')->get();
+        //$datos = LocalizacionDisplay::has('mensajeDisplay')->with('mensajeDisplay')->get();
+         $datos = LocalizacionDisplay::get();
        return $datos;
     }
 
@@ -76,7 +77,7 @@ class CentroMandoController extends Controller
 
             return ['exito' => false, 'code' => 500, 'msg' => 'Ha ocurrido un error: '.$e->getMessage()];
 
-            dd($e->getMessage());
+           // dd($e->getMessage());
         }
 
     }
@@ -264,22 +265,5 @@ class CentroMandoController extends Controller
     //dd('informacion llego', $request);
 
       }
-
-
-
-
-
-
-
-
-
-//return Interseccion::with('patrones')->orderBy('id','desc')->paginate();
-    //
-
-      // $intersecciones = Interseccion::where('interseccion','ilike','%'.$search.'%')->has('patrones')->with('patrones')->orderBy('id','desc')->paginate();where('id_localizacion_display','=', $request['id'])
-      //$datos = Mensajedisplay::has('Mensaje')->with('Mensaje')->get();
-        // $datos = LocalizacionDisplay::with('mensajeDisplay')->orderBy('id','desc')->paginate();
-       
-
 
 }

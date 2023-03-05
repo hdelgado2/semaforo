@@ -777,6 +777,7 @@ export default {
 
 
             loadMensajesDisplayTable(semaforo){
+                console.log('aqui voy');
                 //console.log('this is the data bro :',semaforo);
                  const response = axios.post('/api/loadtabla', semaforo).then(({data})=>{
                  //
@@ -846,6 +847,7 @@ export default {
 
    
             AñadirMensaje(){
+
                 const response = axios.post('/api/saveMassageDisplay',this.form).then(({data})=>{  
                 this.loadMensajesDisplayTable(this.dataclicked);
                 console.log('guardo con exito :', data);   
@@ -861,8 +863,8 @@ export default {
                             confirmButtonText: 'Ok'
 
                         }).then((result) => {
-
-                            //$('#modalSemaforoInfo').modal('hide')
+                                 this.form.tiempo=0;
+                              
      
                         
                         })
