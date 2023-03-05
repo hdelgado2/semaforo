@@ -190,15 +190,42 @@ export default {
 
         async deletemensaje(id){
             this.form.id = id;
-            await this.form.post('/api/deletemensaje/'+id).then((result) => {
-                 this.loadMensajes();
-            //  this.Lista = result['data']
-              Swal.fire({
-                    icon  :'success',
-                    title:'Success!',
-                    text  : "eliminado con exito",
-                    toast : true
-                  });
+
+            await this.form.post('/api/deletemensaje/'+id).then(({data}) => {
+                
+         
+                console.log(data.exito);
+                 if(data.exito){
+                      Swal.fire({
+                    title: 'Hecho!',
+                            text: data.msg,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                  }).then((result)=>{
+
+                            this.loadMensajes();
+
+                        })
+
+                 } else{
+
+                         Swal.fire({
+                            title: 'Oops!',
+                            text: data.msg,
+                            icon: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
+                        })
+                    }
+            
+
+
+
+
             });
           },
 
@@ -266,6 +293,9 @@ export default {
             },
 
             async openModal(){
+                this.form.mensaje='';
+                this.form.tipo_mensaje='';
+                this.form.motivo_mensaje='';
                 this.accioneditar= true;
                 this.editMode = false;
                 $('#modalMensaje').modal('show')

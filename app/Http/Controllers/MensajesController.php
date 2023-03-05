@@ -12,14 +12,22 @@ class MensajesController extends Controller
 
     public function store(Request $request){
  //dd($request);
+try{
 
-        $mensaje = new Mensaje();
+      $mensaje = new Mensaje();
         $mensaje->tipo_mensaje = $request->tipo_mensaje;
         $mensaje->mensaje = $request->mensaje;
         $mensaje->motivo_mensaje = $request->motivo_mensaje;
         $mensaje->save();
 
         return ['exito' => 200, 'id' => $mensaje->id,'msg' => 'Se ha registrado con exito'];
+
+}catch(\Exception $e){
+    return ['exito' => false, 'code' => 500, 'id' => null,'msg' => 'Ha ocurrido un error'];
+
+
+}
+      
     }
 
 
@@ -45,8 +53,8 @@ public function cargarmensajeedit(Request $request)
     public function botoneditar(Request $request)
     {
       // dd('llego', $request->mensaje);
-
-     Mensaje::find($request->id['id'])->update([
+try{
+    Mensaje::find($request->id['id'])->update([
                 'mensaje' => $request->mensaje,
             'motivo_mensaje'  => $request->motivo_mensaje,
             'tipo_mensaje' => $request->tipo_mensaje,
@@ -54,6 +62,12 @@ public function cargarmensajeedit(Request $request)
 
 return ['exito' => 200,'msg' => 'Se ha Registrado con exito'];
 
+
+}catch(\Exception $e){
+    return ['exito' => false, 'code' => 500, 'id' => null,'msg' => 'Ha ocurrido un error'];
+
+}
+     
       
     }
 
@@ -61,12 +75,19 @@ return ['exito' => 200,'msg' => 'Se ha Registrado con exito'];
     public function deletemensaje(Request $request)
     {
       //  dd('llego', $request->id['id']);
-
-         $mensaje = Mensaje::find($request->id['id'])->delete();
+        try{
+             $mensaje = Mensaje::find($request->id['id'])->delete();
 
          return ['exito' => 200,'msg' => 'Se ha eliminado con exito'];
             // $user1 = User::select('id','login','nombre','apellido','baneado')->paginate(10);
             // return $user1;
+
+        }catch(\Exception $e){
+
+             return ['exito' => false, 'code' => 500, 'id' => null,'msg' => 'Ha ocurrido un error (no se puede eliminar un mensaje que este asignado!)'];
+        }
+
+        
 
     }
 
