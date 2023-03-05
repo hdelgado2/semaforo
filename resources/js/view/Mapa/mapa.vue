@@ -2,7 +2,7 @@
 
     <div style="height: 100%; width: 100%">
         <div class="cargando" v-show="!loading === false" style="display:none">
-            <img class="image" width="50" height="50" :src="imageCarga">
+            <img class="image-loader" width="50" height="50" :src="imageCarga">
         </div>
         <div v-show="loading" class="row">
             <div class="col-7 form-group ml-4">
@@ -868,7 +868,7 @@ export default {
       opacity:0.9;
       filter:alpha(opacity=40);  
    }
-   .image{
+   .image-loader{
     margin-top: 500px
    }
 

@@ -1,6 +1,6 @@
 <template>
     <div class="cargando" v-if="carga === false" style="display:none">
-    <img class="image" width="50" height="50" :src="imageCarga">
+    <img class="image-loader" width="50" height="50" :src="imageCarga">
   </div>
 <div v-else class="container">
     
@@ -70,7 +70,8 @@ export default {
         data(){
             return{
                 listaRoles:{},
-                search:""
+                search:"",
+                imageCarga:"https://img1.picmix.com/output/stamp/normal/8/5/2/9/509258_fb107.gif",
             }
         },methods: {
 
