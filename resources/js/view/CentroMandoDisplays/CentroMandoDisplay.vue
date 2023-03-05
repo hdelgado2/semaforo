@@ -6,6 +6,7 @@
                 <div class="row">
                     <p>Se encuentran seleccionadas {{ rutaLength }} intersecciones</p>
                     <button @click="resetRutas" :disabled="!isRuta" class="btn btn-outline-primary ml-2">Reiniciar</button>
+                      <button @click="publishMessage" :disabled="!isRuta" class="btn btn-outline-primary ml-2">Enviar Instrucciones</button>
                 </div>
                 
             </div>
@@ -40,6 +41,7 @@
                 </l-tile-layer>
 
                 <l-marker v-for="semaforo,index in semaforos"
+
                     :key="semaforo.id" 
                     :item="semaforo"
                     :v-if="semaforo != null"
@@ -55,7 +57,7 @@
                         />
                         <l-tooltip :options="{ permanent: true, interactive: true }">
                             <div>
-                                {{ semaforo.interseccion }}
+                                {{ semaforo.nombre_display }}
                             </div>
                         </l-tooltip>
 
@@ -400,8 +402,11 @@ export default {
             },
 
             addRuta(semaforo){
+                // let datosDisplay=semaforo;
+                // this.loadMensajesDisplayTable(datosDisplay);
+                //  console.log('ESTOS SON LOS DATOS111 :', this.DatosTable); 
                 this.polyline.latlngs.push([semaforo.latitud, semaforo.longitud])
-                this.form_instrucciones.rutas.semaforos.push({ ip_equipo: semaforo.ip_equipo, nombre: semaforo.interseccion, tiempo: 0, sentido:'', color:'' })
+                this.form_instrucciones.rutas.semaforos.push({ ip_equipo: semaforo.ip_equipo, nombre: semaforo.nombre_display, tiempo: 0, sentido:'', color:'' })
             },
 
             addMarker(event) {
@@ -666,8 +671,8 @@ export default {
 
 
              async publishMessage(){
-                console.log('hey bro : ', this.form);
-                //this.form_instrucciones.ip_equipo = this.form.ip_equipo;
+              
+                this.form_instrucciones.ip_equipo = this.form.ip_equipo;
                 
                 await axios.post("/api/publishMessages", this.form_instrucciones).then(({data})=>{
 
@@ -715,6 +720,7 @@ export default {
                 await axios.get('api/displaysonline').then(({data}) => this.semaforos = data );
                 // console.log("listo");
                 // console.log('estos son los datos', this.semaforos);
+                //console.log('aqui es 22', this.semaforos);
                 if( this.semaforos.length > 0) this.isReady = true;
             },
 
@@ -777,7 +783,7 @@ export default {
 
 
             loadMensajesDisplayTable(semaforo){
-                console.log('aqui voy');
+                console.log('aqui voy',semaforo);
                 //console.log('this is the data bro :',semaforo);
                  const response = axios.post('/api/loadtabla', semaforo).then(({data})=>{
                  //

@@ -10,22 +10,48 @@ use PhpMqtt\Client\Facades\MQTT;
 class mqttMensajeController extends Controller
 {
        public function publish(Request $request){
-        dd('wassap bro'):
+
+
+//
+
+//        dd('wassap bro', $request);
         try{
-            $time = $request->intervalo_entre_interseccion > 0 ? $request->intervalo_entre_interseccion : 2;
-            if( count($request->rutas['semaforos']) ){
-                foreach($request->rutas['semaforos'] as $semaforo){
-                    $this->handlePublish($semaforo);
-                    sleep($time);
-                }
-            }else{
-                $this->handlePublish($request);
-            }
+            // $time = $request->intervalo_entre_interseccion > 0 ? $request->intervalo_entre_interseccion : 2;
+            // if( count($request->rutas['semaforos']) ){
+            //     foreach($request->rutas['semaforos'] as $semaforo){
+            //         $this->handlePublish($semaforo);
+            //         sleep($time);
+            //     }
+            // }else{
+            //     $this->handlePublish($request);
+            // }
             return ['code'=>200, 'exito' => true,'msg' => 'Instruccion enviada'];
         }catch( \Exception $e ){
             \Log::info('Error al enviar instrucción: '.$e->getMessage());
             return ['code' => 500, 'exito' => false, 'msg' => 'Ha ocurrido un error: '];
         }
+
+//
+
+
+
+
+        // dd('wassap bro');
+        // try{
+        //     $time = $request->intervalo_entre_interseccion > 0 ? $request->intervalo_entre_interseccion : 2;
+        //     if( count($request->rutas['semaforos']) ){
+        //         foreach($request->rutas['semaforos'] as $semaforo){
+        //             $this->handlePublish($semaforo);
+        //             sleep($time);
+        //         }
+        //     }else{
+        //         $this->handlePublish($request);
+        //     }
+        //     return ['code'=>200, 'exito' => true,'msg' => 'Instruccion enviada'];
+        // }catch( \Exception $e ){
+        //     \Log::info('Error al enviar instrucción: '.$e->getMessage());
+        //     return ['code' => 500, 'exito' => false, 'msg' => 'Ha ocurrido un error: '];
+        // }
         
     }
 
