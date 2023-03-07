@@ -161,27 +161,7 @@ export default {
                    // sentidos:[]
                 }),
 
-                form_cruces: new Form({
-                    sentido:"",
-                    sentido_nombre:'',
-                    rojo:0,
-                    rojo_cruce_izq:0,
-                    rojo_cruce_der:0,
-                    amarillo:0,
-                    amarillo_cruce_izq:0,
-                    amarillo_cruce_der:0,
-                    verde:0,
-                    verde_cruce_izq:0,
-                    verde_cruce_der:0,
-                }),
 
-                form_patrones: new Form({
-                    intersecciones:[],
-                    intersecciones_id:''
-                }),
-
-                direcciones_arr:[],
-                sentidos:['NORTE','SUR','OESTE','ESTE'],
                 editMode : false,
                 modoeditar: false,
                 modoeditar1:false,
@@ -196,93 +176,60 @@ export default {
                     });
             },
 
-            toUpperCaseText(){
-                console.log('upper')
-                this.form_cruces.sentido_nombre = this.form_cruces.sentido_nombre.toUpperCase(); 
-            },
-
-            añadirPatron(){
-
-                //console.log("añadir patron")
-                if( !this.patronExiste(this.form_cruces.sentido) ){
-
-                    //this.direcciones_arr.push(this.form_cruces);
-                    this.direcciones_arr.push({ sentido: this.form_cruces.sentido, direccion: this.form_cruces.sentido_nombre, rojo: this.form_cruces.rojo,
-                    rojo_cruce_izq: this.form_cruces.rojo_cruce_izq, rojo_cruce_der: this.form_cruces.rojo_cruce_der, amarillo: this.form_cruces.amarillo, amarillo_cruce_izq: this.form_cruces.amarillo_cruce_izq,
-                    amarillo_cruce_der: this.form_cruces.amarillo_cruce_der, verde: this.form_cruces.verde, verde_cruce_izq: this.form_cruces.verde_cruce_izq, verde_cruce_der: this.form_cruces.verde_cruce_der });
-
-                    this.form_cruces.sentido = "";
-                    this.form_cruces.sentido_nombre = '';
-                    this.form_cruces.rojo = 0;
-                    this.form_cruces.rojo_cruce_izq = 0;
-                    this.form_cruces.rojo_cruce_der = 0;
-                    this.form_cruces.amarillo = 0;
-                    this.form_cruces.amarillo_cruce_izq = 0;
-                    this.form_cruces.amarillo_cruce_der = 0;
-                    this.form_cruces.verde = 0;
-                    this.form_cruces.verde_cruce_izq = 0;
-                    this.form_cruces.verde_cruce_der = 0;
-                    //this.form_cruces. = {}
-                    //this.form.cantidad = ''
-                    //this.form.precio_unitario = ''
-                    //this.form.descuento = ''
-                
-                }else{
-
-                    Swal.fire("Oh no!", "Ya se encuentra añadido un patron en ese sentido.", "warning")
-                }
-              
-            },
-
-                //
-
-
             crearlocalizacion(interseccion){
                 this.modoeditar1= false;
                 this.modoeditar = true;
                 this.editMode = true;
                 this.form = interseccion;
-                this.form.sentidos = []; 
-                this.direcciones_arr = [];
-              
 
                 $('#showInterseccion').modal('show')
             },
-            //
 
            async deletedisplay(interseccion){
 
             this.form = interseccion;
-             const response = axios.post('/api/deletedisplay/', this.form).then((result) => {
-                
-            //  this.Lista = result['data']
-              Swal.fire({
-                    icon  :'success',
-                    title:'Success!',
-                    text  : "eliminado con exito",
-                    toast : true
-                  });
+             const response = axios.post('/api/deletedisplay/', this.form).then(({data}) => {
 
+                console.log(data.exito);
+                if(data.exito){
+                  Swal.fire({
+                title: 'Hecho!',
+                        text: data.msg,
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok'
+              }).then((data)=>{
 
+                this.loadIntersecciones();
 
-                            this.loadIntersecciones();
+                 })
+
+                 } else{
+
+                         Swal.fire({
+                            title: 'Oops!',
+                            text: data.msg,
+                            icon: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
+                        })
+                    }
             });
 
             },
 
 
             async cargaredit(interseccion){
+                 console.log('open modal') 
 
-                 console.log('open modal')
-                
                 this.form = interseccion;
-                
+                this.modoeditar1=false;
+                 this.modoeditar = false;
+                 this.editMode=true;
                 $('#showInterseccion').modal('show')
-
-                 this.editMode = true;
-
-
-           
             },
 
             editDisplay(){
@@ -313,8 +260,6 @@ export default {
 
                 });
 
-
-
                 console.log('editar')
             },
 
@@ -338,53 +283,12 @@ export default {
                 $('#showInterseccion').modal('show')
             },
 
-            deleteDireccionArr(index){
-                console.log(index)
-
-                Swal.fire({
-                    title: 'Eliminar?',
-                    text: "No podra revertir esta acción!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Si, eliminar!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-
-                        this.direcciones_arr = this.direcciones_arr.filter( (direccion, i )=> i != index);
-
-                        Swal.fire(
-                            'Hecho!',
-                            'Patron eliminado.',
-                            'success'
-                        )
-                    }
-                })
-                
-            },
-
             async loadIntersecciones(){
                await axios.post('api/loadDisplays/listado').then(({data}) => this.intersecciones = data);
                console.log('es esta',this.intersecciones);
             },
-            async getRoles(){
-                await axios.get('api/listroles').then(({data}) => this.listaRoles = data.data);
-            },
-            async searchRoles(){
-                await axios.get('api/searchroles/roles='+this.search).then(({data})=>this.listaRoles = data.data)
-            },
-            async deleteRoles({id}){
-                await axios.get('api/deleteroles/'+id).then((result) => {
-                  this.listaRoles = result['data']['data']
-                  Swal.fire({
-                    icon  :'success',
-                    title:'Success!',
-                    text  : "eliminado con exito",
-                    toast : true
-                  });
-                });
-            },
+           
+         
             async guardarInterseccion(){
 
                 const response = axios.post('/api/guardarlacalizacionesdisplays', this.form).then(({data})=>{

@@ -79,11 +79,18 @@ return ['exito' => 200,'msg' => 'Se ha Registrado con exito'];
 
     }
     public function deletedisplay(Request $request){
+        try{
 
 
- $display = LocalizacionDisplay::find($request->id)->delete();
+            $display = LocalizacionDisplay::find($request->id)->delete();
 
-         return ['exito' => 200,'msg' => 'Se ha eliminado con exito'];
+            return ['exito' => 200,'msg' => 'Se ha eliminado con exito'];
+
+        }catch(\Exception $e){
+
+            return ['exito' => false, 'code' => 500, 'id' => null,'msg' => 'Ha ocurrido un error (no se puede eliminar un display con mensajes activos!)'];
+        }
+
     }
 
     public function search(){

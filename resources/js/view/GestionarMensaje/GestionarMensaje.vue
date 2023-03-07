@@ -140,13 +140,6 @@ export default {
                     });
             },
 
-            //vanessa function 
-            // async buscarInterseccion(){
-            //     await axios.get('api/mensajes/listado/search/'+this.search).then(({ data }) => {
-            //             this.mensajes = data
-            //         })
-            // },
-
              async buscarMensaje(){
                 console.log('trying angel', this.search);
                 let query= this.search;
@@ -190,15 +183,37 @@ export default {
 
         async deletemensaje(id){
             this.form.id = id;
-            await this.form.post('/api/deletemensaje/'+id).then((result) => {
-                 this.loadMensajes();
-            //  this.Lista = result['data']
-              Swal.fire({
-                    icon  :'success',
-                    title:'Success!',
-                    text  : "eliminado con exito",
-                    toast : true
-                  });
+
+            await this.form.post('/api/deletemensaje/'+id).then(({data}) => {
+                
+         
+                console.log(data.exito);
+                 if(data.exito){
+                      Swal.fire({
+                    title: 'Hecho!',
+                            text: data.msg,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                  }).then((result)=>{
+
+                            this.loadMensajes();
+
+                        })
+
+                 } else{
+
+                         Swal.fire({
+                            title: 'Oops!',
+                            text: data.msg,
+                            icon: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+
+                        })
+                    }
             });
           },
 
@@ -235,37 +250,14 @@ export default {
                 console.log('editar')
             },
 
-            // showMensaje(interseccion){
-
-            //     console.log('open modal')
-            //     this.editMode = false;
-            //     this.form = interseccion;
-            //     this.form.sentidos = []; 
-            //     this.direcciones_arr = [];
-            //     this.form.sentidos = interseccion.patrones;
-
-            //     interseccion.patrones.forEach( (el) => {
-
-            //         if( el.id != null ){
-            //             console.log('id')
-            //             this.direcciones_arr.push(el)
-            //             // this.form.sentidos.push(el)
-
-            //         }else{
-            //             console.log('!id')
-            //             this.direcciones_arr.push(el)
-            //         }
-            //     })
-
-            //     $('#showInterseccion').modal('show')
-            // },
-
-
             async loadMensajes(){
                 await axios.get('api/mensajes').then(({data}) => this.mensajes = data);
             },
 
             async openModal(){
+                this.form.mensaje='';
+                this.form.tipo_mensaje='';
+                this.form.motivo_mensaje='';
                 this.accioneditar= true;
                 this.editMode = false;
                 $('#modalMensaje').modal('show')

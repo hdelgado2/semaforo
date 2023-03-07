@@ -191,8 +191,8 @@
                     <tbody>
                         <tr  v-for="d, index in direcciones_arr" :key="index+1">
                             <td>{{ index+1 }}</td>
-                            <!-- <td>{{ d.direccion ?? d.sentido_nombre  }}</td> -->
-                            <td>{{ d.direccion ?? d.sentido_nombre }}</td>
+                            <!-- <td>{{ d.direccion  d.sentido_nombre  }}</td> -->
+                            <!-- <td>{{ d.direccion ?? d.sentido_nombre }}</td> -->
                             <td>{{ d.sentido }}</td>
                             <td style="color: red;">{{ d.rojo }}</td>
                             <td style="color: red;">{{ d.rojo_cruce_izq }}</td>
