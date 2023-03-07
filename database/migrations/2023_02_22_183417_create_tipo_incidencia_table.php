@@ -15,6 +15,7 @@ class CreateTipoIncidenciaTable extends Migration
     {
         Schema::create('tipo_incidencia', function (Blueprint $table) {
             $table->id();
+            $table->string('tipo');
             $table->timestamps();
         });
     }
