@@ -19,7 +19,7 @@ class User extends Authenticatable
     protected $connection = 'pgsql';
     protected $table = 'usuarios';
     protected $fillable = [
-        'login', 'password','nombre','cedula','apellido','roles_id'
+        'login', 'password','nombre','cedula','apellido','roles_id','id'
     ];
     protected $appends = ['nombre_completo'];
 
