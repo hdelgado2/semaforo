@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Menu;
 
 
-class CentroMando_GestionarDisplay extends Seeder
+class CentroMandoGestionDisplaySeeder extends Seeder
 {
     /**
      * Run the database seeds.

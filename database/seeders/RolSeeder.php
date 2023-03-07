@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\roles;
 
-class RolSeed extends Seeder
+class RolSeeder extends Seeder
 {
     /**
      * Run the database seeds.

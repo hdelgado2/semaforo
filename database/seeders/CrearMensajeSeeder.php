@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Menu;
 
-class CrearMensaje extends Seeder
+class CrearMensajeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
