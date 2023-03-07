@@ -55,7 +55,7 @@
                         />
                         <l-tooltip :options="{ permanent: true, interactive: true }">
                             <div>
-                                {{ semaforo.interseccion }}
+                                {{ semaforo.nombre_display }}
                             </div>
                         </l-tooltip>
 

@@ -1,10 +1,10 @@
 <template>
 
     <div style="height: 100%; width: 100%">
-        <div class="cargando" v-show="!loading === false" style="display:none">
+        <div class="cargando" v-show="loading" style="display:none">
             <img class="image-loader" width="50" height="50" :src="imageCarga">
         </div>
-        <div v-show="loading" class="row">
+        <div v-show="!loading" class="row">
             <div class="col-7 form-group ml-4">
                 <div class="row">
                     <p>Se encuentran seleccionadas {{ rutaLength }} intersecciones</p>
