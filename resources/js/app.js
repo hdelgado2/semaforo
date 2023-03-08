@@ -59,7 +59,7 @@ let routes = [
     { path: '/guser', component: require('./view/Usuarios/ListUser.vue').default },
     { path: '/createuser', component: require('./view/Usuarios/createUser.vue').default },
     { path: '/edituser/:id', component: require('./view/Usuarios/editUser.vue').default },
-    { path: '/roles', component: require('./view/Roles/ListRoles.vue').default },
+    { path: '/groles', component: require('./view/Roles/ListRoles.vue').default },
     { path: '/create/groles', component: require('./view/Roles/createRoles.vue').default },
     { path: '/ginterseccion', component: require('./view/Mapa/mapa.vue').default },
     { path: '/deleteRoles/:id', component: require('./view/Roles/editRoles.vue').default },
