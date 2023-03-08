@@ -21,7 +21,7 @@ Route::get('getRoles','UsuarioController@getRoles')->name('getRoles');
 Route::get('deleteUser/{id}','UsuarioController@deleteUser')->name('deleteUser');
 Route::get('edituser/{id}','UsuarioController@editUser')->name('editUser');
 Route::post('editusers','UsuarioController@editUserRegistro')->name('editUserRegistro');
-//Route::get('listroles','RolesController@index')->name('index');
+Route::get('listroles','RolesController@index')->name('listroles');
 Route::post('createroles','RolesController@createRoles')->name('createroles');
 Route::get('searchroles/{role}','RolesController@searchRoles')->name('searchRoles');
 Route::get('deleteroles/{role}','RolesController@deleteroles')->name('deleteroles');

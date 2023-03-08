@@ -40,16 +40,16 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    public function LoginView(){
+        return redirect('/login');
+    }
+
     public function login(Request $request)
     {
         
-        
         $user = User::where('login',$request->user)->where('password',md5($request->password))->first();
-       
         if($user !== null){
-            
             Auth::login($user);
-
             return redirect($this->redirectTo);
         }else{
             return redirect('/login');
@@ -60,6 +60,6 @@ class LoginController extends Controller
     public function logout(Request $request){
 
         Auth::logout();
-        return redirect('/');
+        return redirect('/login');
     }
 }
