@@ -28,7 +28,7 @@
 
         <div class="map-container">
             <l-map  @ready="doSomethingOnReady()"
-                v-if="isReady"
+                
                 ref="map"
                 :zoom="zoom"
                 :center="center"
