@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-7 form-group ml-4">
                 <div class="row">
-                    <p>Se encuentran seleccionadas {{ rutaLength }} intersecciones</p>
+                    <p>Se encuentran seleccionadas {{ rutaLength }} displays</p>
                     <button @click="resetRutas" :disabled="!isRuta" class="btn btn-outline-primary ml-2">Reiniciar</button>
                       <button @click="publishMessage" :disabled="!isRuta" class="btn btn-outline-primary ml-2">Enviar Instrucciones</button>
                 </div>
@@ -14,7 +14,7 @@
                 <v-select 
                     v-model="filtro" 
                     :options="semaforos"
-                    placeholder="SELECCIONE INTERSECCIÓN"
+                    placeholder="SELECCIONE DISPLAY"
                     label="nombre_display"
                     @input="selectLocationFilter()"
                 >
@@ -80,7 +80,7 @@
               <div class="modal-body">
                 <div class="row">
                     <div class="form-group col-8">
-                        <label for="interseccion" class="col-form-label">Nombre intersección:</label>
+                        <label for="interseccion" class="col-form-label">Nombre display:</label>
                         <input :readonly="editarenviarinstruccion" v-model="form.interseccion" type="text" class="form-control" id="interseccion">
                     </div>
                     <div class="form-group col-2">
