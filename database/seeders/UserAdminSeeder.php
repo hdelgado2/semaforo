@@ -17,12 +17,12 @@ class UserAdminSeeder extends Seeder
         User::create([
             'nombre' => 'admin',
             'apellido' => 'admin',
-            'role_id' => 1,
+            'roles_id' => 1,
             'baneado' => false,
             'intentos_fallidos' => 0,
             'password' => md5('secuencia'),
             'cedula' => '123456',
-            'tipo' => 'FALLA ELÉCTRICA'
+            'login' => 'admin'
         ]);
     }
 }

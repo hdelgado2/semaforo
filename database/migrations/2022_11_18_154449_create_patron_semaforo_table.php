@@ -15,7 +15,7 @@ class CreatePatronSemaforoTable extends Migration
     {
         Schema::create('patron_semaforo', function (Blueprint $table) {
             $table->id();
-            $table->string('intersecciones_id');
+            $table->integer('intersecciones_id');
             $table->string('direccion')->nullable();
             $table->integer('rojo')->default(0);
             $table->integer('rojo_cruce_izq')->default(0);
