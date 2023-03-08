@@ -56,6 +56,7 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 const Foo = {template:'<p>prueba</p>'};
 
 let routes = [
+    { path: '/home', component: require('./view/Home.vue').default },
     { path: '/guser', component: require('./view/Usuarios/ListUser.vue').default },
     { path: '/createuser', component: require('./view/Usuarios/createUser.vue').default },
     { path: '/edituser/:id', component: require('./view/Usuarios/editUser.vue').default },
