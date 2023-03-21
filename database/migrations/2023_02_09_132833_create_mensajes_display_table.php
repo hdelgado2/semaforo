@@ -17,8 +17,8 @@ class CreateMensajesDisplayTable extends Migration
             $table->id();
             $table->foreignId('id_crear_mensaje')->constrained('crear_mensaje');
             $table->foreignId('id_localizacion_display')->constrained('localizacion_display');
-            $table->string('tipo_programacion');
-            $table->string('etiqueta_proceso');
+            $table->string('tipo_programacion')->nullable();
+            $table->string('etiqueta_proceso')->nullable();
             $table->string('tiempo');
             $table->timestamps();
         });
