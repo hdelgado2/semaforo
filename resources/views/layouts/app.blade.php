@@ -44,10 +44,9 @@
             <!-- Main Sidebar Container -->
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
               <!-- Brand Logo -->
-              <a href="#" class="brand-link">
-                
+              <!-- <a href="#" class="brand-link">
                 <span class="brand-text font-weight-light">AdminLTE 3</span>
-              </a>
+              </a> -->
               
               <!-- Sidebar -->
               <div class="sidebar">
@@ -80,22 +79,22 @@
                      
                   <li class="nav-item">
                     <router-link to="{{'/'.$item->ruta_archivo}}" class="nav-link">
-                      <i class="nav-icon fas fa-copy"></i>
+                      <i class="{{$item->icon}}"></i> 
                       <p style="font-size: 10px; color:aliceblue">
-                       {{$item->nombre_menu}}
-                       <i class="fas fa-angle-left right"></i>
+                       {{ $item->nombre_menu}}
+                       
                       </p>
                     </router-link>
                     
                   </li>
                   
                   @endforeach
-                  <li style="font-size: 10px;color:aliceblue">
+                  <li style="font-size: 10px;color:aliceblue" class="nav-item ml-3">
                                             
-                    <a class="dropdown-item" href="{{ route('logout') }}"
+                    <a href="{{ route('logout') }}"
                        onclick="event.preventDefault();
                                      document.getElementById('logout-form').submit();">
-                                     <i class="nav-icon fas fa-copy"></i>
+                                     <i class="fa-solid fa-power-off"></i>
                         {{ __('Logout') }}
                     </a>
                   

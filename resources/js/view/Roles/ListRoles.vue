@@ -8,7 +8,7 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Lista de Roles</h3>
-                <router-link to="/create/groles" class="btn btn-primary">Registrar</router-link>
+                <router-link to="/create/groles" class="btn btn-primary ml-3">Registrar</router-link>
                 <div class="card-tools"> 
                   <div class="input-group input-group-sm" style="width: 150px;">
                     <input type="text" v-model="search"  name="table_search" class="form-control float-right" placeholder="Search">
@@ -35,7 +35,7 @@
                         <td>{{roles.nombre_rol}}</td>
                         <td v-if="roles.activo === true">Activo</td>
                         <td v-else>Inactivo</td>
-                        <td><router-link :to="{path:'/deleteRoles/'+roles.id}" class="btn btn-warning">Edit</router-link>/
+                        <td><router-link :to="{path:'/deleteRoles/'+roles.id}" class="btn btn-warning">Edit</router-link>
                             <button class="btn btn-danger" @click="deleteRoles(roles)">Borrar</button>
                         </td> 
                     </tr>

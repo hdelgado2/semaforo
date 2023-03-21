@@ -9,14 +9,10 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Lista de Usuarios</h3>
-                <router-link to="/createuser" class="btn btn-primary">Registrar</router-link>
+                <router-link to="/createuser" class="btn btn-primary ml-3">Registrar</router-link>
                 <div class="card-tools">
-                 
                   <div class="input-group input-group-sm" style="width: 150px;">
-
-                   
                     <input type="text" v-model="search"  name="table_search" class="form-control float-right" placeholder="Search">
-
                     <div class="input-group-append">
                       <button type="submit" @click="searchUser" class="btn btn-default">
                         <i class="fas fa-search"></i>
@@ -42,7 +38,7 @@
                         <td>{{list.nombre+' '+list.apellido}}</td>
                         <td v-if="list.baneado === false">Activo</td>
                         <td v-else>Inactivo</td>
-                        <td><router-link :to="{path:'/edituser/'+list.id}" class="btn btn-warning">Edit</router-link>/
+                        <td><router-link :to="{path:'/edituser/'+list.id}" class="btn btn-warning">Edit</router-link>
                             <button @click="deleteUser(list.id)" class="btn btn-danger">Borrar</button>
                         </td>
                     </tr>
